@@ -1,0 +1,42 @@
+﻿.pro-toast-container {
+    position: absolute;
+    z-index: 100;
+    padding: 1rem;
+    right: 0;
+    top: 0;
+}
+
+.pro-toast {
+    width: 350px;
+    max-width: 100%;
+    font-size: 0.800rem;
+    pointer-events: auto;
+    background-color: #198754;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.1);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+    border-radius: 0.35rem;
+    color: #f8f9fa;
+    opacity:90%;
+}
+
+.pro-toast-header {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+}
+
+.pro-toast-body {
+    display: flex;
+    padding: 0.40rem;
+}
+
+.pro-btn-close:hover {
+    text-decoration: none;
+    opacity: .75;
+}
+
+.pro-icon-info {
+    margin-top: 7px;
+    margin-inline: 5px;
+}

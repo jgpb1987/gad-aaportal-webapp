@@ -1,0 +1,16 @@
+@inherits LayoutComponentBase
+@* <Header OnButtonClick="ShowMenu" DatosUsuarioResult="@result.Data.DatosUsuario" />
+<div class="page">
+    <div class="sidebar @ShowHide">
+        @if (result.Data.ListaMenu != null)
+        {
+            <NavMenu ParemeterListaMenu="@result.Data.ListaMenu" />
+        }
+    </div>
+    <main>
+        <article class="content px-4 @AjusteContenido">
+            @Body
+        </article>
+    </main>
+</div>
+ *@

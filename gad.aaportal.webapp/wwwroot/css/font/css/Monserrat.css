@@ -1,0 +1,6 @@
+﻿@font-face {
+    font-family: 'Montserrat'; /* Nombre de la fuente */
+    src: url('../fonts/Montserrat-Regular.otf') format('truetype'); /* Reemplaza 'ruta/a/tu/font.ttf' con la URL de tu archivo .ttf */
+    font-weight: normal;
+    font-style: normal;
+}

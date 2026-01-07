@@ -1,0 +1,6 @@
+@gad.aaportal.apis_HostAddress = http://localhost:5005
+
+GET {{gad.aaportal.apis_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

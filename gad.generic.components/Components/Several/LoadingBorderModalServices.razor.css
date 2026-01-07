@@ -1,0 +1,21 @@
+﻿.modal-content-personalizado {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    pointer-events: auto !important;
+    background-color: none !important;
+    background-clip: padding-box !important;
+    border: 0px solid !important;
+    border-radius: 0.3rem !important;
+    outline: 0 !important;
+}
+
+.text-secondary {
+    --bs-text-opacity: 1;
+    color: #555 !important;
+}
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5); /* Asegúrate de que sea semitransparente */
+}

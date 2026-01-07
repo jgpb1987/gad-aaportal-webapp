@@ -1,0 +1,93 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gad.aaportal.webapp", "gad.aaportal.webapp\gad.aaportal.webapp.csproj", "{6A53EA86-540D-444F-BE2E-6869D5F91D58}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gad-webapps", "gad-webapps", "{F736460D-3244-4E8A-AD23-A717CB7BA9C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gad-mobile", "gad-mobile", "{E664E955-3AF4-4F02-BA93-9D0EC42DF81C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gad-apis", "gad-apis", "{8FC0E439-5ACD-426D-AD72-8EEF65702CAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gad.generic.components", "gad.generic.components\gad.generic.components.csproj", "{6F1578E6-7BBA-41C6-9BB3-C5807235C841}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gad.aaportal.components", "gad.aaportal.components\gad.aaportal.components.csproj", "{E17A6043-58FE-4032-AB97-962D8DFE6B44}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gad-commons", "gad-commons", "{3B7F1BBE-85F1-420C-B7E0-440DA84725F4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gad.aaportal.commons", "gad.aaportal.commons\gad.aaportal.commons.csproj", "{CF868717-9AC9-4BB3-8819-651E0CD2DF33}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gad.aaportal.consumers", "gad.aaportal.consumers\gad.aaportal.consumers.csproj", "{FE611EEC-A2EA-4101-BFDA-0D7DF63FD065}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gad.aaportal.apis", "gad.aaportal.apis\gad.aaportal.apis.csproj", "{DCEE7EC2-0DC9-10E9-DB6F-C4A0E436599A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gad.aaportal.models", "gad.aaportal.models\gad.aaportal.models.csproj", "{4C43896A-8F0C-3FDD-EE35-8FDDB1C836FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gad.aaportal.dataaccess", "gad.aaportal.dataaccess\gad.aaportal.dataaccess.csproj", "{777048F5-74CE-45C7-4AF7-43D18B22F29C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gad.aaportal.services", "gad.aaportal.services\gad.aaportal.services.csproj", "{C038BEF5-ED4D-D0E8-BF17-B6F9253D6770}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gad-components", "gad-components", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6A53EA86-540D-444F-BE2E-6869D5F91D58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A53EA86-540D-444F-BE2E-6869D5F91D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A53EA86-540D-444F-BE2E-6869D5F91D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A53EA86-540D-444F-BE2E-6869D5F91D58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F1578E6-7BBA-41C6-9BB3-C5807235C841}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F1578E6-7BBA-41C6-9BB3-C5807235C841}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F1578E6-7BBA-41C6-9BB3-C5807235C841}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F1578E6-7BBA-41C6-9BB3-C5807235C841}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E17A6043-58FE-4032-AB97-962D8DFE6B44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E17A6043-58FE-4032-AB97-962D8DFE6B44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E17A6043-58FE-4032-AB97-962D8DFE6B44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E17A6043-58FE-4032-AB97-962D8DFE6B44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF868717-9AC9-4BB3-8819-651E0CD2DF33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF868717-9AC9-4BB3-8819-651E0CD2DF33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF868717-9AC9-4BB3-8819-651E0CD2DF33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF868717-9AC9-4BB3-8819-651E0CD2DF33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE611EEC-A2EA-4101-BFDA-0D7DF63FD065}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE611EEC-A2EA-4101-BFDA-0D7DF63FD065}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE611EEC-A2EA-4101-BFDA-0D7DF63FD065}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE611EEC-A2EA-4101-BFDA-0D7DF63FD065}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCEE7EC2-0DC9-10E9-DB6F-C4A0E436599A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCEE7EC2-0DC9-10E9-DB6F-C4A0E436599A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCEE7EC2-0DC9-10E9-DB6F-C4A0E436599A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCEE7EC2-0DC9-10E9-DB6F-C4A0E436599A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C43896A-8F0C-3FDD-EE35-8FDDB1C836FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C43896A-8F0C-3FDD-EE35-8FDDB1C836FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C43896A-8F0C-3FDD-EE35-8FDDB1C836FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C43896A-8F0C-3FDD-EE35-8FDDB1C836FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{777048F5-74CE-45C7-4AF7-43D18B22F29C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{777048F5-74CE-45C7-4AF7-43D18B22F29C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{777048F5-74CE-45C7-4AF7-43D18B22F29C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{777048F5-74CE-45C7-4AF7-43D18B22F29C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C038BEF5-ED4D-D0E8-BF17-B6F9253D6770}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C038BEF5-ED4D-D0E8-BF17-B6F9253D6770}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C038BEF5-ED4D-D0E8-BF17-B6F9253D6770}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C038BEF5-ED4D-D0E8-BF17-B6F9253D6770}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6A53EA86-540D-444F-BE2E-6869D5F91D58} = {F736460D-3244-4E8A-AD23-A717CB7BA9C0}
+		{6F1578E6-7BBA-41C6-9BB3-C5807235C841} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{E17A6043-58FE-4032-AB97-962D8DFE6B44} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{CF868717-9AC9-4BB3-8819-651E0CD2DF33} = {3B7F1BBE-85F1-420C-B7E0-440DA84725F4}
+		{FE611EEC-A2EA-4101-BFDA-0D7DF63FD065} = {F736460D-3244-4E8A-AD23-A717CB7BA9C0}
+		{DCEE7EC2-0DC9-10E9-DB6F-C4A0E436599A} = {8FC0E439-5ACD-426D-AD72-8EEF65702CAE}
+		{4C43896A-8F0C-3FDD-EE35-8FDDB1C836FC} = {8FC0E439-5ACD-426D-AD72-8EEF65702CAE}
+		{777048F5-74CE-45C7-4AF7-43D18B22F29C} = {8FC0E439-5ACD-426D-AD72-8EEF65702CAE}
+		{C038BEF5-ED4D-D0E8-BF17-B6F9253D6770} = {8FC0E439-5ACD-426D-AD72-8EEF65702CAE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B805C927-D1B8-4309-9AE4-66AF8EE73D92}
+	EndGlobalSection
+EndGlobal

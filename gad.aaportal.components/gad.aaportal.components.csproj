@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Reports\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\gad.aaportal.services\gad.aaportal.services.csproj" />
+    <ProjectReference Include="..\gad.generic.components\gad.generic.components.csproj" />
+  </ItemGroup>
+
+</Project>
+

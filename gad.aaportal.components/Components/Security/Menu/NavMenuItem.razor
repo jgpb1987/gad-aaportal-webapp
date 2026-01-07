@@ -1,0 +1,38 @@
+  @*   @if (ListaItems != null)
+    {
+        @foreach (var item in ListaItems)
+        {
+            <li class="menu-item li-margin-list">
+                @if (string.IsNullOrEmpty(item.Ruta))
+                {
+                     <a class="menu-link" @onclick="() => ToggleSubmenu(item.IdMenu)">
+                         <span class="submenu-icon @GetSubmenuIcon(item.IdMenu, -1)"></span>
+                        <span class="oi @item.Icono span-icon"></span>
+                        @item.Nombre
+                     </a>
+                }
+                else
+                {
+                 <li class="li-margin-list">
+                     <a href="@item.Ruta" class="menu-link @(activeOpcion == item.IdMenu ? "active-link" : "")" @onclick="() => GetActiveOpcion(item.IdMenu)">@item.Nombre</a>
+                 </li> 
+                }
+                @if (item.Decendents != null && item.Decendents.Any())
+                {
+                    @if (activeExpand)
+                    {
+                        <ul class="ul-margin-list submenu active">
+                            <NavMenuItem ParameterListaItems="@item.Decendents" expandir="@activeExpand" />
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="ul-margin-list submenu @(activeMenu == item.IdMenu  ? "active" : "")">
+                            <NavMenuItem ParameterListaItems="@item.Decendents" expandir="@activeExpand" />
+                        </ul>
+                    }
+                }
+            </li>
+        }
+    }
+ *@

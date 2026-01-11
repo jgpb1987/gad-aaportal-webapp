@@ -42,10 +42,6 @@ namespace gad.aaportal.services.Services.Implementation
             try
             {
                 var entity = form101.Adapt<Form101>();
-                if (entity.AnioFiscal == 2010)
-                {
-                    string pausa=string.Empty;
-                }
                 var reg = contexto.Form101.Where(f => f.AnioFiscal == entity.AnioFiscal &&
                                         f.NumeroIdentificacion == entity.NumeroIdentificacion).FirstOrDefault();
                 if (reg != null)

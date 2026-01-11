@@ -13,20 +13,33 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//Inicio DbContext
+
+// === Inicio DbContext ===
 builder.Services.AddDbContext<AaportalContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
 });
-//Fin DbContext
+// === Fin DbContext ===
 
-//Inicio Services
+// === Inicio Services ===
 builder.Services.AddScoped<ISeguridadServices, SeguridadServices>();
 builder.Services.AddScoped<IDinardapService, DinardapService>();
-//Fin Services
+builder.Services.AddScoped<IConsultaServices, ConsultaService>();
+// === Fin Services ===
+
+// === CORS ===
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazor",
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:7037") // URL Blazor WASM
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -39,9 +52,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// *** Activar CORS ***
+app.UseCors("AllowBlazor");
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
-

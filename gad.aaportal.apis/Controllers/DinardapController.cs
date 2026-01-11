@@ -42,7 +42,7 @@ namespace gad.aaportal.apis.Controllers
             Form101SaveDtoResult result = new Form101SaveDtoResult();
             try
             {
-                return await services.SaveDinardapResult(contexto, parametro);
+                return await services.SaveForm101Result(contexto, parametro);
             }
             catch (Exception ex)
             {
@@ -74,7 +74,7 @@ namespace gad.aaportal.apis.Controllers
             Form101SaveDtoResult result = new Form101SaveDtoResult();
             try
             {
-                return await services.UpdateDinardapResult(contexto, parametro);
+                return await services.UpdateForm101Result(contexto, parametro);
             }
             catch (Exception ex)
             {

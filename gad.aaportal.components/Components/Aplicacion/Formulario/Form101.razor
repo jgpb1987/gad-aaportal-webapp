@@ -1,0 +1,171 @@
+﻿<h3>Form101</h3>
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-6 fw-bold">Razón Social:</div>
+        <div class="col-6">@razSocial</div>
+
+        <div class="col-6 fw-bold">RUC:</div>
+        <div class="col-6">@ruc</div>
+
+        <div class="col-6 fw-bold">Año</div>
+        <div class="col-6">
+            <select class="form-select"
+                    @bind="anioSeleccionado"
+                    @bind:after="OnAnioChanged">
+                <option value="">-- Seleccione --</option>
+                @foreach (var a in anios)
+                {
+                    <option value="@a">@a</option>
+                }
+            </select>
+
+        </div>
+    </div>
+</div>
+
+@if (ingresosEgresos != null)
+{
+    <table>
+        <tr>
+            <td colspan="2">
+                DETALLE DE ACTIVOS
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Activos Corrientes:
+            </td>
+            <td>
+                <input class="form-control"
+                       value="@ingresosEgresos.TotalActivoCorriente470" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Activos no Corrientes:
+            </td>
+            <td>
+                <input class="form-control"
+                       value="@ingresosEgresos.TotActivoNoCorriente1077" />
+            </td>
+        </tr>
+        <tr style="font-weight:bold">
+            <td>
+                Total Activos:
+            </td>
+            <td>
+                @ingresosEgresos.TotalActivo1080
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td colspan="2">
+                DETALLE DE PASIVOS
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Pasivo Corriente:
+            </td>
+            <td>
+                <input class="form-control"
+                       value="@ingresosEgresos.TotPasivosCorrientes1340" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Pasivo no Corriente:
+            </td>
+            <td>
+                <input class="form-control"
+                       value="@ingresosEgresos.TotalPasivosLargoPlazo1590" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Pasivo Contingente:
+            </td>
+            <td>
+                <input class="form-control"
+                       value="" />
+            </td>
+        </tr>
+        <tr style="font-weight:bold">
+            <td>
+                Total Pasivo:
+            </td>
+            <td>
+                @ingresosEgresos.TotalPasivos1620
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td>
+                Patrimonio:
+            </td>
+            <td>
+                @(ingresosEgresos.TotalActivo1080 - ingresosEgresos.TotalPasivos1620)
+            </td>
+        </tr>
+        <tr>
+            <td style="font-weight:bold">
+                Base 1.5*1000 Activo Total
+            </td>
+            <td>
+                @baseForm
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td>
+                Ingresos:
+            </td>
+            <td>
+                <input class="form-control"
+                       value="@ingresosEgresos.TotalIngresos1930" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Ingresos:
+            </td>
+            <td>
+                <input class="form-control"
+                       value="@ingresosEgresos.TotasCostosGastos3380" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @if (ingresosEgresos.UtilidadEjercicio3420 >= 0)
+                {
+                    <text>
+                        Utilidad
+                    </text>
+                }
+                else
+                {
+                    <text>
+                        Perdida
+                    </text>
+                }
+            </td>
+            <td>
+                @if (ingresosEgresos.UtilidadEjercicio3420 >= 0)
+                {
+                    @(ingresosEgresos.TotalIngresos1930 - ingresosEgresos.TotasCostosGastos3380)
+                }
+                else
+                {
+                    @(ingresosEgresos.TotasCostosGastos3380 - ingresosEgresos.TotalIngresos1930)
+                }
+            </td>
+        </tr>
+    </table>
+}

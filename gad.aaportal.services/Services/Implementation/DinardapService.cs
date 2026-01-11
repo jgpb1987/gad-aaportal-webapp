@@ -17,7 +17,7 @@ namespace gad.aaportal.services.Services.Implementation
             this.logger = logger;
         }
 
-        public async Task<Form101SaveDtoResult> SaveDinardapResult(AaportalContext contexto, Form101DtoRequest form101)
+        public async Task<Form101SaveDtoResult> SaveForm101Result(AaportalContext contexto, Form101DtoRequest form101)
         {
             Form101SaveDtoResult result = new Form101SaveDtoResult();
             try
@@ -36,7 +36,7 @@ namespace gad.aaportal.services.Services.Implementation
             return result;
         }
 
-        public async Task<Form101SaveDtoResult> UpdateDinardapResult(AaportalContext contexto, Form101DtoRequest form101)
+        public async Task<Form101SaveDtoResult> UpdateForm101Result(AaportalContext contexto, Form101DtoRequest form101)
         {
             Form101SaveDtoResult result = new Form101SaveDtoResult();
             try

@@ -32,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gad-components", "gad-compo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gad.aainteroperador.soap", "gad.aainteroperador.soap\gad.aainteroperador.soap.csproj", "{70373A56-EB1B-48A3-A1D6-07C499ED58E4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gad-console-test", "gad-console-test", "{9DFF0D82-52EE-45CE-A9AE-4E7A25DD87F5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gad-test", "gad-test", "{9DFF0D82-52EE-45CE-A9AE-4E7A25DD87F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gad.console.test", "gad.console.test\gad.console.test.csproj", "{C39D3419-2E13-43AE-9920-946062D831F0}"
 EndProject

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace gad.aaportal.models.Entity.Seguridad;
 
 public partial class Usuario

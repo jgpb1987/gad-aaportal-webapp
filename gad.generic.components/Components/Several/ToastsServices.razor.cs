@@ -1,9 +1,4 @@
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.generic.components.Components.Several
 {
@@ -14,7 +9,7 @@ namespace gad.generic.components.Components.Several
         private string Visible = "none";
         private string MessageTitle = string.Empty;
         private string Message = string.Empty;
-        private string BackgroundColor=string.Empty;
+        private string BackgroundColor = string.Empty;
         private string ColorText = string.Empty;
         public async Task ShowMessage(string color, string messageTitle, string message)
         {
@@ -45,31 +40,31 @@ namespace gad.generic.components.Components.Several
                 case "success":
                     BackgroundColor = "#198754";
                     ColorText = "#f8f9fa";
-                break;
+                    break;
                 case "error":
                     BackgroundColor = "#dc3545";
                     ColorText = "#f8f9fa";
-                break;
+                    break;
                 case "info":
                     BackgroundColor = "#0dcaf0";
-                    ColorText = "#f8f9fa"; 
-                break;
+                    ColorText = "#f8f9fa";
+                    break;
                 case "warning":
                     BackgroundColor = "#ffc107";
                     ColorText = "#FFFFFF";
-                break;
+                    break;
                 case "white":
                     BackgroundColor = "#fff";
                     ColorText = "#343a40";
-                break;
+                    break;
                 case "light":
                     BackgroundColor = "#f8f9fa";
                     ColorText = "#343a40";
-                break;
+                    break;
                 case "dark":
                     BackgroundColor = "#212529";
                     ColorText = "#f8f9fa";
-                break;
+                    break;
                 default:
                     BackgroundColor = "#fff";
                     ColorText = "#343a40";

@@ -1,6 +1,5 @@
 using gad.aaportal.commons.Dto;
 using gad.aaportal.dataaccess;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.services.Services.Interfaces;
 

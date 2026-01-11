@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\gad.aainteroperador.soap\gad.aainteroperador.soap.csproj" />
+    <ProjectReference Include="..\gad.aaportal.commons\gad.aaportal.commons.csproj" />
   </ItemGroup>
 
 </Project>

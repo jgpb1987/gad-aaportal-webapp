@@ -1,12 +1,5 @@
 using gad.aaportal.consumers.Js;
 using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.webapp.Js
 {
@@ -36,7 +29,7 @@ namespace gad.aaportal.webapp.Js
         }
         public async Task<string> ObtainSesionStorage(string llave)
         {
-           return await _jsRuntime.InvokeAsync<string>("sessionStorage.getItem", llave);
+            return await _jsRuntime.InvokeAsync<string>("sessionStorage.getItem", llave);
         }
         public async Task RemoveSesionStorage(string llave)
         {

@@ -25,6 +25,7 @@ builder.Services.AddDbContext<AaportalContext>(options =>
 
 //Inicio Services
 builder.Services.AddScoped<ISeguridadServices, SeguridadServices>();
+builder.Services.AddScoped<IDinardapService, DinardapService>();
 //Fin Services
 
 var app = builder.Build();

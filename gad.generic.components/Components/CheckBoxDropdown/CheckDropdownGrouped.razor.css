@@ -1,0 +1,16 @@
+﻿.dropdown {
+    position: relative;
+}
+
+.dropdown-overlay {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: max-content;
+    min-width: 100%;
+    z-index: 2000;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    border: 1px solid rgba(0,0,0,.15);
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+}

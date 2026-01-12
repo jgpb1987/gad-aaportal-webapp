@@ -1,0 +1,144 @@
+﻿@typeparam TItem
+@typeparam TGroup
+
+<div class="dropdown" @onclick="Toggle" @ref="dropdownRef">
+    <button class="btn btn-outline-primary dropdown-toggle w-100" type="button">
+        @Label
+    </button>
+
+    @if (Open)
+    {
+        <div class="dropdown-menu show p-2 dropdown-overlay"
+             @onclick:stopPropagation="true">
+            <div class="d-flex align-items-center mb-2 gap-2">
+                <input class="form-control form-control-sm"
+                       type="text"
+                       placeholder="Buscar..."
+                       @bind-value="searchText"
+                       @bind-value:event="oninput" />
+
+                @if (Selected.Count > 0)
+                {
+                    <button type="button"
+                            class="btn btn-link p-0 small text-decoration-none"
+                            @onclick="ClearAll">
+                        Deseleccionar
+                    </button>
+                }
+            </div>
+
+            @foreach (var group in FilteredItems)
+            {
+                if (!group.Any()) { continue; }
+
+                <div class="fw-bold text-primary small mb-1">
+                    @GroupSelector(group.Key)
+                </div>
+
+                @foreach (var item in group)
+                {
+                    <div class="form-check ms-2">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               checked="@Selected.Contains(ValueSelector(item))"
+                               @onchange="() => ToggleItem(item)" />
+
+                        <label class="form-check-label">
+                            @TextSelector(item)
+                        </label>
+                    </div>
+                }
+
+                <hr class="dropdown-divider" />
+            }
+
+            @if (!FilteredItems.Any(g => g.Any()))
+            {
+                <div class="text-muted small ms-1">Sin coincidencias...</div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public IEnumerable<TItem> Items { get; set; } = [];
+    [Parameter] public Func<TItem, TGroup> GroupBySelector { get; set; }
+    [Parameter] public Func<TGroup, string> GroupSelector { get; set; }
+    [Parameter] public Func<TItem, string> TextSelector { get; set; }
+    [Parameter] public Func<TItem, string> ValueSelector { get; set; }
+    [Parameter] public List<string> Selected { get; set; } = new();
+    [Parameter] public EventCallback<List<string>> SelectedChanged { get; set; }
+
+    private bool Open = false;
+    private string searchText = "";
+    private ElementReference dropdownRef;
+    private DotNetObjectReference<CheckDropdownGrouped<TItem, TGroup>>? objRef;
+
+    IEnumerable<IGrouping<TGroup, TItem>> FilteredItems =>
+        Items
+            .Where(i =>
+                string.IsNullOrWhiteSpace(searchText) ||
+                TextSelector(i).Contains(searchText, StringComparison.OrdinalIgnoreCase))
+            .GroupBy(GroupBySelector);
+
+    string Label =>
+        Selected.Count switch
+        {
+            0 => "Seleccione...",
+            1 => $"{Selected.Count} seleccionado",
+            _ => $"{Selected.Count} seleccionados"
+        };
+
+    void Toggle()
+    {
+        Open = !Open;
+        if (Open)
+        {
+            RegisterEvents();
+        }
+        else
+        {
+            UnregisterEvents();
+        }
+    }
+
+    async Task ToggleItem(TItem item)
+    {
+        var value = ValueSelector(item);
+
+        if (Selected.Contains(value))
+            Selected.Remove(value);
+        else
+            Selected.Add(value);
+
+        await SelectedChanged.InvokeAsync(Selected);
+    }
+
+    [JSInvokable]
+    public void CloseFromJs()
+    {
+        Open = false;
+        UnregisterEvents();
+        StateHasChanged();
+    }
+
+    void RegisterEvents()
+    {
+        objRef = DotNetObjectReference.Create(this);
+        JS.InvokeVoidAsync("dropdownHelper.register", objRef, dropdownRef);
+    }
+
+    void UnregisterEvents()
+    {
+        JS.InvokeVoidAsync("dropdownHelper.unregister");
+        objRef?.Dispose();
+    }
+
+    [Inject] IJSRuntime JS { get; set; }
+
+    async Task ClearAll()
+    {
+        Selected.Clear();
+        await SelectedChanged.InvokeAsync(Selected);
+    }
+}

@@ -34,4 +34,16 @@ namespace gad.aaportal.commons.Dto
         public decimal? TotasCostosGastos3380 { get; set; }
         public decimal? UtilidadEjercicio3420 { get; set; }
     }
+
+    public class Canton
+    {
+        public int Id { get; set; }
+        public string Provincia { get; set; }
+        public string NombreCanton { get; set; }
+    }
+
+    public class CantonesResponse : BaseResult
+    {
+        public List<Canton> Cantones { get; set; }
+    }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace gad.aaportal.services.Services.Implementation
 {
@@ -64,17 +65,40 @@ namespace gad.aaportal.services.Services.Implementation
                                                 && f.AnioFiscal == parametros.anio).FirstOrDefaultAsync();
                 if (query != null)
                 {
-                    result.TotalActivoCorriente470 = query.TotalActivoCorriente470;
-                    result.TotActivoNoCorriente1077 = query.TotActivoNoCorriente1077;
-                    result.TotalActivo1080 = query.TotalActivo1080;
-                    result.TotPasivosCorrientes1340 = query.TotPasivosCorrientes1340;
-                    result.TotalPasivosLargoPlazo1590 = query.TotalPasivosLargoPlazo1590;
-                    result.TotalPasivos1620 = query.TotalPasivos1620;
-                    result.TotalIngresos1930 = query.TotalIngresos1930;
-                    result.TotasCostosGastos3380 = query.TotasCostosGastos3380;
-                    result.UtilidadEjercicio3420 = query.UtilidadEjercicio3420;
+                    result.TotalActivoCorriente470 = query.TotalActivoCorriente470.HasValue ? Math.Round(query.TotalActivoCorriente470.Value, 2) : 0;
+                    result.TotActivoNoCorriente1077 = query.TotActivoNoCorriente1077.HasValue ? Math.Round(query.TotActivoNoCorriente1077.Value, 2) : 0;
+                    result.TotalActivo1080 = query.TotalActivo1080.HasValue ? Math.Round(query.TotalActivo1080.Value, 2) : 0;
+                    result.TotPasivosCorrientes1340 = query.TotPasivosCorrientes1340.HasValue ? Math.Round(query.TotPasivosCorrientes1340.Value, 2) : 0;
+                    result.TotalPasivosLargoPlazo1590 = query.TotalPasivosLargoPlazo1590.HasValue ? Math.Round(query.TotalPasivosLargoPlazo1590.Value, 2) : 0;
+                    result.TotalPasivos1620 = query.TotalPasivos1620.HasValue ? Math.Round(query.TotalPasivos1620.Value, 2) : 0;
+                    result.TotalIngresos1930 = query.TotalIngresos1930.HasValue ? Math.Round(query.TotalIngresos1930.Value, 2) : 0;
+                    result.TotasCostosGastos3380 = query.TotasCostosGastos3380.HasValue ? Math.Round(query.TotasCostosGastos3380.Value, 2) : 0;
+                    result.UtilidadEjercicio3420 = query.UtilidadEjercicio3420.HasValue ? Math.Round(query.UtilidadEjercicio3420.Value, 2) : 0;
                 }
 
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
+
+        public async Task<CantonesResponse> ConsultaCantones(AaportalContext contexto)
+        {
+            CantonesResponse result = new CantonesResponse();
+            try
+            {
+                result.Cantones = await contexto.Cantones
+                                    .OrderBy(c => c.Provincia)
+                                    .Select(c => new Canton
+                                    {
+                                        Id = c.Id,
+                                        Provincia = c.Provincia,
+                                        NombreCanton = c.Nombre
+                                    })
+                                    .ToListAsync();
             }
             catch (Exception ex)
             {

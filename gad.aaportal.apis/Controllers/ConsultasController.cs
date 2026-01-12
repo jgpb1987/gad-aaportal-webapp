@@ -73,5 +73,20 @@ namespace gad.aaportal.apis.Controllers
             }
             return result;
         }
+
+        [HttpGet("ConsultaCantones")]
+        public async Task<ActionResult<CantonesResponse>> ConsultaCantones()
+        {
+            CantonesResponse result = new CantonesResponse();
+            try
+            {
+                return await services.ConsultaCantones(contexto);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+            return result;
+        }
     }
 }

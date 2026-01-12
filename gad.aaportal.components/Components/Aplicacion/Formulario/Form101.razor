@@ -1,4 +1,4 @@
-﻿<h3>Form101</h3>
+﻿<h3 class="text-center fw-bold">Form101</h3>
 
 <div class="container mt-3">
     <div class="row">
@@ -19,153 +19,193 @@
                     <option value="@a">@a</option>
                 }
             </select>
-
         </div>
     </div>
 </div>
 
 @if (ingresosEgresos != null)
 {
-    <table>
-        <tr>
-            <td colspan="2">
-                DETALLE DE ACTIVOS
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Activos Corrientes:
-            </td>
-            <td>
-                <input class="form-control"
-                       value="@ingresosEgresos.TotalActivoCorriente470" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Activos no Corrientes:
-            </td>
-            <td>
-                <input class="form-control"
-                       value="@ingresosEgresos.TotActivoNoCorriente1077" />
-            </td>
-        </tr>
-        <tr style="font-weight:bold">
-            <td>
-                Total Activos:
-            </td>
-            <td>
-                @ingresosEgresos.TotalActivo1080
-            </td>
-        </tr>
-    </table>
+    <div class="container mt-4">
 
-    <table>
-        <tr>
-            <td colspan="2">
-                DETALLE DE PASIVOS
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Pasivo Corriente:
-            </td>
-            <td>
-                <input class="form-control"
-                       value="@ingresosEgresos.TotPasivosCorrientes1340" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Pasivo no Corriente:
-            </td>
-            <td>
-                <input class="form-control"
-                       value="@ingresosEgresos.TotalPasivosLargoPlazo1590" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Pasivo Contingente:
-            </td>
-            <td>
-                <input class="form-control"
-                       value="" />
-            </td>
-        </tr>
-        <tr style="font-weight:bold">
-            <td>
-                Total Pasivo:
-            </td>
-            <td>
-                @ingresosEgresos.TotalPasivos1620
-            </td>
-        </tr>
-    </table>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6">
+                <table class="table table-bordered">
+                    <tr>
+                        <td colspan="3" class="fw-bold text-center">
+                            DETALLE DE ACTIVOS
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Activos Corrientes:
+                        </td>
+                        <td>
+                            <input class="form-control form-control-editable text-end"
+                                   type="number"
+                                   step="0.01"
+                                   @bind-value:get="ingresosEgresos.TotalActivoCorriente470"
+                                   @bind-value:set="(v) => { ingresosEgresos.TotalActivoCorriente470 = Convert.ToDecimal(v); RecalcularActivos(); }"
+                                   @bind-value:event="oninput" />
+                        </td>
+                        <td>(a)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Activos no Corrientes:
+                        </td>
+                        <td>
+                            <input class="form-control form-control-editable text-end"
+                                   type="number"
+                                   step="0.01"
+                                   @bind-value:get="ingresosEgresos.TotActivoNoCorriente1077"
+                                   @bind-value:set="(v) => { ingresosEgresos.TotActivoNoCorriente1077 = Convert.ToDecimal(v); RecalcularActivos(); }"
+                                   @bind-value:event="oninput" />
+                        </td>
+                        <td>(b)</td>
+                    </tr>
+                    <tr class="fw-bold">
+                        <td>
+                            Total Activos:
+                        </td>
+                        <td class="text-end">
+                            @ingresosEgresos.TotalActivo1080
+                        </td>
+                        <td>(c)</td>
+                    </tr>
+                </table>
+            </div>
 
-    <table>
-        <tr>
-            <td>
-                Patrimonio:
-            </td>
-            <td>
-                @(ingresosEgresos.TotalActivo1080 - ingresosEgresos.TotalPasivos1620)
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight:bold">
-                Base 1.5*1000 Activo Total
-            </td>
-            <td>
-                @baseForm
-            </td>
-        </tr>
-    </table>
+            <div class="col-12 col-md-6">
+                <table class="table table-bordered">
+                    <tr>
+                        <td colspan="3" class="fw-bold text-center">
+                            DETALLE DE PASIVOS
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Pasivo Corriente:
+                        </td>
+                        <td>
+                            <input class="form-control form-control-editable text-end"
+                                   type="number" step="0.01"
+                                   @bind-value:get="ingresosEgresos.TotPasivosCorrientes1340"
+                                   @bind-value:set="(v) => { ingresosEgresos.TotPasivosCorrientes1340 = Convert.ToDecimal(v); RecalcularPasivos(); }"
+                                   @bind-value:event="oninput" />
+                        </td>
+                        <td>(d)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Pasivo no Corriente:
+                        </td>
+                        <td>
+                            <input class="form-control form-control-editable text-end"
+                                   type="number" step="0.01"
+                                   @bind-value:get="ingresosEgresos.TotalPasivosLargoPlazo1590"
+                                   @bind-value:set="(v) => { ingresosEgresos.TotalPasivosLargoPlazo1590 = Convert.ToDecimal(v); RecalcularPasivos(); }"
+                                   @bind-value:event="oninput" />
+                        </td>
+                        <td>(e)</td>
+                    </tr>
+                    <tr>
+                        <td>Pasivo Contingente:</td>
+                        <td>
+                            <input class="form-control text-end" value="" />
+                        </td>
+                        <td>(f)</td>
+                    </tr>
+                    <tr class="fw-bold">
+                        <td>
+                            Total Pasivo:
+                        </td>
+                        <td class="text-end">
+                            @ingresosEgresos.TotalPasivos1620
+                        </td>
+                        <td>(g)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
-    <table>
-        <tr>
-            <td>
-                Ingresos:
-            </td>
-            <td>
-                <input class="form-control"
-                       value="@ingresosEgresos.TotalIngresos1930" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Ingresos:
-            </td>
-            <td>
-                <input class="form-control"
-                       value="@ingresosEgresos.TotasCostosGastos3380" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @if (ingresosEgresos.UtilidadEjercicio3420 >= 0)
-                {
-                    <text>
-                        Utilidad
-                    </text>
-                }
-                else
-                {
-                    <text>
-                        Perdida
-                    </text>
-                }
-            </td>
-            <td>
-                @if (ingresosEgresos.UtilidadEjercicio3420 >= 0)
-                {
-                    @(ingresosEgresos.TotalIngresos1930 - ingresosEgresos.TotasCostosGastos3380)
-                }
-                else
-                {
-                    @(ingresosEgresos.TotasCostosGastos3380 - ingresosEgresos.TotalIngresos1930)
-                }
-            </td>
-        </tr>
-    </table>
+        <!-- Patrimonio centrado -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 col-md-6">
+                <table class="table table-bordered">
+                    <tr class="fw-bold">
+                        <td>
+                            Patrimonio:
+                        </td>
+                        <td class="text-end">
+                            @(ingresosEgresos.TotalActivo1080 - ingresosEgresos.TotalPasivos1620)
+                        </td>
+                        <td>(h)</td>
+                    </tr>
+                    <tr class="fw-bold">
+                        <td>
+                            Base 1.5*1000 Activo Total
+                        </td>
+                        <td class="text-end">
+                            @baseForm
+                        </td>
+                        <td>(i)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Ingresos centrado -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 col-md-6">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>
+                            Ingresos:
+                        </td>
+                        <td>
+                            <input class="form-control form-control-editable text-end"
+                                   type="number"
+                                   @bind-value="ingresosEgresos.TotalIngresos1930"
+                                   @bind-value:event="oninput" />
+                        </td>
+                        <td>(j)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Costos / Gastos:
+                        </td>
+                        <td>
+                            <input class="form-control form-control-editable text-end"
+                                   type="number"
+                                   @bind-value="ingresosEgresos.TotasCostosGastos3380"
+                                   @bind-value:event="oninput" />
+                        </td>
+                        <td>(k)</td>
+                    </tr>
+                    <tr class="fw-bold">
+                        <td class="text-end">
+                            @(ingresosEgresos.UtilidadEjercicio3420 >= 0 ? "Utilidad" : "Pérdida")
+                        </td>
+                        <td class="text-end">
+                            @(ingresosEgresos.TotalIngresos1930 - ingresosEgresos.TotasCostosGastos3380)
+                        </td>
+                        <td>(l)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div style="width:25%">
+        <CheckDropdownGrouped TItem="Canton"
+                              TGroup="string"
+                              Items="@cantones.Cantones"
+                              Selected="@selectedCantones"
+                              SelectedChanged="@((v) => selectedCantones = v)"
+                              GroupBySelector="c => c.Provincia"
+                              GroupSelector="prov => prov"
+                              ValueSelector="c => c.Id.ToString()"
+                              TextSelector="c => c.NombreCanton" />
+    </div>
+    <p>PRUEBA</p>
 }

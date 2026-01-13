@@ -24,6 +24,8 @@ public partial class AaportalContext : DbContext
 
     #region Schema Aplicacion
     public DbSet<Canton> Cantones => Set<Canton>();
+    public DbSet<TarifaImpositiva> TarifasImpositivas { get; set; }
+
     #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,5 +34,6 @@ public partial class AaportalContext : DbContext
         modelBuilder.ApplyConfiguration(new UsuarioSesionConfiguracion());
         modelBuilder.ApplyConfiguration(new Form101Configuracion());
         modelBuilder.ApplyConfiguration(new CantonConfiguration());
+        modelBuilder.ApplyConfiguration(new TarifaImpositivaConfig());
     }
 }

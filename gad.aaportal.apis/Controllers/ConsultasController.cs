@@ -88,5 +88,20 @@ namespace gad.aaportal.apis.Controllers
             }
             return result;
         }
+
+        [HttpGet("ConsultaTarifas")]
+        public async Task<ActionResult<ListaTarifas>> ConsultaTarifas()
+        {
+            ListaTarifas result = new ListaTarifas();
+            try
+            {
+                return await services.ConsultaTarifas(contexto);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+            return result;
+        }
     }
 }

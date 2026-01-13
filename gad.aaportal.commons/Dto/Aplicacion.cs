@@ -46,4 +46,17 @@ namespace gad.aaportal.commons.Dto
     {
         public List<Canton> Cantones { get; set; }
     }
+
+    public class TarifaImpositiva
+    {
+        public decimal Desde { get; set; }
+        public decimal Hasta { get; set; }
+        public decimal Impuesto { get; set; }
+        public decimal Excedente { get; set; }
+    }
+
+    public class ListaTarifas : BaseResult
+    {
+        public List<TarifaImpositiva> tarifas { get; set; }
+    }
 }

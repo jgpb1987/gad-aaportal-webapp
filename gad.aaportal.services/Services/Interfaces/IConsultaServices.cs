@@ -9,5 +9,6 @@ namespace gad.aaportal.services.Services.Interfaces
         Task<ConsultaRazSocialResponse> ConsultaRazSocial(AaportalContext contexto, ConsultaIdentificacionRequest parametos);
         Task<ConsultaIngresosEgresosResponse> ConsultaIngresosEgresos(AaportalContext contexto, ConsultaIngresosEgresosRequest parametos);
         Task<CantonesResponse> ConsultaCantones(AaportalContext contexto);
+        Task<ListaTarifas> ConsultaTarifas(AaportalContext contexto);
     }
 }

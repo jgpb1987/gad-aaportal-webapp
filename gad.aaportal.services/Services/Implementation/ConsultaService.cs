@@ -107,5 +107,28 @@ namespace gad.aaportal.services.Services.Implementation
             }
             return result;
         }
+
+        public async Task<ListaTarifas> ConsultaTarifas(AaportalContext contexto)
+        {
+            ListaTarifas result = new ListaTarifas();
+            try
+            {
+                result.tarifas = await contexto.TarifasImpositivas
+                                    .Select(c => new TarifaImpositiva
+                                    {
+                                        Desde = c.Desde,
+                                        Hasta = c.Hasta,
+                                        Impuesto = c.Impuesto,
+                                        Excedente = c.Excedente
+                                    })
+                                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
     }
 }

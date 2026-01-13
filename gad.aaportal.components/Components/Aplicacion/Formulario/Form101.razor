@@ -43,8 +43,10 @@
                             <input class="form-control form-control-editable text-end"
                                    type="number"
                                    step="0.01"
+                                   min="0.00"
+                                   placeholder="prueba"
                                    @bind-value:get="ingresosEgresos.TotalActivoCorriente470"
-                                   @bind-value:set="(v) => { ingresosEgresos.TotalActivoCorriente470 = Convert.ToDecimal(v); RecalcularActivos(); }"
+                                   @bind-value:set="(v) => { ingresosEgresos.TotalActivoCorriente470 = Convert.ToDecimal(v); RecalcularActivos(); RecalcularBase(); }"
                                    @bind-value:event="oninput" />
                         </td>
                         <td>(a)</td>
@@ -57,8 +59,9 @@
                             <input class="form-control form-control-editable text-end"
                                    type="number"
                                    step="0.01"
+                                   min="0.00"
                                    @bind-value:get="ingresosEgresos.TotActivoNoCorriente1077"
-                                   @bind-value:set="(v) => { ingresosEgresos.TotActivoNoCorriente1077 = Convert.ToDecimal(v); RecalcularActivos(); }"
+                                   @bind-value:set="(v) => { ingresosEgresos.TotActivoNoCorriente1077 = Convert.ToDecimal(v); RecalcularActivos(); RecalcularBase(); }"
                                    @bind-value:event="oninput" />
                         </td>
                         <td>(b)</td>
@@ -70,7 +73,7 @@
                         <td class="text-end">
                             @ingresosEgresos.TotalActivo1080
                         </td>
-                        <td>(c)</td>
+                        <td>(c) = (a)+(b)</td>
                     </tr>
                 </table>
             </div>
@@ -88,9 +91,9 @@
                         </td>
                         <td>
                             <input class="form-control form-control-editable text-end"
-                                   type="number" step="0.01"
+                                   type="number" step="0.01" min="0.00"
                                    @bind-value:get="ingresosEgresos.TotPasivosCorrientes1340"
-                                   @bind-value:set="(v) => { ingresosEgresos.TotPasivosCorrientes1340 = Convert.ToDecimal(v); RecalcularPasivos(); }"
+                                   @bind-value:set="(v) => { ingresosEgresos.TotPasivosCorrientes1340 = Convert.ToDecimal(v); RecalcularPasivos(); RecalcularBase(); }"
                                    @bind-value:event="oninput" />
                         </td>
                         <td>(d)</td>
@@ -101,7 +104,7 @@
                         </td>
                         <td>
                             <input class="form-control form-control-editable text-end"
-                                   type="number" step="0.01"
+                                   type="number" step="0.01" min="0.00"
                                    @bind-value:get="ingresosEgresos.TotalPasivosLargoPlazo1590"
                                    @bind-value:set="(v) => { ingresosEgresos.TotalPasivosLargoPlazo1590 = Convert.ToDecimal(v); RecalcularPasivos(); }"
                                    @bind-value:event="oninput" />
@@ -111,24 +114,31 @@
                     <tr>
                         <td>Pasivo Contingente:</td>
                         <td>
-                            <input class="form-control text-end" value="" />
-                        </td>
-                        <td>(f)</td>
-                    </tr>
-                    <tr class="fw-bold">
-                        <td>
-                            Total Pasivo:
-                        </td>
-                        <td class="text-end">
-                            @ingresosEgresos.TotalPasivos1620
-                        </td>
-                        <td>(g)</td>
-                    </tr>
-                </table>
-            </div>
+                            <input class="form-control form-control-editable text-end"
+                                   type="number"
+                                   step="0.01"
+                                   min="0.00"
+                                   value="@(
+                                   ((ingresosEgresos.TotalPasivos1620 ?? 0)
+                                    - (ingresosEgresos.TotPasivosCorrientes1340 ?? 0)
+                                    - (ingresosEgresos.TotalPasivosLargoPlazo1590 ?? 0))
+                                   .ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+                    </td>
+                    <td>(f)</td>
+                </tr>
+                <tr class="fw-bold">
+                    <td>
+                        Total Pasivo:
+                    </td>
+                    <td class="text-end">
+                        @ingresosEgresos.TotalPasivos1620
+                    </td>
+                    <td>(g)=(d)+(e)+(f)</td>
+                </tr>
+            </table>
         </div>
+    </div>
 
-        <!-- Patrimonio centrado -->
         <div class="row justify-content-center mt-4">
             <div class="col-12 col-md-6">
                 <table class="table table-bordered">
@@ -139,7 +149,7 @@
                         <td class="text-end">
                             @(ingresosEgresos.TotalActivo1080 - ingresosEgresos.TotalPasivos1620)
                         </td>
-                        <td>(h)</td>
+                        <td>(h)=(c)-(g)</td>
                     </tr>
                     <tr class="fw-bold">
                         <td>
@@ -148,13 +158,12 @@
                         <td class="text-end">
                             @baseForm
                         </td>
-                        <td>(i)</td>
+                        <td>(i)=(c)-(d) * 1.5 / 1000</td>
                     </tr>
                 </table>
             </div>
         </div>
 
-        <!-- Ingresos centrado -->
         <div class="row justify-content-center mt-4">
             <div class="col-12 col-md-6">
                 <table class="table table-bordered">
@@ -165,6 +174,8 @@
                         <td>
                             <input class="form-control form-control-editable text-end"
                                    type="number"
+                                   min="0.00"
+                                   step="0.01"
                                    @bind-value="ingresosEgresos.TotalIngresos1930"
                                    @bind-value:event="oninput" />
                         </td>
@@ -177,6 +188,8 @@
                         <td>
                             <input class="form-control form-control-editable text-end"
                                    type="number"
+                                   step="0.01"
+                                   min="0.00"
                                    @bind-value="ingresosEgresos.TotasCostosGastos3380"
                                    @bind-value:event="oninput" />
                         </td>
@@ -184,28 +197,55 @@
                     </tr>
                     <tr class="fw-bold">
                         <td class="text-end">
-                            @(ingresosEgresos.UtilidadEjercicio3420 >= 0 ? "Utilidad" : "Pérdida")
+                            @LabelResultado
                         </td>
                         <td class="text-end">
-                            @(ingresosEgresos.TotalIngresos1930 - ingresosEgresos.TotasCostosGastos3380)
+                            @Math.Abs(ingresosEgresos.TotalIngresos1930.Value - ingresosEgresos.TotasCostosGastos3380.Value)
                         </td>
-                        <td>(l)</td>
+                        <td>(l)=(j)-(k)</td>
                     </tr>
                 </table>
             </div>
         </div>
     </div>
 
-    <div style="width:25%">
-        <CheckDropdownGrouped TItem="Canton"
-                              TGroup="string"
-                              Items="@cantones.Cantones"
-                              Selected="@selectedCantones"
-                              SelectedChanged="@((v) => selectedCantones = v)"
-                              GroupBySelector="c => c.Provincia"
-                              GroupSelector="prov => prov"
-                              ValueSelector="c => c.Id.ToString()"
-                              TextSelector="c => c.NombreCanton" />
+    <div class="row justify-content-center mt-4">
+        <div class="col-12 col-md-6">
+            <table>
+                <tr>
+                    <td>
+                        Cantones:
+                    </td>
+                    <td>
+                        <CheckDropdownGrouped TItem="Canton"
+                                              TGroup="string"
+                                              Items="@cantones.Cantones"
+                                              Selected="@selectedCantones"
+                                              SelectedChanged="@OnCantonesChanged"
+                                              GroupBySelector="c => c.Provincia"
+                                              GroupSelector="prov => prov"
+                                              ValueSelector="c => c.Id.ToString()"
+                                              TextSelector="c => c.NombreCanton" />
+                    </td>
+                    <td>
+                        % a pagar otros cantones
+                    </td>
+                    <td>
+                        <input class="form-control form-control-editable text-end"
+                               type="number"
+                               step="0.01"
+                               min="0.00"
+                               max="@MaxPercent"
+                               @bind-value="porcentaje"
+                               @bind-value:event="oninput" />
+                    </td>
+                    <td>
+                        Total a pagar:
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
-    <p>PRUEBA</p>
 }

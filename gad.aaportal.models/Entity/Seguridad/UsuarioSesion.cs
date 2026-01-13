@@ -9,7 +9,7 @@ public partial class UsuarioSesion
 
     public string CodigoUser { get; set; } = null!;
 
-    public DateOnly Fecha { get; set; }
+    public DateTime Fecha { get; set; }
 
     public DateTime FechaHora { get; set; }
 

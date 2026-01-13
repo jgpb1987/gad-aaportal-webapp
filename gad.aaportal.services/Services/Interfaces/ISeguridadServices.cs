@@ -8,4 +8,5 @@ public interface ISeguridadServices
 {
     Task<string> HelloWorld();
     Task<UsuarioDtoResult> Login(AaportalContext contexto, UsuarioDtoParam parametro);
+    Task<RsaDtoResult> GetRsaPublicKey(AaportalContext contexto);
 }

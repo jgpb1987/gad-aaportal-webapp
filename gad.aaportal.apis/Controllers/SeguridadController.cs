@@ -23,7 +23,20 @@ namespace gad.aaportal.apis.Controllers
         {
            return await services.HelloWorld();
         }
-
+        [HttpPost("publicKey")]
+        public async Task<ActionResult<RsaDtoResult>> GetPublicKey()
+        {
+            RsaDtoResult result = new();
+            try
+            {
+                result = await services.GetRsaPublicKey(contexto);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+            return result;
+        }
         [HttpPost("login")]
         public async Task<ActionResult<UsuarioDtoResult>> GetLogin([FromBody] UsuarioDtoParam parametro)
         {
@@ -38,6 +51,7 @@ namespace gad.aaportal.apis.Controllers
             }
             return result;
         }
+
     }
 }
 

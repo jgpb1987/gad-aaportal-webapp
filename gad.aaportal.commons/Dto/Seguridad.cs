@@ -27,11 +27,19 @@ namespace gad.aaportal.commons.Dto
 
         public string TimeZone { get; set; } = null!;
     }
-    public class UsuarioDtoResult : BaseResult
+    public class UsuarioDataDtoResult 
     {
         public DateTime Expiration { get; set; }
         public string Token { get; set; } = null!;
         public DateTime UltimoAcceso { get; set; }
         public string Nombres { get; set; } = null!;
+    }
+    public class UsuarioDtoResult : BaseResult
+    {
+        public UsuarioDataDtoResult Data { get; set; } = null!;
+    }
+    public class RsaDtoResult : BaseResult
+    {
+        public string PublicKey { get; set; } = null!;
     }
 }

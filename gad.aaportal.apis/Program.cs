@@ -1,4 +1,5 @@
 using gad.aaportal.dataaccess;
+using gad.aaportal.services.Config;
 using gad.aaportal.services.Services.Implementation;
 using gad.aaportal.services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,12 @@ builder.Services.AddDbContext<AaportalContext>(options =>
 
 //Inicio Services
 builder.Services.AddScoped<ISeguridadServices, SeguridadServices>();
+builder.Services.AddScoped<ISecurityAlgorithmServices, SecurityAlgorithmServices>();
 //Fin Services
+
+//Inicio archivo configuración
+builder.Services.Configure<ServicesConfig>(builder.Configuration.GetSection("ServicesConfig"));
+//Fin archivo configuración
 
 var app = builder.Build();
 

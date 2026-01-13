@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace gad.security.algorithm.Cryptography
+{
+    public enum Argon2Variant
+    {
+        Argon2d,
+        Argon2i,
+        Argon2id
+    }
+}

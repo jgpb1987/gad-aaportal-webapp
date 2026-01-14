@@ -23,7 +23,7 @@ namespace gad.aaportal.apis.Controllers
         {
            return await services.HelloWorld();
         }
-        [HttpPost("publicKey")]
+        [HttpGet("publicKey")]
         public async Task<ActionResult<RsaDtoResult>> GetPublicKey()
         {
             RsaDtoResult result = new();

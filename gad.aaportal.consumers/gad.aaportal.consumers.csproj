@@ -8,15 +8,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\gad.aaportal.commons\gad.aaportal.commons.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\Implementation\" />
-    <Folder Include="Services\Interface\" />
+    <ProjectReference Include="..\gad.security.algorithm\gad.security.algorithm.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.JSInterop" Version="8.0.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
 </Project>

@@ -48,7 +48,7 @@ public class SeguridadServices : ISeguridadServices
         try
         {
             var consulta= await contexto.Rsas.FirstOrDefaultAsync(r => r.Estado);
-            result.PublicKey = consulta != null ? consulta.PublicKey : string.Empty;
+            result.Data = new() {PublicKey= consulta != null ? consulta.PublicKey : string.Empty };
         }
         catch (SystemExceptionCustomized sex)
         {

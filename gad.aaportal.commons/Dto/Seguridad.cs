@@ -38,8 +38,12 @@ namespace gad.aaportal.commons.Dto
     {
         public UsuarioDataDtoResult Data { get; set; } = null!;
     }
-    public class RsaDtoResult : BaseResult
+    public class RsaDtoDataResult 
     {
         public string PublicKey { get; set; } = null!;
+    }
+    public class RsaDtoResult : BaseResult
+    {
+        public RsaDtoDataResult Data { get; set; } = null!;
     }
 }

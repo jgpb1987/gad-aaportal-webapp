@@ -82,5 +82,105 @@ namespace gad.aaportal.apis.Controllers
             }
             return result;
         }
+
+        [HttpPost("SaveForm102")]
+        public async Task<ActionResult<Form102SaveDtoResult>> PostSaveForm102([FromBody] Form102DtoRequest parametro)
+        {
+            /* REQUEST SAMPLE
+                  "anioFiscal": 2024,
+                  "numeroIdentificacion": "1002182598001",
+                  "razonSocial": "BOLAÑOS POSSO ZOILA MARIELA",
+                  "sustitutivaOriginal": "ORIGINAL",
+                  "avaArriendoOtrosAct3070": 0,
+                  "avaluoArriendoInmuebles3030": 476145.830000000016,
+                  "depreciacionAcumulada530": 0,
+                  "ecoSoftware480": 0,
+                  "ingresosLepOli3120": 0,
+                  "inmueblesExceptoTerrenos420": 0,
+                  "maqEquInstalaciones450": 0,
+                  "mueblesEnseres440": 0,
+                  "perdidaEjercicio2810": 0,
+                  "rebajaDiscapacidad3350": 0,
+                  "rebajaTerceraEdad3340": 0,
+                  "subIngRgrTyc3195": 27476.4000000000015,
+                  "subIngRgrTycSrd3200": 21707.1599999999999,
+                  "terrenos540": 0,
+                  "totActCorriente410": 0,
+                  "totActivoNoCorriente812": 0,
+                  "totPasivoCorriente1030": 0,
+                  "totPatrimonioNeto1330": 0,
+                  "totalActivo830": 0,
+                  "totalActivoFijo560": 0,
+                  "totalCostosGastos2760": 0,
+                  "totalIngresos1440": 0,
+                  "totalPasivo1310": 0,
+                  "utilidadNetaEjercicio2800": 0,
+                  "vehiculosEqtEqc490": 0,
+                  "vneGrvTce1360": 0,
+                  "ingresosAemRie1280": 0,
+                  "ingSyoTrabajoRde3240": 5769.23999999999978,
+                  "cdoCliRelExterior190": 0
+             */
+            Form102SaveDtoResult result = new Form102SaveDtoResult();
+            try
+            {
+                return await services.SaveForm102Result(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+            return result;
+        }
+
+        [HttpPost("UpdateForm102")]
+        public async Task<ActionResult<Form102SaveDtoResult>> PostUpdateForm102([FromBody] Form102DtoRequest parametro)
+        {
+            /* REQUEST SAMPLE
+                  "anioFiscal": 2024,
+                  "numeroIdentificacion": "1002182598001",
+                  "razonSocial": "BOLAÑOS POSSO ZOILA MARIELA",
+                  "sustitutivaOriginal": "ORIGINAL",
+                  "avaArriendoOtrosAct3070": 0,
+                  "avaluoArriendoInmuebles3030": 476145.830000000016,
+                  "depreciacionAcumulada530": 0,
+                  "ecoSoftware480": 0,
+                  "ingresosLepOli3120": 0,
+                  "inmueblesExceptoTerrenos420": 0,
+                  "maqEquInstalaciones450": 0,
+                  "mueblesEnseres440": 0,
+                  "perdidaEjercicio2810": 0,
+                  "rebajaDiscapacidad3350": 0,
+                  "rebajaTerceraEdad3340": 0,
+                  "subIngRgrTyc3195": 27476.4000000000015,
+                  "subIngRgrTycSrd3200": 21707.1599999999999,
+                  "terrenos540": 0,
+                  "totActCorriente410": 0,
+                  "totActivoNoCorriente812": 0,
+                  "totPasivoCorriente1030": 0,
+                  "totPatrimonioNeto1330": 0,
+                  "totalActivo830": 0,
+                  "totalActivoFijo560": 0,
+                  "totalCostosGastos2760": 0,
+                  "totalIngresos1440": 0,
+                  "totalPasivo1310": 0,
+                  "utilidadNetaEjercicio2800": 0,
+                  "vehiculosEqtEqc490": 0,
+                  "vneGrvTce1360": 0,
+                  "ingresosAemRie1280": 0,
+                  "ingSyoTrabajoRde3240": 5769.23999999999978,
+                  "cdoCliRelExterior190": 0
+             */
+            Form102SaveDtoResult result = new Form102SaveDtoResult();
+            try
+            {
+                return await services.UpdateForm102Result(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+            return result;
+        }
     }
 }

@@ -40,6 +40,8 @@ namespace gad.aaportal.commons.Dto
         public int Id { get; set; }
         public string Provincia { get; set; }
         public string NombreCanton { get; set; }
+        public bool Seleccionado { get; set; }
+        public decimal Porcentaje { get; set; }
     }
 
     public class CantonesResponse : BaseResult
@@ -59,4 +61,107 @@ namespace gad.aaportal.commons.Dto
     {
         public List<TarifaImpositiva> tarifas { get; set; }
     }
+
+    public class DeclaracionData
+    {
+        public string RUC { get; set; }
+        public string AnioFiscal { get; set; }
+        private decimal _Acorriente = 0;
+        private decimal _Anocorriente = 0;
+        public decimal TotalActivoCorriente470
+        {
+            get => _Acorriente;
+            set
+            {
+                _Acorriente = value;
+                RecalculateA();
+                RecalculatePatente();
+            }
+        }
+        public decimal TotActivoNoCorriente1077
+        {
+            get => _Anocorriente;
+            set
+            {
+                _Anocorriente = value;
+                RecalculateA();
+                RecalculatePatente();
+            }
+        }
+        public decimal TotalActivo1080 { get; private set; } = 0;
+        private void RecalculateA()
+        {
+            TotalActivo1080 = _Acorriente + _Anocorriente;
+        }
+        private decimal _Pcorriente = 0;
+        private decimal _PlargoPlazo = 0;
+        private decimal _Pcontingente = 0;
+        public decimal TotPasivosCorrientes1340
+        {
+            get => _Pcorriente;
+            set
+            {
+                _Pcorriente = value;
+                RecalculateP();
+                RecalculatePatente();
+            }
+        }
+        public decimal TotalPasivosLargoPlazo1590
+        {
+            get => _PlargoPlazo;
+            set
+            {
+                _PlargoPlazo = value;
+                RecalculateP();
+            }
+        }
+        public decimal TotalPasivosContingente
+        {
+            get => _Pcontingente;
+            set
+            {
+                _Pcontingente = value;
+                RecalculateP();
+            }
+        }
+
+        public decimal TotalPasivos1620 { get; private set; } = 0;
+        private void RecalculateP()
+        {
+            TotalPasivos1620 = _Pcorriente + _PlargoPlazo + _Pcontingente;
+        }
+        public decimal ValorPatente { get; set; } = 0;
+        private void RecalculatePatente()
+        {
+            ValorPatente = Math.Round((TotalActivo1080 - TotPasivosCorrientes1340) * 1.5m / 1000, 2);
+            ValorPatente = Math.Max(ValorPatente, 1m);
+        }
+        private decimal _ingresos = 0;
+        public decimal Ingresos
+        {
+            get => _ingresos;
+            set
+            {
+                _ingresos = value;
+                RecalculateUtilidad();
+            }
+        }
+        private decimal _egresos = 0;
+        public decimal Egresos
+        {
+            get => _egresos;
+            set
+            {
+                _egresos = value;
+                RecalculateUtilidad();
+            }
+
+        }
+        public decimal UtilidadPerdida { get; set; } = 0;
+        private void RecalculateUtilidad()
+        {
+            UtilidadPerdida = Ingresos - Egresos;
+        }
+    }
+
 }

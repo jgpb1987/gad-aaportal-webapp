@@ -1,44 +1,36 @@
 ﻿using gad.aaportal.commons.Dto;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
+using Canton = gad.aaportal.commons.Dto.Canton;
 
 namespace gad.aaportal.components.Components.Aplicacion.Formulario
 {
     public partial class Form101 : ComponentBase
     {
-        public string razSocial = string.Empty;
-        public string ruc = "1091730940001";
-        public List<int> anios = new();
-        public int? anioSeleccionado { get; set; }
-        ConsultaIngresosEgresosResponse? ingresosEgresos;
-        decimal? baseForm = 0;
-        CantonesResponse cantones = new CantonesResponse();
-        ListaTarifas tarifas = new ListaTarifas();
-        private decimal _porcentaje;
-        public decimal porcentaje
-        {
-            get => _porcentaje;
-            set
-            {
-                _porcentaje = value > MaxPercent ? MaxPercent : value;
-            }
-        }
+        private string ruc = "1091730940001";//SE DEBE TOMAR EL VALOR DE SESION
 
-        decimal MaxPercent = 0;
-        private List<string> selectedCantones = new();
-
+        private string? razSocial { get; set; }
+        private List<int> anios = new();
+        private int? anioSeleccionado { get; set; }
+        private decimal? baseForm = 0;
+        private ListaTarifas tarifas = new();
+        private HashSet<string> collapsedStates = new();
         private string LabelResultado =>
-                        ingresosEgresos.TotalIngresos1930 - ingresosEgresos.TotasCostosGastos3380 >= 0
+                        declaracion.UtilidadPerdida >= 0
                         ? "Utilidad"
                         : "Pérdida";
+
+        ConsultaIngresosEgresosResponse? ingresosEgresos;
+        DeclaracionData declaracion = new DeclaracionData();
+        CantonesResponse cantones = new CantonesResponse();
 
         protected override async Task OnInitializedAsync()
         {
             var parametros = new { identificacion = ruc };
             await ConsultaRazSocial(parametros);
             await ConsultaAnios(parametros);
-            await ConsultaCantones();
             await ConsultaTarifas();
+            await ConsultaCantones();
         }
 
         private async Task ConsultaAnios(object parametros)
@@ -68,14 +60,17 @@ namespace gad.aaportal.components.Components.Aplicacion.Formulario
                 var resp = await http.PostAsJsonAsync("api/Consultas/ConsultaIngresosEgresos", parametros);
                 resp.EnsureSuccessStatusCode();
                 ingresosEgresos = await resp.Content.ReadFromJsonAsync<ConsultaIngresosEgresosResponse>();
-                var act = ingresosEgresos.TotalActivo1080 ?? 0m;
-                var pas = ingresosEgresos.TotPasivosCorrientes1340 ?? 0m;
+                var act = ingresosEgresos?.TotalActivo1080 ?? 0m;
+                var pas = ingresosEgresos?.TotPasivosCorrientes1340 ?? 0m;
                 baseForm = (act - pas) * 1.5m / 1000m;
                 baseForm = baseForm.HasValue ? Math.Round(baseForm.Value, 2) : 0;
                 StateHasChanged();
             }
+            else
+            {
+                ingresosEgresos = null;
+            }
         }
-
         private async Task ConsultaCantones()
         {
             using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
@@ -94,39 +89,32 @@ namespace gad.aaportal.components.Components.Aplicacion.Formulario
             StateHasChanged();
         }
 
-        void RecalcularActivos()
+        private void ToggleCollapse(string provincia)
         {
-            ingresosEgresos.TotalActivo1080 =
-                ingresosEgresos.TotalActivoCorriente470 +
-                ingresosEgresos.TotActivoNoCorriente1077;
-            StateHasChanged();
+            if (!collapsedStates.Add(provincia))
+                collapsedStates.Remove(provincia);
         }
 
-        void RecalcularPasivos()
+        protected override void OnParametersSet()
         {
-            ingresosEgresos.TotalPasivos1620 =
-                ingresosEgresos.TotPasivosCorrientes1340 +
-                ingresosEgresos.TotalPasivosLargoPlazo1590;
-            StateHasChanged();
+            foreach (var c in cantones.Cantones)
+            {
+                if (c.Id == 116)
+                {
+                    c.Seleccionado = true;
+                    c.Porcentaje = 100;
+                }
+            }
         }
 
-        void RecalcularBase()
+        void ToggleCanton(Canton canton, object? value)
         {
-            var act = ingresosEgresos.TotalActivo1080 ?? 0m;
-            var pas = ingresosEgresos.TotPasivosCorrientes1340 ?? 0m;
-            baseForm = (act - pas) * 1.5m / 1000m;
-            baseForm = baseForm.HasValue ? Math.Round(baseForm.Value, 2) : 0;
-        }
-
-        private void OnCantonesChanged(List<string> seleccionados)
-        {
-            porcentaje = 0;
-            selectedCantones = seleccionados;
-            var count = selectedCantones.Count;
-            MaxPercent = count == 0
-                ? 100m   // no hay cantones → Antonio Ante 100%
-                : 99.99m / count;
-            StateHasChanged();
+            bool selected = (bool)value;
+            canton.Seleccionado = selected;
+            if (!selected)
+            {
+                canton.Porcentaje = 0;
+            }
         }
     }
 }

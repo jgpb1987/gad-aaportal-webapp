@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace gad.aaportal.dataaccess.Aplicacion.Aplicacion
 {
-    public class CantonConfiguration : IEntityTypeConfiguration<Canton>
+    public class CantonConfiguracion : IEntityTypeConfiguration<Canton>
     {
         public void Configure(EntityTypeBuilder<Canton> builder)
         {
@@ -20,6 +20,8 @@ namespace gad.aaportal.dataaccess.Aplicacion.Aplicacion
                 .HasColumnName("canton")
                 .HasMaxLength(100)
                 .IsRequired();
+            builder.Property(c => c.Seleccionado)
+                .HasColumnName("Seleccionado");
         }
     }
 }

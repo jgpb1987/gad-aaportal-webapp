@@ -20,6 +20,7 @@ public partial class AaportalContext : DbContext
 
     #region Schema Dinardap
     public DbSet<Form101> Form101 { get; set; }
+    public DbSet<Form102> Form102 { get; set; } = null!;
     #endregion
 
     #region Schema Aplicacion
@@ -33,7 +34,8 @@ public partial class AaportalContext : DbContext
         modelBuilder.ApplyConfiguration(new UsuarioConfiguracion());
         modelBuilder.ApplyConfiguration(new UsuarioSesionConfiguracion());
         modelBuilder.ApplyConfiguration(new Form101Configuracion());
-        modelBuilder.ApplyConfiguration(new CantonConfiguration());
+        modelBuilder.ApplyConfiguration(new Form102Configuracion());
+        modelBuilder.ApplyConfiguration(new CantonConfiguracion());
         modelBuilder.ApplyConfiguration(new TarifaImpositivaConfig());
     }
 }

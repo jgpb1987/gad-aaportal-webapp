@@ -1,27 +1,6 @@
-﻿using gad.aaportal.commons.Base;
-
-namespace gad.aaportal.commons.Dto
+﻿namespace gad.aaportal.models.Entity.Dinardap
 {
-    public class Form101DtoRequest
-    {
-        public int AnioFiscal { get; set; }
-        public string NumeroIdentificacion { get; set; } = null!;
-        public string? RazonSocial { get; set; }
-        public decimal? PerdidaEjercicio3430 { get; set; }
-        public decimal? TotActivoNoCorriente1077 { get; set; }
-        public decimal? TotPasivosCorrientes1340 { get; set; }
-        public decimal? TotalActivo1080 { get; set; }
-        public decimal? TotalActivoCorriente470 { get; set; }
-        public decimal? TotalIngresos1930 { get; set; }
-        public decimal? TotalPasivos1620 { get; set; }
-        public decimal? TotalPatrimonioNeto1780 { get; set; }
-        public decimal? TotasCostosGastos3380 { get; set; }
-        public decimal? UtilidadEjercicio3420 { get; set; }
-        public decimal? TotalPasivosLargoPlazo1590 { get; set; }
-        public decimal? ProNoctePasCtgComNeg1577 { get; set; }
-    }
-
-    public class Form102DtoRequest
+    public class Form102
     {
         public int AnioFiscal { get; set; }
         public string NumeroIdentificacion { get; set; } = null!;
@@ -57,15 +36,8 @@ namespace gad.aaportal.commons.Dto
         public decimal? IngresosAemRie1280 { get; set; }
         public decimal? IngSyoTrabajoRde3240 { get; set; }
         public decimal? CdoCliRelExterior190 { get; set; }
-    }
 
-    public class Form101SaveDtoResult : BaseResult
-    {
-        public bool Result { get; set; } = false;
-    }
-
-    public class Form102SaveDtoResult : BaseResult
-    {
-        public bool Result { get; set; } = false;
+        public DateTime FechaInsercion { get; set; }
+        public DateTime? FechaActualizacion { get; set; }
     }
 }

@@ -91,12 +91,14 @@ namespace gad.aaportal.services.Services.Implementation
             try
             {
                 result.Cantones = await contexto.Cantones
-                                    .OrderBy(c => c.Provincia)
+                                    .OrderByDescending(c => c.Seleccionado)
+                                    .ThenBy(c => c.Provincia)
                                     .Select(c => new Canton
                                     {
                                         Id = c.Id,
                                         Provincia = c.Provincia,
-                                        NombreCanton = c.Nombre
+                                        NombreCanton = c.Nombre,
+                                        Seleccionado = c.Seleccionado
                                     })
                                     .ToListAsync();
             }

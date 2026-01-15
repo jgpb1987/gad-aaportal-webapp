@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\gad.aaportal.consumers\gad.aaportal.consumers.csproj" />
-    <ProjectReference Include="..\gad.aaportal.services\gad.aaportal.services.csproj" />
     <ProjectReference Include="..\gad.generic.components\gad.generic.components.csproj" />
   </ItemGroup>
 

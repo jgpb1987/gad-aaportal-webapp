@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace gad.aaportal.consumers.consumers.Interface
+namespace gad.aaportal.consumers.Consumers.Interface
 {
     public interface ISecurityAlgorithmConsumers
     {

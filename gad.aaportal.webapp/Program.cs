@@ -1,6 +1,6 @@
 using gad.aaportal.consumers.Config;
-using gad.aaportal.consumers.consumers.Implementation;
-using gad.aaportal.consumers.consumers.Interface;
+using gad.aaportal.consumers.Consumers.Implementation;
+using gad.aaportal.consumers.Consumers.Interface;
 using gad.aaportal.consumers.Js;
 using gad.aaportal.webapp;
 using gad.aaportal.webapp.Js;
@@ -24,7 +24,7 @@ builder.Services.AddScoped(sp =>
     return httpClient;
 });
 //Inicio JS
-builder.Services.AddScoped<ISessionStorageService, WebSessionStorageService>();
+builder.Services.AddScoped<ISessionStorageServices, WebSessionStorageService>();
 //Fin JS
 //Inicio Consumers
 builder.Services.AddScoped<ISeguridadConsumers, SeguridadConsumers>();

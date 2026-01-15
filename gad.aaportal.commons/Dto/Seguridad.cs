@@ -1,16 +1,15 @@
 ﻿using gad.aaportal.commons.Base;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace gad.aaportal.commons.Dto
 {
-    public class UsuarioDtoParam
+    public class InfoBrowserUsuario
     {
-        public string User { get; set; } = null!;
-        public string Password { get; set; } = null!;
         public string Browser { get; set; } = null!;
 
         public string UserAgent { get; set; } = null!;
@@ -26,6 +25,13 @@ namespace gad.aaportal.commons.Dto
         public string Geolocation { get; set; } = null!;
 
         public string TimeZone { get; set; } = null!;
+    }
+    public class UsuarioDtoParam : InfoBrowserUsuario
+    {
+        [Required(ErrorMessage = "{0} es obligatorio")]
+        public string User { get; set; } = null!;
+        [Required(ErrorMessage = "{0} es obligatorio")]
+        public string Password { get; set; } = null!;
     }
     public class UsuarioDataDtoResult 
     {

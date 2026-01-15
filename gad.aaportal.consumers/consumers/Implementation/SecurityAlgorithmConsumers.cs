@@ -1,5 +1,5 @@
 ﻿using gad.aaportal.consumers.Config;
-using gad.aaportal.consumers.consumers.Interface;
+using gad.aaportal.consumers.Consumers.Interface;
 using gad.security.algorithm.Cryptography;
 using gad.security.algorithm.Extensions;
 using Microsoft.JSInterop;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace gad.aaportal.consumers.consumers.Implementation
+namespace gad.aaportal.consumers.Consumers.Implementation
 {
     public class SecurityAlgorithmConsumers : ISecurityAlgorithmConsumers
     {

@@ -7,17 +7,17 @@
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
     height: 65px;
-    background: #005eb8;
+    background: rgba(196, 29, 23, 1);
 }
 .margen-button-sidebar {
     margin-left: 10px;
     margin-right: 20px;
 }
 .margen-button-logo-sidebar {
-    margin-top: 12px;
+    margin-top: 5px;
 }
 .button-sidebar {
-    color: #ced4da;
+    color: #fff;
     cursor: pointer;
 }
 .button-sidebar :hover {

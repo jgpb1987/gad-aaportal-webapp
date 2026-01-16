@@ -42,6 +42,7 @@ namespace gad.aaportal.commons.Dto
         public string NombreCanton { get; set; }
         public bool Seleccionado { get; set; }
         public decimal Porcentaje { get; set; }
+        public bool PagoAA { get; set; }
     }
 
     public class CantonesResponse : BaseResult
@@ -75,7 +76,7 @@ namespace gad.aaportal.commons.Dto
             {
                 _Acorriente = value;
                 RecalculateA();
-                RecalculatePatente();
+                RecalculateUnoPuntoCinco();
             }
         }
         public decimal TotActivoNoCorriente1077
@@ -85,7 +86,7 @@ namespace gad.aaportal.commons.Dto
             {
                 _Anocorriente = value;
                 RecalculateA();
-                RecalculatePatente();
+                RecalculateUnoPuntoCinco();
             }
         }
         public decimal TotalActivo1080 { get; private set; } = 0;
@@ -103,7 +104,7 @@ namespace gad.aaportal.commons.Dto
             {
                 _Pcorriente = value;
                 RecalculateP();
-                RecalculatePatente();
+                RecalculateUnoPuntoCinco();
             }
         }
         public decimal TotalPasivosLargoPlazo1590
@@ -130,11 +131,11 @@ namespace gad.aaportal.commons.Dto
         {
             TotalPasivos1620 = _Pcorriente + _PlargoPlazo + _Pcontingente;
         }
-        public decimal ValorPatente { get; set; } = 0;
-        private void RecalculatePatente()
+        public decimal ValorUnoPuntoCinco { get; set; } = 0;
+        private void RecalculateUnoPuntoCinco()
         {
-            ValorPatente = Math.Round((TotalActivo1080 - TotPasivosCorrientes1340) * 1.5m / 1000, 2);
-            ValorPatente = Math.Max(ValorPatente, 1m);
+            ValorUnoPuntoCinco = Math.Round((TotalActivo1080 - TotPasivosCorrientes1340) * 1.5m / 1000, 2);
+            ValorUnoPuntoCinco = Math.Max(ValorUnoPuntoCinco, 0m);
         }
         private decimal _ingresos = 0;
         public decimal Ingresos

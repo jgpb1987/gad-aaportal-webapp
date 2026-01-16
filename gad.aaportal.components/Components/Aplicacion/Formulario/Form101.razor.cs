@@ -13,16 +13,16 @@ namespace gad.aaportal.components.Components.Aplicacion.Formulario
         private List<int> anios = new();
         private int? anioSeleccionado { get; set; }
         private decimal? baseForm = 0;
-        private ListaTarifas tarifas = new();
         private HashSet<string> collapsedStates = new();
         private string LabelResultado =>
                         declaracion.UtilidadPerdida >= 0
                         ? "Utilidad"
                         : "Pérdida";
-
+        
         ConsultaIngresosEgresosResponse? ingresosEgresos;
         DeclaracionData declaracion = new DeclaracionData();
         CantonesResponse cantones = new CantonesResponse();
+        ListaTarifas tarifas = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -107,13 +107,25 @@ namespace gad.aaportal.components.Components.Aplicacion.Formulario
             }
         }
 
-        void ToggleCanton(Canton canton, object? value)
+        static void ToggleCanton(Canton canton, object? value)
         {
             bool selected = (bool)value;
             canton.Seleccionado = selected;
             if (!selected)
             {
                 canton.Porcentaje = 0;
+            }
+        }
+
+        private void ValidarSuma(Canton canton)
+        {
+            var total = cantones.Cantones
+                .Where(c => c.Seleccionado)
+                .Sum(c => c.Porcentaje);
+            if (total > 100)
+            {
+                canton.Porcentaje = 0;
+                StateHasChanged();
             }
         }
     }

@@ -27,6 +27,7 @@ builder.Services.AddDbContext<AaportalContext>(options =>
 builder.Services.AddScoped<ISeguridadServices, SeguridadServices>();
 builder.Services.AddScoped<IDinardapService, DinardapService>();
 builder.Services.AddScoped<IConsultaServices, ConsultaService>();
+builder.Services.AddScoped<IDeclaracionServices, DeclaracionServices>();
 // === Fin Services ===
 
 // === CORS ===

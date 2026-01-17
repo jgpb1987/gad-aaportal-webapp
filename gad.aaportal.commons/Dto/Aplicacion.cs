@@ -1,4 +1,5 @@
 ﻿using gad.aaportal.commons.Base;
+using System.ComponentModel;
 
 namespace gad.aaportal.commons.Dto
 {
@@ -33,6 +34,7 @@ namespace gad.aaportal.commons.Dto
         public decimal? TotalIngresos1930 { get; set; }
         public decimal? TotasCostosGastos3380 { get; set; }
         public decimal? UtilidadEjercicio3420 { get; set; }
+        public decimal? ValorPatente { get; set; }
     }
 
     public class Canton
@@ -63,12 +65,18 @@ namespace gad.aaportal.commons.Dto
         public List<TarifaImpositiva> tarifas { get; set; }
     }
 
-    public class DeclaracionData
+    public class DeclaracionData : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void Notify(string propertyName) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
         public string RUC { get; set; }
-        public string AnioFiscal { get; set; }
+        public int AnioFiscal { get; set; }
+
         private decimal _Acorriente = 0;
         private decimal _Anocorriente = 0;
+
         public decimal TotalActivoCorriente470
         {
             get => _Acorriente;
@@ -77,8 +85,10 @@ namespace gad.aaportal.commons.Dto
                 _Acorriente = value;
                 RecalculateA();
                 RecalculateUnoPuntoCinco();
+                Notify(nameof(TotalActivoCorriente470));
             }
         }
+
         public decimal TotActivoNoCorriente1077
         {
             get => _Anocorriente;
@@ -87,16 +97,21 @@ namespace gad.aaportal.commons.Dto
                 _Anocorriente = value;
                 RecalculateA();
                 RecalculateUnoPuntoCinco();
+                Notify(nameof(TotActivoNoCorriente1077));
             }
         }
+
         public decimal TotalActivo1080 { get; private set; } = 0;
         private void RecalculateA()
         {
             TotalActivo1080 = _Acorriente + _Anocorriente;
+            Notify(nameof(TotalActivo1080));
         }
+
         private decimal _Pcorriente = 0;
         private decimal _PlargoPlazo = 0;
         private decimal _Pcontingente = 0;
+
         public decimal TotPasivosCorrientes1340
         {
             get => _Pcorriente;
@@ -105,8 +120,10 @@ namespace gad.aaportal.commons.Dto
                 _Pcorriente = value;
                 RecalculateP();
                 RecalculateUnoPuntoCinco();
+                Notify(nameof(TotPasivosCorrientes1340));
             }
         }
+
         public decimal TotalPasivosLargoPlazo1590
         {
             get => _PlargoPlazo;
@@ -114,8 +131,10 @@ namespace gad.aaportal.commons.Dto
             {
                 _PlargoPlazo = value;
                 RecalculateP();
+                Notify(nameof(TotalPasivosLargoPlazo1590));
             }
         }
+
         public decimal TotalPasivosContingente
         {
             get => _Pcontingente;
@@ -123,6 +142,7 @@ namespace gad.aaportal.commons.Dto
             {
                 _Pcontingente = value;
                 RecalculateP();
+                Notify(nameof(TotalPasivosContingente));
             }
         }
 
@@ -130,39 +150,59 @@ namespace gad.aaportal.commons.Dto
         private void RecalculateP()
         {
             TotalPasivos1620 = _Pcorriente + _PlargoPlazo + _Pcontingente;
+            Notify(nameof(TotalPasivos1620));
         }
-        public decimal ValorUnoPuntoCinco { get; set; } = 0;
+
+        public decimal ValorUnoPorMil { get; private set; } = 0;
         private void RecalculateUnoPuntoCinco()
         {
-            ValorUnoPuntoCinco = Math.Round((TotalActivo1080 - TotPasivosCorrientes1340) * 1.5m / 1000, 2);
-            ValorUnoPuntoCinco = Math.Max(ValorUnoPuntoCinco, 0m);
+            ValorUnoPorMil = Math.Round((TotalActivo1080 - TotPasivosCorrientes1340) * 1.5m / 1000, 2);
+            ValorUnoPorMil = Math.Max(ValorUnoPorMil, 0m);
+            Notify(nameof(ValorUnoPorMil));
         }
+
         private decimal _ingresos = 0;
-        public decimal Ingresos
+        public decimal TotalIngresos1930
         {
             get => _ingresos;
             set
             {
                 _ingresos = value;
                 RecalculateUtilidad();
+                Notify(nameof(TotalIngresos1930));
             }
         }
+
         private decimal _egresos = 0;
-        public decimal Egresos
+        public decimal TotasCostosGastos3380
         {
             get => _egresos;
             set
             {
                 _egresos = value;
                 RecalculateUtilidad();
+                Notify(nameof(TotasCostosGastos3380));
             }
-
         }
-        public decimal UtilidadPerdida { get; set; } = 0;
+
+        public decimal UtilidadEjercicio3420 { get; private set; } = 0;
         private void RecalculateUtilidad()
         {
-            UtilidadPerdida = Ingresos - Egresos;
+            UtilidadEjercicio3420 = TotalIngresos1930 - TotasCostosGastos3380;
+            Notify(nameof(UtilidadEjercicio3420)); // ← agregado aquí
         }
+
+        public decimal ValorPatente { get; set; } = 0;
     }
 
+    public class DeclaracionRequest
+    {
+        public DeclaracionData declaracion { get; set; }
+        public List<Canton> Cantones { get; set; } = new List<Canton>();
+    }
+
+    public class SaveDeclaracionPJResult : BaseResult
+    {
+        public bool grabado { get; set; } = false;
+    }
 }

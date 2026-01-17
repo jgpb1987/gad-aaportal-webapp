@@ -27,5 +27,9 @@
     <Folder Include="Components\Menu\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\gad.aaportal.commons\gad.aaportal.commons.csproj" />
+  </ItemGroup>
+
 </Project>
 

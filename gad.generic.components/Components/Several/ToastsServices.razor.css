@@ -1,5 +1,5 @@
 ﻿.pro-toast-container {
-    position: absolute;
+    position: fixed;
     z-index: 100;
     padding: 1rem;
     right: 0;

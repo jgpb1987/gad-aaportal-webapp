@@ -1,0 +1,90 @@
+﻿@using System.Collections.Generic
+@using gad.generic.components.Components.Several
+
+<div>
+    @if (Cantones == null || !Cantones.Any())
+    {
+        <p>Cargando cantones...</p>
+    }
+    else
+    {
+        <div class="fw-bold text-center mb-2">
+            Distribución Pago por Cantones
+        </div>
+
+        <input type="text"
+               class="form-control mb-2"
+               placeholder="Buscar cantón..."
+               @bind="filtroCanton"
+               @bind:event="oninput" />
+
+        <div style="max-height:200px; overflow-y:auto; padding:5px;">
+            @foreach (var prov in Cantones
+                    .Where(c => string.IsNullOrWhiteSpace(filtroCanton)
+                    || c.NombreCanton.Contains(filtroCanton, StringComparison.OrdinalIgnoreCase)
+                    || c.Seleccionado)
+                    .GroupBy(c => c.Provincia))
+            {
+                var collapsed = collapsedStates.Contains(prov.Key);
+
+                <div class="mb-2 d-flex align-items-center">
+                    <button class="btn btn-sm btn-secondary me-2"
+                            @onclick="() => ToggleCollapse(prov.Key)">
+                        @(collapsed ? "+" : "-")
+                    </button>
+                    <strong>@prov.Key</strong>
+                </div>
+
+                @if (!collapsed)
+                {
+                    <table class="table table-sm mb-3" style="table-layout: fixed; width: 100%;">
+                        <colgroup>
+                            <col style="width: 35%;" />
+                            <col style="width: 15%;" />
+                            <col style="width: 25%;" />
+                            <col style="width: 25%;" />
+                        </colgroup>
+                        <thead>
+                            <tr class="fw-bold text-center">
+                                <td>Cantón</td>
+                                <td></td>
+                                <td>Porcentaje</td>
+                                <td>Pago Aquí</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var canton in prov)
+                            {
+                                <tr>
+                                    <td>@canton.NombreCanton</td>
+                                    <td class="text-center">
+                                        <input type="checkbox"
+                                               checked="@canton.Seleccionado"
+                                               @onchange="(e) => ToggleCanton(canton, e.Value)"
+                                               disabled="@(canton.NombreCanton == "Antonio Ante")" />
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="number"
+                                               class="form-control form-control-sm text-center"
+                                               step="0.01"
+                                               min="@(canton.NombreCanton == "Antonio Ante" ? 0.01 : 0)"
+                                               max="100"
+                                               @bind-value="canton.Porcentaje"
+                                               @bind-value:event="oninput"
+                                               disabled="@(!canton.Seleccionado)"
+                                               @bind-value:after="() => ValidarSuma(canton)" />
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox"
+                                               checked="@canton.PagoAA"
+                                               disabled="@(canton.NombreCanton == "Antonio Ante")" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+        </div>
+    }
+</div>

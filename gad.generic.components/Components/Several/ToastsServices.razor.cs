@@ -4,24 +4,38 @@ namespace gad.generic.components.Components.Several
 {
     public partial class ToastsServices
     {
+        // Duración por defecto en milisegundos
         [Parameter]
-        public int Time { get; set; }
+        public int Time { get; set; } = 5000; // 5 segundos por defecto
+
         private string Visible = "none";
         private string MessageTitle = string.Empty;
         private string Message = string.Empty;
         private string BackgroundColor = string.Empty;
         private string ColorText = string.Empty;
-        public async Task ShowMessage(string color, string messageTitle, string message)
+
+        // Método mejorado para permitir tiempo opcional
+        public async Task ShowMessage(string color, string messageTitle, string message, int? duration = null)
         {
+            // Si se pasa duración se usa, si no se usa el parámetro Time por defecto
+            int displayTime = duration ?? Time;
+            if (displayTime <= 0)
+            {
+                displayTime = 5000; // seguridad: nunca menos de 1ms
+            }
+
             Visible = "block";
             MessageTitle = messageTitle;
             Message = message;
             Colors(color);
             StateHasChanged();
-            await Task.Delay(Time);
+
+            await Task.Delay(displayTime);
+
             Visible = "none";
             StateHasChanged();
         }
+
         public void Open()
         {
             Visible = "block";
@@ -33,6 +47,7 @@ namespace gad.generic.components.Components.Several
             Visible = "none";
             StateHasChanged();
         }
+
         public void Colors(string op)
         {
             switch (op)
@@ -73,4 +88,3 @@ namespace gad.generic.components.Components.Several
         }
     }
 }
-

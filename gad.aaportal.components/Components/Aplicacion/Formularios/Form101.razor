@@ -1,0 +1,222 @@
+﻿<ToastsServices @ref="Toast" Time="5000" />
+
+<h3 class="text-center fw-bold">Form101</h3>
+
+<div class="container mt-3">
+    <div class="row align-items-stretch">
+        <div class="col-12 col-md-8 d-flex flex-column justify-content-start">
+            <div class="row g-2">
+                <div class="col-12 col-md-4 fw-bold">RUC:</div>
+                <div class="col-12 col-md-8">@ruc</div>
+
+                <div class="col-12 col-md-4 fw-bold">Razón Social:</div>
+                <div class="col-12 col-md-8">@razSocial</div>
+
+                <div class="col-12 col-md-4 fw-bold">Año:</div>
+                <div class="col-12 col-md-8">
+                    <select class="form-select"
+                            @bind="anioSeleccionado"
+                            @bind:after="OnAnioChanged">
+                        <option value="">-- Seleccione --</option>
+                        @foreach (var a in anios)
+                        {
+                            <option value="@a">@a</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4 d-flex flex-column justify-content-between">
+            <div class="d-flex justify-content-between gap-2">
+                <button class="btn btn-primary w-50" @onclick="GeneraOrdenPago">Grabar / Pagar</button>
+                <button class="btn btn-success w-50" @onclick="UsarSugeridos">Valores Sugeridos</button>
+            </div>
+            <div class="text-center mt-3">
+                <button class="btn btn-danger w-50" @onclick="LimpiarForm">Borrar Datos</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@if (ingresosEgresos != null)
+{
+    <div class="container mt-4">
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td colspan="3" class="fw-bold text-center">DETALLE DE ACTIVOS</td>
+                        </tr>
+                        <tr class="fw-bold text-center">
+                            <td></td>
+                            <td>Declarado</td>
+                            <td>Sugerido</td>
+                        </tr>
+                        <tr>
+                            <td>Activos Corrientes:</td>
+                            <td>
+                                <input class="form-control form-control-editable text-end"
+                                       type="number" step="0.01" min="0.00"
+                                       @bind-value="declaracion.TotalActivoCorriente470"
+                                       @bind-value:event="oninput" />
+                            </td>
+                            <td class="text-end">@ingresosEgresos.TotalActivoCorriente470</td>
+                        </tr>
+                        <tr>
+                            <td>Activos no Corrientes:</td>
+                            <td>
+                                <input class="form-control form-control-editable text-end"
+                                       type="number" step="0.01" min="0.00"
+                                       @bind-value="declaracion.TotActivoNoCorriente1077"
+                                       @bind-value:event="oninput" />
+                            </td>
+                            <td class="text-end">@ingresosEgresos.TotActivoNoCorriente1077</td>
+                        </tr>
+                        <tr class="fw-bold">
+                            <td>Total Activos:</td>
+                            <td class="text-end">
+                                <input class="form-control text-end" readonly value="@declaracion.TotalActivo1080" />
+                            </td>
+                            <td class="text-end">@ingresosEgresos.TotalActivo1080</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tr class="fw-bold text-center">
+                            <td colspan="3">DETALLE DE PASIVOS</td>
+                        </tr>
+                        <tr class="fw-bold text-center">
+                            <td></td>
+                            <td>Declarado</td>
+                            <td>Sugerido</td>
+                        </tr>
+                        <tr>
+                            <td>Pasivo Corriente:</td>
+                            <td class="text-end">
+                                <input class="form-control form-control-editable text-end"
+                                       type="number" step="0.01" min="0.00"
+                                       @bind-value="declaracion.TotPasivosCorrientes1340"
+                                       @bind-value:event="oninput" />
+                            </td>
+                            <td class="text-end">@ingresosEgresos.TotPasivosCorrientes1340</td>
+                        </tr>
+                        <tr>
+                            <td>Pasivo no Corriente:</td>
+                            <td class="text-end">
+                                <input class="form-control form-control-editable text-end"
+                                       type="number" step="0.01" min="0.00"
+                                       @bind-value="declaracion.TotalPasivosLargoPlazo1590"
+                                       @bind-value:event="oninput" />
+                            </td>
+                            <td class="text-end">@ingresosEgresos.TotalPasivosLargoPlazo1590</td>
+                        </tr>
+                        <tr>
+                            <td>Pasivo Contingente:</td>
+                            <td class="text-end">
+                                <input class="form-control form-control-editable text-end"
+                                       type="number" step="0.01" min="0.00"
+                                       @bind-value="declaracion.TotalPasivosContingente"
+                                       @bind-value:event="oninput" />
+                            </td>
+                            <td class="text-end">0</td>
+                        </tr>
+                        <tr class="fw-bold">
+                            <td>Total Pasivo:</td>
+                            <td class="text-end">
+                                <input class="form-control text-end" readonly value="@declaracion.TotalPasivos1620" />
+                            </td>
+                            <td class="text-end">@ingresosEgresos.TotalPasivos1620</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td></td>
+                            <td class="text-center fw-bold">Declarado</td>
+                            <td class="text-center fw-bold">Sugerido</td>
+                        </tr>
+                        <tr>
+                            <td>Ingresos:</td>
+                            <td>
+                                <input class="form-control form-control-editable text-end"
+                                       type="number" step="0.01" min="0.00"
+                                       @bind-value="declaracion.TotalIngresos1930"
+                                       @bind-value:event="oninput" />
+                            </td>
+                            <td class="text-end">@ingresosEgresos.TotalIngresos1930</td>
+                        </tr>
+                        <tr>
+                            <td>Costos / Gastos:</td>
+                            <td>
+                                <input class="form-control form-control-editable text-end"
+                                       type="number" step="0.01" min="0.00"
+                                       @bind-value="declaracion.TotasCostosGastos3380"
+                                       @bind-value:event="oninput" />
+                            </td>
+                            <td class="text-end">@ingresosEgresos.TotasCostosGastos3380</td>
+                        </tr>
+                        <tr class="fw-bold">
+                            <td class="text-end">@LabelResultado</td>
+                            <td class="text-end @(declaracion.UtilidadEjercicio3420 < 0 ? "text-danger" : "")">
+                                @(Math.Abs(declaracion.UtilidadEjercicio3420).ToString("N2"))
+                            </td>
+                            <td class="text-end">
+                                @(Math.Abs(ingresosEgresos.TotalIngresos1930.Value - ingresosEgresos.TotasCostosGastos3380.Value))
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="table-responsive mb-3">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td></td>
+                            <td class="fw-bold">Declarado</td>
+                            <td class="fw-bold">Sugerido</td>
+                        </tr>
+                        <tr class="fw-bold">
+                            <td>Patrimonio:</td>
+                            @{
+                                var diferencia = declaracion.TotalActivo1080 - declaracion.TotalPasivos1620;
+                            }
+                            <td class="text-end @(diferencia < 0 ? "text-danger" : "")">
+                                @(Math.Abs(diferencia).ToString("N2"))
+                            </td>
+                            <td class="text-end">
+                                @(ingresosEgresos.TotalActivo1080 - ingresosEgresos.TotalPasivos1620)
+                            </td>
+                        </tr>
+                        <tr class="fw-bold" style="background-color:darkgrey">
+                            <td>1.5 x Mil:</td>
+                            <td class="text-end">@declaracion.ValorUnoPorMil</td>
+                            <td class="text-end">@baseForm</td>
+                        </tr>
+                        <tr class="fw-bold" style="background-color:darkgrey">
+                            <td>Patente:</td>
+                            <td class="text-end">@declaracion.ValorPatente</td>
+                            <td class="text-end">@ingresosEgresos.ValorPatente</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <CantonesSelection Cantones="cantones.Cantones" Toast="Toast" OnPorcentajeCambiado="CalcularPatenteDeclarada" />
+            </div>
+        </div>
+
+    </div>
+}

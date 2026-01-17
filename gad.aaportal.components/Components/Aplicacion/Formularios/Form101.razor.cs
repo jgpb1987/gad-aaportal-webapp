@@ -62,7 +62,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             {
                 if (args.PropertyName == nameof(DeclaracionData.TotalActivo1080) ||
                     args.PropertyName == nameof(DeclaracionData.TotalPasivos1620) ||
-                    args.PropertyName==nameof(DeclaracionData.UtilidadEjercicio3420))
+                    args.PropertyName == nameof(DeclaracionData.UtilidadEjercicio3420))
                 {
                     await CalcularPatenteDeclarada();
                     StateHasChanged();
@@ -141,8 +141,8 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             declaracion.PropertyChanged += async (_, args) =>
             {
                 if (args.PropertyName == nameof(DeclaracionData.TotalActivo1080) ||
-                    args.PropertyName == nameof(DeclaracionData.TotalPasivos1620)||
-                    args.PropertyName==nameof(DeclaracionData.UtilidadEjercicio3420))
+                    args.PropertyName == nameof(DeclaracionData.TotalPasivos1620) ||
+                    args.PropertyName == nameof(DeclaracionData.UtilidadEjercicio3420))
                 {
                     await CalcularPatenteDeclarada();
                     StateHasChanged();

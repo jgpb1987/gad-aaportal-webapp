@@ -1,15 +1,8 @@
 ﻿using gad.aaportal.commons.Dto;
 using gad.aaportal.dataaccess;
-using gad.aaportal.models.Entity.Dinardap;
 using gad.aaportal.services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace gad.aaportal.services.Services.Implementation
 {

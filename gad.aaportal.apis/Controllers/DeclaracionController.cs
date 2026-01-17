@@ -8,7 +8,7 @@ namespace gad.aaportal.apis.Controllers
 {
     [Route("api/Declaracion/")]
     [ApiController]
-    public class DeclaracionController:ControllerBase
+    public class DeclaracionController : ControllerBase
     {
         private readonly AaportalContext contexto;
         private readonly IDeclaracionServices services;

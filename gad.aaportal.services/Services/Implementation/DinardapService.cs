@@ -1,7 +1,6 @@
 ﻿using gad.aaportal.commons.Dto;
 using gad.aaportal.dataaccess;
 using gad.aaportal.models.Entity.Dinardap;
-using gad.aaportal.services.MessageException;
 using gad.aaportal.services.Services.Interfaces;
 using Mapster;
 using Microsoft.Extensions.Logging;

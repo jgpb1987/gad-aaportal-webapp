@@ -25,7 +25,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
         ToastsServices? Toast { get; set; }
         ConsultaIngresosEgresosResponse? ingresosEgresos;
         DeclaracionData declaracion;
-        CantonesResponse cantones = new CantonesResponse();
+        CantonesResponse cantones;
         ListaTarifas tarifas = new();
 
         protected override async Task OnInitializedAsync()
@@ -79,8 +79,8 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                 var pas = ingresosEgresos?.TotPasivosCorrientes1340 ?? 0m;
                 baseForm = (act - pas) * 1.5m / 1000m;
                 baseForm = baseForm.HasValue ? Math.Round(baseForm.Value, 2) : 0;
-                await CalcularPatenteSugerido();
                 StateHasChanged();
+                await CalcularPatenteSugerido();
             }
             else
             {
@@ -89,6 +89,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
         }
         private async Task ConsultaCantones()
         {
+            cantones = new();
             using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
             var resp = await http.GetAsync("api/Consultas/ConsultaCantones");
             resp.EnsureSuccessStatusCode();

@@ -10,7 +10,7 @@ namespace gad.aaportal.dataaccess.Aplicacion.Aplicacion
         {
             builder.ToTable("DistribucionPago", schema: "Aplicacion");
 
-            builder.HasKey(x => new { x.RUC, x.AnioFiscal, x.Canton });
+            builder.HasKey(x => new { x.RUC, x.AnioFiscal, x.Id });
 
             builder.Property(c => c.RUC)
                 .HasMaxLength(20)
@@ -19,14 +19,17 @@ namespace gad.aaportal.dataaccess.Aplicacion.Aplicacion
             builder.Property(c => c.AnioFiscal)
                 .IsRequired();
 
-            builder.Property(c => c.Canton)
+            builder.Property(c => c.Id)
                 .IsRequired();
 
-            builder.Property(c => c.Paga)
+            builder.Property(c => c.PagoAA)
                 .HasColumnType("bit")
                 .IsRequired();
 
             builder.Property(t => t.Porcentaje)
+                .HasColumnType("decimal(18,2)")
+                .IsRequired();
+            builder.Property(t => t.Valor)
                 .HasColumnType("decimal(18,2)")
                 .IsRequired();
         }

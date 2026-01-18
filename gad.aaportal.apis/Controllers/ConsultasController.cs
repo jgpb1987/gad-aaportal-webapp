@@ -103,5 +103,20 @@ namespace gad.aaportal.apis.Controllers
             }
             return result;
         }
+
+        [HttpGet("ConsultaTasasAdministrativas")]
+        public async Task<ActionResult<TasasAdministrativas>> ConsultaTasasAdministrativas()
+        {
+            TasasAdministrativas result = new TasasAdministrativas();
+            try
+            {
+                return await services.ConsultaTasasAdministrativas(contexto);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+            return result;
+        }
     }
 }

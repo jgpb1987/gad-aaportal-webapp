@@ -27,13 +27,9 @@ namespace gad.aaportal.services.Services.Implementation
 
                 foreach (var item in parametros.Cantones)
                 {
-                    DistribucionPago distribucion = new DistribucionPago();
+                    DistribucionPago distribucion = item.Adapt<DistribucionPago>();
                     distribucion.AnioFiscal = parametros.declaracion.AnioFiscal;
                     distribucion.RUC = parametros.declaracion.RUC;
-                    distribucion.Canton = item.Id;
-                    distribucion.Porcentaje = item.Porcentaje;
-                    distribucion.Paga = item.PagoAA;
-
                     contexto.DistribucionPagos.Add(distribucion);
                 }
 

@@ -45,6 +45,7 @@ namespace gad.aaportal.commons.Dto
         public bool Seleccionado { get; set; }
         public decimal Porcentaje { get; set; }
         public bool PagoAA { get; set; }
+        public decimal Valor { get; set; }
     }
 
     public class CantonesResponse : BaseResult
@@ -204,5 +205,16 @@ namespace gad.aaportal.commons.Dto
     public class SaveDeclaracionPJResult : BaseResult
     {
         public bool grabado { get; set; } = false;
+    }
+
+    public class TasaAdministrativa
+    {
+        public string Concepto { get; set; }
+        public decimal Valor { get; set; }
+    }
+
+    public class TasasAdministrativas : BaseResult
+    {
+        public List<TasaAdministrativa> Tasas { get; set; } = new();
     }
 }

@@ -16,10 +16,9 @@ namespace gad.generic.components.Components.Filters
         public ToastsServices? Toast { get; set; }
         [Parameter]
         public EventCallback<Canton> OnPorcentajeCambiado { get; set; }
-
+        
         private HashSet<string> collapsedStates = new();
         private string filtroCanton = string.Empty;
-        private bool inicializado = false;
 
         private void ToggleCollapse(string provincia)
         {
@@ -35,21 +34,20 @@ namespace gad.generic.components.Components.Filters
                 canton.Porcentaje = 0;
         }
 
-        protected override void OnParametersSet()
+        private void TooglePagoAA(Canton canton, object? value)
         {
-            if (!inicializado)
-            {
-                foreach (var c in Cantones)
-                {
-                    if (c.Id == 116)
-                    {
-                        c.Seleccionado = true;
-                        c.Porcentaje = 100;
-                        c.PagoAA = true;
-                    }
-                }
+            bool selected = (bool)value;
+            canton.PagoAA = selected;
+        }
 
-                inicializado = true;
+        protected override void OnInitialized()
+        {
+            var aa = Cantones.FirstOrDefault(c => c.Id == 116);
+            if (aa != null)
+            {
+                aa.Seleccionado = true;
+                aa.PagoAA = true;
+                if (aa.Porcentaje <= 0) aa.Porcentaje = 100;
             }
         }
 

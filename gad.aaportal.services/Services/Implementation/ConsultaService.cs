@@ -125,5 +125,25 @@ namespace gad.aaportal.services.Services.Implementation
             }
             return result;
         }
+
+        public async Task<TasasAdministrativas> ConsultaTasasAdministrativas(AaportalContext contexto)
+        {
+            TasasAdministrativas result = new TasasAdministrativas();
+            try
+            {
+                result.Tasas = await contexto.TasaAdministrativas
+                                    .Select(c => new TasaAdministrativa
+                                    {
+                                        Concepto = c.Concepto,
+                                        Valor = c.Valor
+                                    }).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
     }
 }

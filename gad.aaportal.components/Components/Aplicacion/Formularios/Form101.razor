@@ -1,5 +1,13 @@
 ﻿<ToastsServices @ref="Toast" Time="5000" />
 
+<BsModal @ref="myModal"
+         Title="@modalTitle"
+         Size="@modalSize">
+    <ChildContent>
+        @modalMessage
+    </ChildContent>
+</BsModal>
+
 <h3 class="text-center fw-bold">Form101</h3>
 
 <div class="container mt-3">
@@ -29,11 +37,11 @@
 
         <div class="col-12 col-md-4 d-flex flex-column justify-content-between">
             <div class="d-flex justify-content-between gap-2">
-                <button class="btn btn-primary w-50" @onclick="GeneraOrdenPago">Grabar / Pagar</button>
-                <button class="btn btn-success w-50" @onclick="UsarSugeridos">Valores Sugeridos</button>
+                <button class="btn btn-primary w-50" disabled="@btnMains" @onclick="GeneraOrdenPago">Aceptar y Guardar</button>
+                <button class="btn btn-success w-50" disabled="@btnMains" @onclick="UsarSugeridos">Valores Sugeridos</button>
             </div>
             <div class="text-center mt-3">
-                <button class="btn btn-danger w-50" @onclick="LimpiarForm">Borrar Datos</button>
+                <button class="btn btn-danger w-50" disabled="@btnMains" @onclick="LimpiarForm">Limpiar datos</button>
             </div>
         </div>
 
@@ -214,7 +222,8 @@
             </div>
 
             <div class="col-12 col-md-6">
-                <CantonesSelection Cantones="cantones.Cantones" Toast="Toast" OnPorcentajeCambiado="CalcularPatenteDeclarada" />
+                <CantonesSelection Cantones="cantones.Cantones" Toast="Toast"
+                                   OnPorcentajeCambiado="CalcularPatenteDeclarada" />
             </div>
         </div>
 

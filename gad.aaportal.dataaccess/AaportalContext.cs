@@ -28,6 +28,7 @@ public partial class AaportalContext : DbContext
     public DbSet<TarifaImpositiva> TarifasImpositivas { get; set; }
     public DbSet<DeclaracionPJ> DeclaracionPJs { get; set; }
     public DbSet<DistribucionPago> DistribucionPagos { get; set; }
+    public DbSet<TasaAdministrativa> TasaAdministrativas { get; set; }
 
     #endregion
 
@@ -41,5 +42,6 @@ public partial class AaportalContext : DbContext
         modelBuilder.ApplyConfiguration(new TarifaImpositivaConfig());
         modelBuilder.ApplyConfiguration(new DeclaracionPJConfiguracion());
         modelBuilder.ApplyConfiguration(new DistribucionPagoConfiguracion());
+        modelBuilder.ApplyConfiguration(new TasaAdministrativaConfiguracion());
     }
 }

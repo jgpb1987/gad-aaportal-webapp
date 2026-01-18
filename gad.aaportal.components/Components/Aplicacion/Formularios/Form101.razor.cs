@@ -1,5 +1,7 @@
 ﻿using gad.aaportal.commons.Dto;
+using gad.aaportal.commons.Enum;
 using gad.generic.components.Components.Several;
+using gad.generic.components.Modal;
 using Mapster;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
@@ -16,24 +18,30 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
         private decimal? baseForm = 0;
         private decimal impuesto = 0;
         private decimal excedente = 0;
+        bool btnMains = true;
+        string modalTitle = string.Empty;
+        ModalSize modalSize;
+        MarkupString modalMessage;
         private decimal valor_excedente = 0;
         private string LabelResultado =>
                         declaracion.UtilidadEjercicio3420 >= 0
                         ? "Utilidad"
                         : "Pérdida";
 
+        BsModal? myModal;
         ToastsServices? Toast { get; set; }
         ConsultaIngresosEgresosResponse? ingresosEgresos;
         DeclaracionData declaracion;
         CantonesResponse cantones;
         ListaTarifas tarifas = new();
-
+        TasasAdministrativas tasas = new();
         protected override async Task OnInitializedAsync()
         {
             var parametros = new { identificacion = ruc };
             await ConsultaRazSocial(parametros);
             await ConsultaAnios(parametros);
             await ConsultaTarifas();
+            await ConsultarTasasAdministrativas();
             await ConsultaCantones();
         }
 
@@ -64,12 +72,13 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                     args.PropertyName == nameof(DeclaracionData.TotalPasivos1620) ||
                     args.PropertyName == nameof(DeclaracionData.UtilidadEjercicio3420))
                 {
-                    await CalcularPatenteDeclarada();
+                    CalcularPatenteDeclarada();
                     StateHasChanged();
                 }
             };
             if (anioSeleccionado.HasValue)
             {
+                btnMains = false;
                 var parametros = new { identificacion = ruc, anio = anioSeleccionado };
                 using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
                 var resp = await http.PostAsJsonAsync("api/Consultas/ConsultaIngresosEgresos", parametros);
@@ -80,10 +89,11 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                 baseForm = (act - pas) * 1.5m / 1000m;
                 baseForm = baseForm.HasValue ? Math.Round(baseForm.Value, 2) : 0;
                 StateHasChanged();
-                await CalcularPatenteSugerido();
+                CalcularPatenteSugerido();
             }
             else
             {
+                btnMains = true;
                 ingresosEgresos = null;
             }
         }
@@ -106,33 +116,80 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             StateHasChanged();
         }
 
+        private async Task ConsultarTasasAdministrativas()
+        {
+            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+            var resp = await http.GetAsync("api/Consultas/ConsultaTasasAdministrativas");
+            resp.EnsureSuccessStatusCode();
+            tasas = await resp.Content.ReadFromJsonAsync<TasasAdministrativas>();
+            StateHasChanged();
+        }
+
         private async Task GeneraOrdenPago()
         {
-            DeclaracionRequest parametros = new DeclaracionRequest();
-            parametros.declaracion = declaracion;
-            declaracion.RUC = ruc;
-            declaracion.AnioFiscal = anioSeleccionado.Value;
-            parametros.Cantones = cantones.Cantones.Where(c => c.Seleccionado).ToList();
-            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
-            var resp = await http.PostAsJsonAsync("api/Declaracion/DeclaracionPJ", parametros);
-            resp.EnsureSuccessStatusCode();
-            var declaracionResult = await resp.Content.ReadFromJsonAsync<SaveDeclaracionPJResult>();
+            var porcentajeXPagar = cantones.Cantones.Where(c => c.PagoAA).Sum(c => c.Porcentaje);
+
+            modalTitle = "Valores Declarados";
+            var tasasHtml = string.Join("<br>",
+                                tasas.Tasas.Select(t => $"<b>{t.Concepto}:</b> ${t.Valor}")
+                            );
+
+            modalMessage = (MarkupString)($@"
+                                De acuerdo a sus datos declarados usted deberá pagar: <br>
+                                <b>Valor Patente:</b> ${declaracion.ValorPatente}<br>
+                                <b>Valor 1.5 x Mil:</b> ${Math.Round((declaracion.ValorUnoPorMil * porcentajeXPagar / 100), 2)}<br>
+                                {tasasHtml} <br>
+                                <b>TOTAL: ${(declaracion.ValorPatente
+                                    + Math.Round((declaracion.ValorUnoPorMil * porcentajeXPagar / 100), 2)
+                                    + tasas.Tasas.Sum(t=>t.Valor))}</b><br>
+                                ¿Acepta los valores?");
+
+            modalSize = ModalSize.Default;
+            bool confirm = await myModal.ShowAsync();
+            if (confirm)
+            {
+                DeclaracionRequest parametros = new DeclaracionRequest();
+                parametros.declaracion = declaracion;
+                declaracion.RUC = ruc;
+                declaracion.AnioFiscal = anioSeleccionado.Value;
+                parametros.Cantones = cantones.Cantones.Where(c => c.Seleccionado).ToList();
+                using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+                var resp = await http.PostAsJsonAsync("api/Declaracion/DeclaracionPJ", parametros);
+                resp.EnsureSuccessStatusCode();
+                var declaracionResult = await resp.Content.ReadFromJsonAsync<SaveDeclaracionPJResult>();
+            }
         }
 
         private async Task LimpiarForm()
         {
-            declaracion = new();
-            declaracion.PropertyChanged += async (_, args) =>
+            modalTitle = "Limpiar Datos";
+            modalMessage = (MarkupString)("¿Seguro de borrar datos?");
+            modalSize = ModalSize.Small;
+            bool confirm = await myModal.ShowAsync();
+            if (confirm)
             {
-                if (args.PropertyName == nameof(DeclaracionData.TotalActivo1080) ||
-                    args.PropertyName == nameof(DeclaracionData.TotalPasivos1620) ||
-                    args.PropertyName == nameof(DeclaracionData.UtilidadEjercicio3420))
+                declaracion = new();
+                declaracion.PropertyChanged += async (_, args) =>
                 {
-                    await CalcularPatenteDeclarada();
-                    StateHasChanged();
-                }
-            };
-            await ConsultaCantones();
+                    if (args.PropertyName == nameof(DeclaracionData.TotalActivo1080) ||
+                        args.PropertyName == nameof(DeclaracionData.TotalPasivos1620) ||
+                        args.PropertyName == nameof(DeclaracionData.UtilidadEjercicio3420))
+                    {
+                        CalcularPatenteDeclarada();
+                        StateHasChanged();
+                    }
+                };
+            }
+            cantones.Cantones.ForEach(c =>
+            {
+                c.Seleccionado = false;
+                c.PagoAA = false;
+                c.Porcentaje = 0;
+            });
+            var aa = cantones.Cantones.Where(c => c.Id == 116).FirstOrDefault();
+            aa.Seleccionado = true;
+            aa.PagoAA = true;
+            aa.Porcentaje = 100;
         }
 
         private async Task UsarSugeridos()
@@ -144,15 +201,15 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                     args.PropertyName == nameof(DeclaracionData.TotalPasivos1620) ||
                     args.PropertyName == nameof(DeclaracionData.UtilidadEjercicio3420))
                 {
-                    await CalcularPatenteDeclarada();
+                    CalcularPatenteDeclarada();
                     StateHasChanged();
                 }
             };
-            await CalcularPatenteDeclarada();
+            CalcularPatenteDeclarada();
             StateHasChanged();
         }
 
-        private async Task CalcularPatenteSugerido()
+        private void CalcularPatenteSugerido()
         {
             decimal patrimonio = Math.Max(ingresosEgresos.TotalActivo1080.Value - ingresosEgresos.TotalPasivos1620.Value, 0m);
             decimal porcentajeAA = cantones.Cantones.Where(c => c.Id == 116).FirstOrDefault().Porcentaje / 100m;
@@ -166,7 +223,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                 ingresosEgresos.ValorPatente = ingresosEgresos.ValorPatente / 2;
         }
 
-        private async Task CalcularPatenteDeclarada()
+        private void CalcularPatenteDeclarada()
         {
             decimal patrimonio = Math.Max(declaracion.TotalActivo1080 - declaracion.TotalPasivos1620, 0m);
             decimal porcentajeAA = cantones.Cantones.Where(c => c.Id == 116).FirstOrDefault().Porcentaje / 100m;
@@ -178,6 +235,12 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             declaracion.ValorPatente = Math.Round(impuesto + valor_excedente, 2);
             if (!LabelResultado.Equals("Utilidad"))
                 declaracion.ValorPatente = declaracion.ValorPatente / 2;
+
+            foreach (var item in cantones.Cantones)
+            {
+                if (item.Seleccionado && item.PagoAA)
+                    item.Valor = declaracion.ValorUnoPorMil * item.Porcentaje / 100;
+            }
         }
     }
 }

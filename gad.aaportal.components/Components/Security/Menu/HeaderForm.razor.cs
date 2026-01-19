@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace gad.aaportal.components.Components.Security.Menu
 {
-    public partial class Header
+    public partial class HeaderForm
     {
         [Parameter] public EventCallback OnButtonClick { get; set; }
         [Parameter] public UsuarioDataDtoResult DatosUsuarioResult { get; set; } = null!;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace gad.aaportal.components.Components.Security.Menu
 {
-    public partial class NavMenu
+    public partial class NavMenuForm
     {
         private string SearchTerm { get; set; } = string.Empty;
         private void OnSearchInput(ChangeEventArgs e)

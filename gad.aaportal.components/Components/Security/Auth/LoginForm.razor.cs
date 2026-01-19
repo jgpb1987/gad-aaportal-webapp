@@ -11,9 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace gad.aaportal.components.Components.Security.Login
+namespace gad.aaportal.components.Components.Security.Auth
 {
-    public partial class Login1 : ComponentBase
+    public partial class LoginForm : ComponentBase
     {
         [Inject] private NavigationManager UriHelper { get; set; } = null!;
         [Inject] private ISeguridadConsumers SeguridadConsumers { get; set; } = null!;

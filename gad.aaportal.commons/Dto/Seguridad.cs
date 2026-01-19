@@ -52,4 +52,20 @@ namespace gad.aaportal.commons.Dto
     {
         public RsaDtoDataResult Data { get; set; } = null!;
     }
+    public class ForgotPasswordDtoParam 
+    {
+        [Required(ErrorMessage = "{0} es obligatorio")]
+        public string User { get; set; } = null!;
+        [Required(ErrorMessage = "{0} es obligatorio")]
+        public string Email { get; set; } = null!;
+    }
+    public class UserRegistrationDtoParam
+    {
+        [Required(ErrorMessage = "{0} es obligatorio")]
+        public string User { get; set; } = null!;
+        [Required(ErrorMessage = "{0} es obligatorio")]
+        public string Nombres { get; set; } = null!;
+        [Required(ErrorMessage = "{0} es obligatorio")]
+        public string Email { get; set; } = null!;
+    }
 }

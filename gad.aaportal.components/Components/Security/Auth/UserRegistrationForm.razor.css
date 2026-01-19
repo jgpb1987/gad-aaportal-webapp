@@ -38,7 +38,7 @@
 .title-card-login {
     font-size: max(1.6vw, 16px);
     color: #333333;
-    margin-top: 10px;
+    /*margin-top: 10px;*/
     display: flex;
     justify-content: center;
     font-weight: bold;
@@ -53,13 +53,13 @@
 
 .btn-color-cpn {
     color: #fff;
-    background-color: #333333;
+    background-color: rgba(228, 34, 27, 1);
 }
 
     .btn-color-cpn:hover {
         color: #fff;
-        background-color: #ffd100;
-        border-color: #ffd100;
+        background-color: rgba(196, 29, 23, 1);
+        border-color: rgba(196, 29, 23, 1);
     }
 
 .lbl-card-login-usuario {
@@ -78,7 +78,9 @@
     width: 50%;
     margin: auto;*/
     margin-top: 30px;
+    width: 35%;
 }
+
 .a-img-login {
     display: flex;
     justify-content: center;
@@ -122,14 +124,17 @@
         width: 90%;
     }
 }
+
 @media (max-width: 767px) {
     .login-politicas-seguridad {
         position: initial !important;
         margin-top: 50px;
     }
+
     .posicion-politicas {
         margin-top: 70px;
     }
+
     .card-login-shadow {
         box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0) !important;
         background-color: #fff;
@@ -152,10 +157,10 @@
 }
 
 .card-producto-login {
-/*    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);*/
+    /*    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);*/
     border-radius: 5px;
     width: 6.1rem;
-    height: 65px;
+    height: 80px;
     background-color: #fff;
     border-color: #555;
     border: 0.5px solid #555;
@@ -170,25 +175,40 @@
     color: #727272;
     font-weight: bold;
 }
+
     .card-producto-login:hover {
         color: #fff;
-        background-color: #ffd100;
-        border-color: #ffd100;
+        background-color: rgba(228, 34, 27, 1);
+        border-color: rgba(228, 34, 27, 1);
     }
+
 .card-producto-interno-login {
     margin-top: 7px;
 }
+
 .validation-message {
     color: red;
     font-size: 11px;
     margin-left: 80px;
 }
+
 .background-color-parte-derecha {
-    background-color: #3B3730;
+    background-color: rgba(196, 29, 23, 1);
 }
+
 .background-color-parte-izquierda {
     background-color: #3B3730;
 }
+
 .espacio-entre-parrafo {
     margin-bottom: 8px;
 }
+
+.card-producto-login {
+    appearance: none;
+    border: 0.5px solid #555; /* mantiene tu borde */
+}
+
+    .card-producto-login:focus {
+        outline: none;
+    }

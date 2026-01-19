@@ -118,5 +118,24 @@ namespace gad.aaportal.apis.Controllers
             }
             return result;
         }
+
+        [HttpPost("ConsultaDeclaracion")]
+        public async Task<ActionResult<DeclaracionResponse>> ConsultaDeclaracion([FromBody] ConsultaDeclaracionRequest parametos)
+        {
+            /* REQUEST SAMPLE
+                "ruc": "1091730940001",
+                "anioFiscal": 2024
+             */
+            DeclaracionResponse result = new DeclaracionResponse();
+            try
+            {
+                return await services.ConsultaDeclaracion(contexto, parametos);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+            return result;
+        }
     }
 }

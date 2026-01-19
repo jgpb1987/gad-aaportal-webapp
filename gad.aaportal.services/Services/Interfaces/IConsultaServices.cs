@@ -11,5 +11,6 @@ namespace gad.aaportal.services.Services.Interfaces
         Task<CantonesResponse> ConsultaCantones(AaportalContext contexto);
         Task<ListaTarifas> ConsultaTarifas(AaportalContext contexto);
         Task<TasasAdministrativas> ConsultaTasasAdministrativas(AaportalContext contexto);
+        Task<DeclaracionResponse> ConsultaDeclaracion(AaportalContext contexto, ConsultaDeclaracionRequest parametos);
     }
 }

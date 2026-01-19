@@ -217,4 +217,24 @@ namespace gad.aaportal.commons.Dto
     {
         public List<TasaAdministrativa> Tasas { get; set; } = new();
     }
+
+    public class ConsultaDeclaracionRequest
+    {
+        public string RUC { get; set; }
+        public int AnioFiscal { get; set; }
+    }
+
+    public class DistribucionPagoDto
+    {
+        public int Id { get; set; }
+        public bool PagoAA { get; set; }
+        public decimal Porcentaje { get; set; }
+        public decimal Valor { get; set; }
+    }
+
+    public class DeclaracionResponse : BaseResult
+    {
+        public DeclaracionData declaracion { get; set; }
+        public List<DistribucionPagoDto> distribuciones { get; set; }
+    }
 }

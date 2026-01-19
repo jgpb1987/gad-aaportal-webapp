@@ -1,6 +1,7 @@
 ﻿using gad.aaportal.commons.Dto;
 using gad.aaportal.dataaccess;
 using gad.aaportal.services.Services.Interfaces;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -137,6 +138,22 @@ namespace gad.aaportal.services.Services.Implementation
                                         Concepto = c.Concepto,
                                         Valor = c.Valor
                                     }).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
+
+        public async Task<DeclaracionResponse> ConsultaDeclaracion(AaportalContext contexto, ConsultaDeclaracionRequest parametos)
+        {
+            DeclaracionResponse result = new DeclaracionResponse();
+            try
+            {
+                result.declaracion = contexto.DeclaracionPJs.FirstOrDefault(d => d.RUC == parametos.RUC && d.AnioFiscal == parametos.AnioFiscal).Adapt<DeclaracionData>();
+                result.distribuciones = contexto.DistribucionPagos.Where(d => d.RUC == parametos.RUC && d.AnioFiscal == parametos.AnioFiscal).ToList().Adapt<List<DistribucionPagoDto>>();
             }
             catch (Exception ex)
             {

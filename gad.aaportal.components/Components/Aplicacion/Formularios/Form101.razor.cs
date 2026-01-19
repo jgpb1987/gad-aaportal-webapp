@@ -54,6 +54,26 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             anios = result.anios;
         }
 
+        private async Task ConsultaDeclaracion()
+        {
+            var parametros = new { RUC = ruc, anioFiscal = anioSeleccionado };
+            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+            var resp = await http.PostAsJsonAsync("api/Consultas/ConsultaDeclaracion", parametros);
+            resp.EnsureSuccessStatusCode();
+            var result = await resp.Content.ReadFromJsonAsync<DeclaracionResponse>();
+            if (result.declaracion != null)
+            {
+                declaracion = result.declaracion;
+                foreach (var item in result.distribuciones)
+                {
+                    var canton = cantones.Cantones.FirstOrDefault(c => c.Id == item.Id);
+                    canton.Seleccionado = true;
+                    canton.PagoAA = item.PagoAA;
+                    canton.Porcentaje= item.Porcentaje;
+                }
+            }
+        }
+
         private async Task ConsultaRazSocial(object parametros)
         {
             using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
@@ -78,6 +98,8 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             };
             if (anioSeleccionado.HasValue)
             {
+                await ConsultaDeclaracion();
+
                 btnMains = false;
                 var parametros = new { identificacion = ruc, anio = anioSeleccionado };
                 using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
@@ -127,6 +149,12 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 
         private async Task GeneraOrdenPago()
         {
+            if (cantones.Cantones.Where(c => c.Seleccionado).Sum(c => c.Porcentaje) < 100)
+            {
+                Toast.ShowMessage("error", "Distribución de pago", "La suma de porcentajes debe ser del 100%");
+                return;
+            }
+
             var porcentajeXPagar = cantones.Cantones.Where(c => c.PagoAA).Sum(c => c.Porcentaje);
 
             modalTitle = "Valores Declarados";
@@ -141,7 +169,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                                 {tasasHtml} <br>
                                 <b>TOTAL: ${(declaracion.ValorPatente
                                     + Math.Round((declaracion.ValorUnoPorMil * porcentajeXPagar / 100), 2)
-                                    + tasas.Tasas.Sum(t=>t.Valor))}</b><br>
+                                    + tasas.Tasas.Sum(t => t.Valor))}</b><br>
                                 ¿Acepta los valores?");
 
             modalSize = ModalSize.Default;
@@ -157,6 +185,14 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                 var resp = await http.PostAsJsonAsync("api/Declaracion/DeclaracionPJ", parametros);
                 resp.EnsureSuccessStatusCode();
                 var declaracionResult = await resp.Content.ReadFromJsonAsync<SaveDeclaracionPJResult>();
+                if (declaracionResult.grabado)
+                {
+                    Toast.ShowMessage("succes", "Declaración Procesada", "Su declaración ha sido procesada correctamente");
+                }
+                else
+                {
+                    Toast.ShowMessage("error", "Declaración No Procesada", "Ocurrió un error al procesar su declaración, inténtelo nuevamente");
+                }
             }
         }
 
@@ -238,7 +274,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 
             foreach (var item in cantones.Cantones)
             {
-                if (item.Seleccionado && item.PagoAA)
+                if (item.Seleccionado)
                     item.Valor = declaracion.ValorUnoPorMil * item.Porcentaje / 100;
             }
         }

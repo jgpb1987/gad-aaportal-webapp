@@ -52,9 +52,62 @@ namespace gad.aaportal.components.Components.Security.Auth
 
         private async Task SubmitUserRegistration()
         {
-            // TODO: aquí conectas tu consumer real (SeguridadConsumers.ChangePassword/etc)
-            await Toast!.ShowMessage("info", "INFO", "Funcionalidad de cambio de contraseña pendiente de conectar al servicio.");
-            _view = LoginView.Login;
+            try
+            {
+                LoadingBorder!.Open();
+                var dataDispositivo = await JSSessionStorageServices.GetInfoDispositivoUsuario();
+                var userRegistrationRequest = new UserRegistrationDtoParam()
+                {
+                    Browser = dataDispositivo.Browser == null ? string.Empty : dataDispositivo.Browser,
+                    Geolocation = dataDispositivo.Geolocation == null ? string.Empty : dataDispositivo.Geolocation,
+                    Ip = dataDispositivo.Ip == null ? string.Empty : dataDispositivo.Ip,
+                    Language = dataDispositivo.Language == null ? string.Empty : dataDispositivo.Language,
+                    OperatingSystem = dataDispositivo.OperatingSystem == null ? string.Empty : dataDispositivo.OperatingSystem,
+                    Plugins = dataDispositivo.Plugins == null ? string.Empty : dataDispositivo.Plugins,
+                    TimeZone = dataDispositivo.TimeZone == null ? string.Empty : dataDispositivo.TimeZone,
+                    UserAgent = dataDispositivo.UserAgent == null ? string.Empty : dataDispositivo.UserAgent,
+                    User=_userRegistrationParam.User,
+                    Email=_userRegistrationParam.Email,
+                    Nombres=_userRegistrationParam.Nombres
+                };
+                var urResponse = await SeguridadConsumers.UserRegistration(userRegistrationRequest);
+                if (urResponse != null)
+                {
+                    if (urResponse.Data != null)
+                    {
+                        if (urResponse.Message.Code.Equals("OK"))
+                        {
+                            await Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
+                            await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Expiration, urResponse.Data.Expiration.ToString());
+                            await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Token, urResponse.Data.Token);
+                            await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.UltimoAcceso, urResponse.Data.UltimoAcceso.ToString());
+                            await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Nombres, urResponse.Data.Nombres);
+                            UriHelper.NavigateTo("/index");
+                            LoadingBorder!.Close();
+                        }
+                        else
+                        {
+                            LoadingBorder!.Close();
+                            await Toast!.ShowMessage("error", urResponse.Message.Code, urResponse.Message.Description);
+                        }
+                    }
+                    else
+                    {
+                        LoadingBorder!.Close();
+                        await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                    }
+                }
+                else
+                {
+                    LoadingBorder!.Close();
+                    await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                }
+            }
+            catch (Exception ex)
+            {
+                LoadingBorder!.Close();
+                await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+            }
         }
 
         private async Task LoginUser()

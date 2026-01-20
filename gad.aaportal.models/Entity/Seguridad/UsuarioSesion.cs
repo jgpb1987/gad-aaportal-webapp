@@ -34,6 +34,7 @@ public partial class UsuarioSesion
     public string TimeZone { get; set; } = null!;
 
     public bool EstaRevocado { get; set; }
+    public string Accion { get; set; } = null!;
 
     public virtual Usuario CodigoUserNavigation { get; set; } = null!;
 }

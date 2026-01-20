@@ -41,7 +41,6 @@ public class SeguridadServices : ISeguridadServices
         }
         return hello;
     }
-
     public async Task<RsaDtoResult> GetRsaPublicKey(AaportalContext contexto)
     {
         RsaDtoResult result = new();
@@ -92,7 +91,6 @@ public class SeguridadServices : ISeguridadServices
         }
         return result;
     }
-
     public async Task<UsuarioDtoResult> Login(AaportalContext contexto, UsuarioDtoParam parametro)
     {
         UsuarioDtoResult result = new();
@@ -100,26 +98,26 @@ public class SeguridadServices : ISeguridadServices
         {
             var rsa = await contexto.Rsas.FirstOrDefaultAsync(r => r.Estado);
             if (rsa==null)
-                throw SystemExceptionCustomized.CreateException("SEGOO1", "Error al obtener llaves");
+                throw SystemExceptionCustomized.CreateException("LGIOO1", "Error al obtener llaves");
 
             var decryptUser= await securityAlgorithmServices.GetDecryptRsa(new EncryptDecryptDtoParam() {Key=rsa.PrivateKey, Data=parametro.User});
             var decryptPwd= await securityAlgorithmServices.GetDecryptRsa(new EncryptDecryptDtoParam() { Key = rsa.PrivateKey, Data = parametro.Password });
 
             if (decryptUser.Data.EncryptDecrypt.Length<=0)
-                throw SystemExceptionCustomized.CreateException("SEGOO2", "Error no es posible desencriptar claves.");
+                throw SystemExceptionCustomized.CreateException("LGIOO2", "Error no es posible desencriptar claves.");
 
             var user= await contexto.Usuarios.FirstOrDefaultAsync(u => u.User == decryptUser.Data.EncryptDecrypt && u.Estado);
             
             if (user==null)
-                throw SystemExceptionCustomized.CreateException("SEGOO3", "Usuario no existe");
+                throw SystemExceptionCustomized.CreateException("LGIOO3", "Usuario no existe");
 
             var pwd= await securityAlgorithmServices.GetGenerateComputeHashSha(new ComputeHashSha1DtoParam() {Usuario= decryptUser.Data.EncryptDecrypt, Password= decryptPwd.Data.EncryptDecrypt });
             if(user.Password!=pwd.Data.Hash)
-                throw SystemExceptionCustomized.CreateException("SEGOO4", "Password incorrecto");
+                throw SystemExceptionCustomized.CreateException("LGIOO4", "Password incorrecto");
 
             var appJwt = await contexto.Jwts.FirstOrDefaultAsync(a => a.Estado);
             if (appJwt==null)
-                throw SystemExceptionCustomized.CreateException("SEGOO5", "Error al obtener configuracion de token.");
+                throw SystemExceptionCustomized.CreateException("LGIOO5", "Error al obtener configuracion de token.");
 
             var usuarioSesion=await contexto.UsuarioSesions.Where(us => us.CodigoUser == user.User).OrderByDescending(us => us.FechaHora).FirstOrDefaultAsync();
 
@@ -145,7 +143,8 @@ public class SeguridadServices : ISeguridadServices
                 Geolocation = parametro.Geolocation,
                 TimeZone = parametro.TimeZone,
                 Fecha=fechaHora,
-                FechaRevocatoria=fechaHora
+                FechaRevocatoria=fechaHora,
+                Accion = servicesConfig.AccionLogin
             };
             await contexto.UsuarioSesions.AddAsync(userSesion);
             await contexto.SaveChangesAsync();
@@ -170,6 +169,97 @@ public class SeguridadServices : ISeguridadServices
         }
         return result;
     }
+    public async Task<UsuarioDtoResult> GetUserRegistration(AaportalContext contexto, UserRegistrationDtoParam parametro)
+    {
+        UsuarioDtoResult result = new();
+        var transaction = await contexto.Database.BeginTransactionAsync();
+        try
+        {
+            var rsa = await contexto.Rsas.FirstOrDefaultAsync(r => r.Estado);
+            if (rsa == null)
+                throw SystemExceptionCustomized.CreateException("UREOO1", "Error al obtener llaves");
 
+            var appJwt = await contexto.Jwts.FirstOrDefaultAsync(a => a.Estado);
+            if (appJwt == null)
+                throw SystemExceptionCustomized.CreateException("UREOO2", "Error al obtener configuracion de token.");
 
+            var user = await contexto.Usuarios.FirstOrDefaultAsync(u => u.User == parametro.User);
+
+            if(user != null)
+                throw SystemExceptionCustomized.CreateException("UREOO3", "Usuario ya se encuentra registrado");
+
+            /********************************/
+            /*SECCION PARA LLAMAR API QUE VALIDA USUARIO EN LA BDD GAD AA*/
+            /********************************/
+
+            var claveRandom = await securityAlgorithmServices.GetRandomEncoder(new RandomDtoParam() { Encoder = "b32", Size = 8 });
+
+            var pwd = await securityAlgorithmServices.GetGenerateComputeHashSha(new ComputeHashSha1DtoParam() { Usuario = parametro.User, Password = claveRandom.Data.Random });
+
+            DateTime fechaHora = DateTime.Now;
+            var userNew = new Usuario()
+            {
+                User = parametro.User,
+                Password = pwd.Data.Hash, 
+                Fecha = fechaHora,
+                FechaUltimoCambioClave = fechaHora,
+                DiasParaCambiarClave = servicesConfig.DiasParaCambiarClave,
+                Nombres = parametro.Nombres,
+                Email = parametro.Email,
+                CambiaClave = false,
+                EstaBloqueado = false,               
+                Estado = true,            
+            };
+            contexto.Usuarios.Add(userNew);
+
+            var expiration = DateTime.Now.AddSeconds(appJwt.JwtTime);
+            var jtiSession = System.Guid.NewGuid().ToString();
+            var token = GenerateJWT(servicesConfig.NameApp, servicesConfig.WebSiteCompany, jtiSession, userNew.Nombres, userNew.Email, appJwt.SecurityKey, expiration, servicesConfig.Audiencia, servicesConfig.WebSiteCompany, fechaHora,  fechaHora);
+
+            var userSesion = new UsuarioSesion()
+            {
+                FechaHora = fechaHora,
+                FechaExpiracion = expiration,
+                Jti = jtiSession,
+                CodigoUser = userNew.User,
+                Browser = parametro.Browser,
+                UserAgent = parametro.UserAgent,
+                CodigoUserNavigation = userNew,
+                Language = parametro.Language,
+                EstaRevocado = false,
+                Ip = parametro.Ip,
+                OperatingSystem = parametro.OperatingSystem,
+                Plugins = parametro.Plugins,
+                Geolocation = parametro.Geolocation,
+                TimeZone = parametro.TimeZone,
+                Fecha = fechaHora,
+                FechaRevocatoria = fechaHora,
+                Accion= servicesConfig.AccionUserRegsitration
+            };
+            await contexto.UsuarioSesions.AddAsync(userSesion);
+            await contexto.SaveChangesAsync();
+
+            result.Data = new UsuarioDataDtoResult()
+            {
+                Token = token,
+                Expiration = expiration,
+                UltimoAcceso = fechaHora,
+                Nombres = userNew.Nombres
+            };
+            await transaction.CommitAsync();
+        }
+        catch (SystemExceptionCustomized sex)
+        {
+            await transaction.RollbackAsync();
+            logger.LogError(sex, sex.StackTrace, sex.Code);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            logger.LogError(ex, ex.StackTrace, nameof(CodeMessage.SERVER_ERROR));
+            throw;
+        }
+        return result;
+    }
 }

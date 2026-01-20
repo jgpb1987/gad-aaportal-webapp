@@ -51,7 +51,20 @@ namespace gad.aaportal.apis.Controllers
             }
             return result;
         }
-
+        [HttpPost("userRegistration")]
+        public async Task<ActionResult<UsuarioDtoResult>> GetUserRegistration([FromBody] UserRegistrationDtoParam parametro)
+        {
+            UsuarioDtoResult result = new();
+            try
+            {
+                result = await services.GetUserRegistration(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+            return result;
+        }
     }
 }
 

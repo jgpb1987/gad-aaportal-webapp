@@ -47,5 +47,19 @@ namespace gad.aaportal.consumers.Consumers.Implementation
             }
             return result;
         }
+
+        public async Task<UsuarioDtoResult> UserRegistration(UserRegistrationDtoParam parametro)
+        {
+            UsuarioDtoResult result = new();
+            try
+            {
+                result = await _httpClient.Post<UserRegistrationDtoParam, UsuarioDtoResult>(parametro, configuraciones.EndPointsConfig.GetUserRegistration);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return result;
+        }
     }
 }

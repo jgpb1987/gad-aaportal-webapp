@@ -11,5 +11,6 @@ namespace gad.aaportal.consumers.Consumers.Interface
     {
         public Task<RsaDtoResult> GetPublicKey();
         public Task<UsuarioDtoResult> Login(UsuarioDtoParam parametro);
+        public Task<UsuarioDtoResult> UserRegistration(UserRegistrationDtoParam parametro);
     }
 }

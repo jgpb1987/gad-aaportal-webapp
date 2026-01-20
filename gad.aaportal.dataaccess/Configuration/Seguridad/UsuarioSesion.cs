@@ -15,6 +15,10 @@ public class UsuarioSesionConfiguracion : IEntityTypeConfiguration<UsuarioSesion
                     entity.Property(e => e.Jti)
                         .HasMaxLength(50)
                         .HasColumnName("jti");
+                    entity.Property(e => e.Accion)
+                    .HasMaxLength(200)
+                    .HasDefaultValue("")
+                    .HasColumnName("accion");
                     entity.Property(e => e.Browser)
                         .HasMaxLength(100)
                         .HasColumnName("browser");

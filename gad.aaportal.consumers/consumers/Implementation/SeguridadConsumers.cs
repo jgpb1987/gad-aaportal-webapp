@@ -1,4 +1,5 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using gad.aaportal.commons.Base;
+using gad.aaportal.commons.Dto;
 using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.Consumers.Interface;
 using gad.aaportal.consumers.Utilitarian;
@@ -48,12 +49,26 @@ namespace gad.aaportal.consumers.Consumers.Implementation
             return result;
         }
 
-        public async Task<UsuarioDtoResult> UserRegistration(UserRegistrationDtoParam parametro)
+        public async Task<BaseResult> UserRegistration(UserRegistrationDtoParam parametro)
         {
-            UsuarioDtoResult result = new();
+            BaseResult result = new();
             try
             {
-                result = await _httpClient.Post<UserRegistrationDtoParam, UsuarioDtoResult>(parametro, configuraciones.EndPointsConfig.GetUserRegistration);
+                result = await _httpClient.Post<UserRegistrationDtoParam, BaseResult>(parametro, configuraciones.EndPointsConfig.GetUserRegistration);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return result;
+        }
+
+        public async Task<BaseResult> ForgotPassword(ForgotPasswordDtoParam parametro)
+        {
+            BaseResult result = new();
+            try
+            {
+                result = await _httpClient.Post<ForgotPasswordDtoParam, BaseResult>(parametro, configuraciones.EndPointsConfig.GetForgotPassword);
             }
             catch (Exception)
             {

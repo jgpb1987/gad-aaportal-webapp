@@ -5,6 +5,7 @@ using gad.aaportal.models.Entity.Seguridad;
 using gad.aaportal.services.Config;
 using gad.aaportal.services.MessageException;
 using gad.aaportal.services.Services.Interfaces;
+using gad.aaportal.services.Util;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -169,9 +170,9 @@ public class SeguridadServices : ISeguridadServices
         }
         return result;
     }
-    public async Task<UsuarioDtoResult> GetUserRegistration(AaportalContext contexto, UserRegistrationDtoParam parametro)
+    public async Task<BaseResult> GetUserRegistration(AaportalContext contexto, UserRegistrationDtoParam parametro)
     {
-        UsuarioDtoResult result = new();
+        BaseResult result = new();
         var transaction = await contexto.Database.BeginTransactionAsync();
         try
         {
@@ -188,11 +189,15 @@ public class SeguridadServices : ISeguridadServices
             if(user != null)
                 throw SystemExceptionCustomized.CreateException("UREOO3", "Usuario ya se encuentra registrado");
 
+            var configMail= await contexto.ConfiguracionEmails.Where(p => p.Estado).FirstOrDefaultAsync();
+            if (configMail == null)
+                throw SystemExceptionCustomized.CreateException("UREOO4", "No existe configuración para envío de credenciales");
+
             /********************************/
             /*SECCION PARA LLAMAR API QUE VALIDA USUARIO EN LA BDD GAD AA*/
             /********************************/
 
-            var claveRandom = await securityAlgorithmServices.GetRandomEncoder(new RandomDtoParam() { Encoder = "b32", Size = 8 });
+            var claveRandom = await securityAlgorithmServices.GetRandomEncoder(new RandomDtoParam() { Encoder = "b32", Size = 4 });
 
             var pwd = await securityAlgorithmServices.GetGenerateComputeHashSha(new ComputeHashSha1DtoParam() { Usuario = parametro.User, Password = claveRandom.Data.Random });
 
@@ -236,16 +241,104 @@ public class SeguridadServices : ISeguridadServices
                 FechaRevocatoria = fechaHora,
                 Accion= servicesConfig.AccionUserRegsitration
             };
+
             await contexto.UsuarioSesions.AddAsync(userSesion);
             await contexto.SaveChangesAsync();
 
-            result.Data = new UsuarioDataDtoResult()
+            //result.Data = new UsuarioDataDtoResult()
+            //{
+            //    Token = token,
+            //    Expiration = expiration,
+            //    UltimoAcceso = fechaHora,
+            //    Nombres = userNew.Nombres
+            //};
+            
+            Mail.SendEmail("Credenciales", "Clave: " + claveRandom.Data.Random, parametro.Email, configMail.Servidor, configMail.Email, configMail.Pwd, configMail.Puerto);
+
+            result.Message=new() {Description="La clave fue enviada al correo electrónico registrado, Por favor cambiar su contraseña en el siguiente inicio de sesión."};
+
+            await transaction.CommitAsync();
+        }
+        catch (SystemExceptionCustomized sex)
+        {
+            await transaction.RollbackAsync();
+            logger.LogError(sex, sex.StackTrace, sex.Code);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            logger.LogError(ex, ex.StackTrace, nameof(CodeMessage.SERVER_ERROR));
+            throw;
+        }
+        return result;
+    }
+
+    public async Task<BaseResult> GetForgotPassword(AaportalContext contexto, ForgotPasswordDtoParam parametro)
+    {
+        BaseResult result = new();
+        var transaction = await contexto.Database.BeginTransactionAsync();
+        try
+        {
+            var rsa = await contexto.Rsas.FirstOrDefaultAsync(r => r.Estado);
+            if (rsa == null)
+                throw SystemExceptionCustomized.CreateException("FPAOO1", "Error al obtener llaves");
+
+            var appJwt = await contexto.Jwts.FirstOrDefaultAsync(a => a.Estado);
+            if (appJwt == null)
+                throw SystemExceptionCustomized.CreateException("FPAOO2", "Error al obtener configuracion de token.");
+
+            var user = await contexto.Usuarios.FirstOrDefaultAsync(u => u.User == parametro.User && u.Email==parametro.Email);
+
+            if (user == null)
+                throw SystemExceptionCustomized.CreateException("FPAOO3", "Usuario no existe");
+
+            var configMail = await contexto.ConfiguracionEmails.Where(p => p.Estado).FirstOrDefaultAsync();
+            if (configMail == null)
+                throw SystemExceptionCustomized.CreateException("FPAOO4", "No existe configuración para envío de credenciales");
+
+            var claveRandom = await securityAlgorithmServices.GetRandomEncoder(new RandomDtoParam() { Encoder = "b32", Size = 4 });
+
+            var pwd = await securityAlgorithmServices.GetGenerateComputeHashSha(new ComputeHashSha1DtoParam() { Usuario = parametro.User, Password = claveRandom.Data.Random });
+
+            DateTime fechaHora = DateTime.Now;
+
+            var expiration = DateTime.Now.AddSeconds(appJwt.JwtTime);
+            var jtiSession = System.Guid.NewGuid().ToString();
+            var token = GenerateJWT(servicesConfig.NameApp, servicesConfig.WebSiteCompany, jtiSession, user.Nombres, user.Email, appJwt.SecurityKey, expiration, servicesConfig.Audiencia, servicesConfig.WebSiteCompany, fechaHora, fechaHora);
+
+            user.Password = pwd.Data.Hash;
+            user.FechaUltimoCambioClave = fechaHora;
+
+            var userSesion = new UsuarioSesion()
             {
-                Token = token,
-                Expiration = expiration,
-                UltimoAcceso = fechaHora,
-                Nombres = userNew.Nombres
+                FechaHora = fechaHora,
+                FechaExpiracion = expiration,
+                Jti = jtiSession,
+                CodigoUser = user.User,
+                Browser = parametro.Browser,
+                UserAgent = parametro.UserAgent,
+                CodigoUserNavigation = user,
+                Language = parametro.Language,
+                EstaRevocado = false,
+                Ip = parametro.Ip,
+                OperatingSystem = parametro.OperatingSystem,
+                Plugins = parametro.Plugins,
+                Geolocation = parametro.Geolocation,
+                TimeZone = parametro.TimeZone,
+                Fecha = fechaHora,
+                FechaRevocatoria = fechaHora,
+                Accion = servicesConfig.AccionForgotPassword
             };
+
+            await contexto.UsuarioSesions.AddAsync(userSesion);
+            await contexto.SaveChangesAsync();
+
+
+            Mail.SendEmail("Credenciales", "Clave: " + claveRandom.Data.Random, parametro.Email, configMail.Servidor, configMail.Email, configMail.Pwd, configMail.Puerto);
+
+            result.Message = new() { Description = "La clave fue enviada al correo electrónico registrado, Por favor cambiar su contraseña en el siguiente inicio de sesión." };
+
             await transaction.CommitAsync();
         }
         catch (SystemExceptionCustomized sex)

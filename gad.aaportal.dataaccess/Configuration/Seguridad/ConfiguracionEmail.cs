@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace gad.aaportal.dataaccess.Configuration.Seguridad
+namespace gad.aaportal.dataaccess.Configuration
 {
     public class ConfiguracionEmailConfiguracion : IEntityTypeConfiguration<ConfiguracionEmail>
     {

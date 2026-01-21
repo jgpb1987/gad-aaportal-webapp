@@ -1,4 +1,5 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using gad.aaportal.commons.Base;
+using gad.aaportal.commons.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace gad.aaportal.consumers.Consumers.Interface
     {
         public Task<RsaDtoResult> GetPublicKey();
         public Task<UsuarioDtoResult> Login(UsuarioDtoParam parametro);
-        public Task<UsuarioDtoResult> UserRegistration(UserRegistrationDtoParam parametro);
+        public Task<BaseResult> UserRegistration(UserRegistrationDtoParam parametro);
+        public Task<BaseResult> ForgotPassword(ForgotPasswordDtoParam parametro);
     }
 }

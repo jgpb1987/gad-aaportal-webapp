@@ -10,7 +10,7 @@ namespace gad.aaportal.webapp.Layout
         [Inject] private ISessionStorageServices JSSessionStorageServices { get; set; } = null!;
         [Inject] private ConfiguracionesApp Configuraciones { get; set; } = null!;
         public UsuarioDataDtoResult DatosUsuarioResult { get; set; } = null!;
-        private bool collapseNavMenu = false;
+        private bool collapseNavMenu = true;
         private string? AjusteContenido;
         private string? ShowHide => collapseNavMenu ? "show" : "hide";
         private void ShowMenu()

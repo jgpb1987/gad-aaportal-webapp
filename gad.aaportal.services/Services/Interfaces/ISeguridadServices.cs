@@ -1,3 +1,4 @@
+using gad.aaportal.commons.Base;
 using gad.aaportal.commons.Dto;
 using gad.aaportal.dataaccess;
 using System.Threading.Tasks;
@@ -9,5 +10,6 @@ public interface ISeguridadServices
     Task<string> HelloWorld();
     Task<UsuarioDtoResult> Login(AaportalContext contexto, UsuarioDtoParam parametro);
     Task<RsaDtoResult> GetRsaPublicKey(AaportalContext contexto);
-    Task<UsuarioDtoResult> GetUserRegistration(AaportalContext contexto, UserRegistrationDtoParam parametro);
+    Task<BaseResult> GetUserRegistration(AaportalContext contexto, UserRegistrationDtoParam parametro);
+    Task<BaseResult> GetForgotPassword(AaportalContext contexto, ForgotPasswordDtoParam parametro);
 }

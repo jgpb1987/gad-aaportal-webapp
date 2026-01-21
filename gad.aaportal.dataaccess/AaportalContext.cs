@@ -15,10 +15,12 @@ public partial class AaportalContext : DbContext
     public virtual DbSet<UsuarioSesion> UsuarioSesions { get; set; }
     public virtual DbSet<Jwt> Jwts { get; set; }
     public virtual DbSet<Rsa> Rsas { get; set; }
+    public virtual DbSet<ConfiguracionEmail> ConfiguracionEmails { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfiguration(new Configuration.UsuarioConfiguracion());
         modelBuilder.ApplyConfiguration(new Configuration.UsuarioSesionConfiguracion());
         modelBuilder.ApplyConfiguration(new Configuration.JwtConfiguracion());
         modelBuilder.ApplyConfiguration(new Configuration.RsaConfiguracion());
+        modelBuilder.ApplyConfiguration(new Configuration.ConfiguracionEmailConfiguracion());
     }
 }

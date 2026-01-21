@@ -1,3 +1,4 @@
+<LoadingBorderModalServices @ref="LoadingBorder" />
 <div>
     <div class="margin-search">
         <input @bind="SearchTerm" class="text-search" type="text" placeholder="Buscar Opción..." />  
@@ -35,6 +36,9 @@
                         Consultas
                     </a>
                 </li>
+                <div class="centrar_boton">
+                    <button type="button" @onclick="CerrarSesion" class="btn btn-lg btn-color-per btn-card-login">Cerrar sesión</button>
+                </div>
             </ul>
         </ul>
     </div>

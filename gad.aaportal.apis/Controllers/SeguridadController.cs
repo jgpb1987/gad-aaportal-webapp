@@ -1,3 +1,4 @@
+using gad.aaportal.commons.Base;
 using gad.aaportal.commons.Dto;
 using gad.aaportal.dataaccess;
 using gad.aaportal.services.MessageException;
@@ -52,12 +53,26 @@ namespace gad.aaportal.apis.Controllers
             return result;
         }
         [HttpPost("userRegistration")]
-        public async Task<ActionResult<UsuarioDtoResult>> GetUserRegistration([FromBody] UserRegistrationDtoParam parametro)
+        public async Task<ActionResult<BaseResult>> GetUserRegistration([FromBody] UserRegistrationDtoParam parametro)
         {
-            UsuarioDtoResult result = new();
+            BaseResult result = new();
             try
             {
                 result = await services.GetUserRegistration(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+            return result;
+        }
+        [HttpPost("forgotPassword")]
+        public async Task<ActionResult<BaseResult>> GetForgotPassword([FromBody] ForgotPasswordDtoParam parametro)
+        {
+            BaseResult result = new();
+            try
+            {
+                result = await services.GetForgotPassword(contexto, parametro);
             }
             catch (Exception ex)
             {

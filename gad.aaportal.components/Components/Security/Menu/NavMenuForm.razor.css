@@ -77,3 +77,21 @@
 .sidebar-menu li a:hover i {
     color: #c41d17;
 }
+.centrar_boton {
+    text-align: center;
+}
+.btn-card-login {
+    height: 42px;
+    border-radius: 5px;
+    width: 60%;
+    margin-top: 10px;
+}
+.btn-color-per {
+    color: #fff;
+    background-color: #008000;
+}
+.btn-color-per:hover {
+        color: #fff;
+        background-color: #009846;
+        border-color: #009846;
+}

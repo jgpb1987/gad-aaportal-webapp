@@ -1,4 +1,4 @@
-using gad.aaportal.consumers.Config;
+﻿using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.Consumers.Implementation;
 using gad.aaportal.consumers.Consumers.Interface;
 using gad.aaportal.consumers.Js;
@@ -40,7 +40,11 @@ builder.Services.AddSingleton(provider =>
     configuracion.GetSection("EndPointsConfig").Bind(configuraciones.EndPointsConfig);
     return configuraciones;
 });
+
+// 📌 Fijar cultura global (punto decimal, 0.00)
+var culture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
 //Fin config
 
 await builder.Build().RunAsync();
-

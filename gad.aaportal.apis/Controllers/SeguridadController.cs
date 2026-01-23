@@ -4,7 +4,6 @@ using gad.aaportal.dataaccess;
 using gad.aaportal.services.MessageException;
 using gad.aaportal.services.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata;
 
 namespace gad.aaportal.apis.Controllers
 {
@@ -22,7 +21,7 @@ namespace gad.aaportal.apis.Controllers
         [HttpGet("helloworld")]
         public async Task<ActionResult<string>> GetHelloWorld()
         {
-           return await services.HelloWorld();
+            return await services.HelloWorld();
         }
         [HttpGet("publicKey")]
         public async Task<ActionResult<RsaDtoResult>> GetPublicKey()

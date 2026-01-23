@@ -1,0 +1,47 @@
+﻿.dropdown {
+    position: relative;
+}
+
+.dropdown-overlay {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: max-content;
+    min-width: 100%;
+    z-index: 2000;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    border: 1px solid rgba(0,0,0,.15);
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
+.dropdown-btn {
+    background-color: transparent;
+    padding: .375rem .75rem;
+    border-radius: 4px;
+    transition: background-color .2s, color .2s;
+}
+
+    .dropdown-btn:hover:not(:disabled),
+    .dropdown-btn:focus:not(:disabled),
+    .dropdown-btn:active:not(:disabled) {
+        background-color: var(--dropdown-color) !important;
+        color: white !important;
+    }
+
+.dropdown-menu .fw-bold {
+    color: var(--dropdown-color) !important;
+}
+
+.dropdown-menu .form-check-input {
+    border-color: var(--dropdown-color);
+}
+
+    .dropdown-menu .form-check-input:checked {
+        background-color: var(--dropdown-color);
+        border-color: var(--dropdown-color);
+    }
+
+.dropdown-menu .form-check-label {
+    color: #000; /* o var(--dropdown-color); si quieres que tome el tema */
+}

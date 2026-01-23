@@ -1,6 +1,6 @@
+using gad.aaportal.models.Entity.Seguridad;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using gad.aaportal.models.Entity.Seguridad;
 
 namespace gad.aaportal.dataaccess.Configuration;
 

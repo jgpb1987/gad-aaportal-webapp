@@ -1,13 +1,6 @@
 using gad.aaportal.commons.Dto;
 using gad.aaportal.consumers.Js;
 using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.webapp.Js
 {

@@ -1,6 +1,7 @@
 using gad.aaportal.dataaccess.Aplicacion.Aplicacion;
 using gad.aaportal.dataaccess.Aplicacion.Dinardap;
 using gad.aaportal.dataaccess.Configuration;
+using gad.aaportal.models.Configuration.Seguridad;
 using gad.aaportal.models.Entity.Aplicacion;
 using gad.aaportal.models.Entity.Dinardap;
 using gad.aaportal.models.Entity.Seguridad;

@@ -11,7 +11,7 @@ namespace gad.aaportal.webapp.Layout
         [Inject] private ConfiguracionesApp Configuraciones { get; set; } = null!;
         public UsuarioDataDtoResult DatosUsuarioResult { get; set; } = null!;
         private bool collapseNavMenu = true;
-        private string? AjusteContenido;
+        private string? AjusteContenido = "contenido-abierto";
         private string? ShowHide => collapseNavMenu ? "show" : "hide";
         private void ShowMenu()
         {

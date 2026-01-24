@@ -1,0 +1,105 @@
+﻿using gad.aaportal.commons.Dto;
+using gad.aaportal.dataaccess;
+using gad.aaportal.models.Entity.Dinardap;
+using gad.aaportal.services.Services.Interfaces;
+using Mapster;
+using Microsoft.Extensions.Logging;
+
+namespace gad.aaportal.services.Services.Implementation
+{
+    public class DinardapService : IDinardapService
+    {
+        private readonly ILogger<DinardapService> logger;
+
+        public DinardapService(ILogger<DinardapService> logger)
+        {
+            this.logger = logger;
+        }
+
+        public async Task<Form101SaveDtoResult> SaveForm101Result(AaportalContext contexto, Form101DtoRequest form101)
+        {
+            Form101SaveDtoResult result = new Form101SaveDtoResult();
+            try
+            {
+                var entity = form101.Adapt<Form101>();
+                entity.FechaInsert = DateTime.Now;
+                contexto.Form101.Add(entity);
+                await contexto.SaveChangesAsync();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
+
+        public async Task<Form101SaveDtoResult> UpdateForm101Result(AaportalContext contexto, Form101DtoRequest form101)
+        {
+            Form101SaveDtoResult result = new Form101SaveDtoResult();
+            try
+            {
+                var entity = form101.Adapt<Form101>();
+                var reg = contexto.Form101.Where(f => f.AnioFiscal == entity.AnioFiscal &&
+                                        f.NumeroIdentificacion == entity.NumeroIdentificacion).FirstOrDefault();
+                if (reg != null)
+                {
+                    form101.Adapt(reg);
+                    reg.FechaModificado = DateTime.Now;
+                }
+                await contexto.SaveChangesAsync();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
+
+        public async Task<Form102SaveDtoResult> SaveForm102Result(AaportalContext contexto, Form102DtoRequest form102)
+        {
+            Form102SaveDtoResult result = new Form102SaveDtoResult();
+            try
+            {
+                var entity = form102.Adapt<Form102>();
+                entity.FechaInsercion = DateTime.Now;
+                contexto.Form102.Add(entity);
+                await contexto.SaveChangesAsync();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
+
+        public async Task<Form102SaveDtoResult> UpdateForm102Result(AaportalContext contexto, Form102DtoRequest form102)
+        {
+            Form102SaveDtoResult result = new Form102SaveDtoResult();
+            try
+            {
+                var entity = form102.Adapt<Form102>();
+                var reg = contexto.Form102.Where(f => f.AnioFiscal == entity.AnioFiscal &&
+                                        f.NumeroIdentificacion == entity.NumeroIdentificacion).FirstOrDefault();
+                if (reg != null)
+                {
+                    form102.Adapt(reg);
+                    reg.FechaActualizacion = DateTime.Now;
+                }
+                await contexto.SaveChangesAsync();
+                result.Result = true;
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
+    }
+}

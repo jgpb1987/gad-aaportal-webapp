@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
   </ItemGroup>
 
@@ -20,9 +21,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\gad.aaportal.services\gad.aaportal.services.csproj" />
+    <ProjectReference Include="..\gad.aaportal.consumers\gad.aaportal.consumers.csproj" />
     <ProjectReference Include="..\gad.generic.components\gad.generic.components.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Content Remove="wwwroot\**" />
+		<None Remove="wwwroot\**" />
+		<EmbeddedResource Include="wwwroot\**" />
+	</ItemGroup>
 
 </Project>
 

@@ -1,0 +1,49 @@
+﻿<ToastsServices @ref="Toast" Time="5000" />
+<LoadingBorderModalServices @ref="LoadingBorder" />
+
+<section class="container-fluid ">
+    <div class="row d-flex justify-content-center heigth-full-screen">
+        <div class="col-12 col-md-7 col-lg-7 col-xl-7">
+            <div class="card-login">
+                <div class="card-login-shadow">
+                    <a class="a-img-login" href="https://www.antonioante.gob.ec" target="_blank">
+                        <img class="img-login" src="img\logoAA4.png" />
+                    </a>
+                    @switch (_view)
+                    {
+                        case LoginView.Login:
+                            <LoginUserForm Model="LoginParam"
+                                           OnSubmit="LoginUser"
+                                           OnForgotPassword="ShowForgotPassword"
+                                           OnChangePassword="ShowUserRegistration" />
+                            break;
+
+                        case LoginView.ForgotPassword:
+                            <ForgotPasswordForm Model="_forgotParam"
+                                                OnSubmit="SubmitForgotPassword"
+                                                OnBack="ShowLogin" />
+                            break;
+
+                        case LoginView.UserRegistration:
+                            <UserRegistrationForm Model="_userRegistrationParam"
+                                                  OnSubmit="SubmitUserRegistration"
+                                                OnBack="ShowLogin" />
+                            break;
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-5 col-lg-5 col-xl-5 background-color-parte-derecha posicion-politicas">
+            <div class="login-politicas-seguridad text-color-login-texto-politicas-seguridad color-parte-derecha background-color-parte-derecha">
+                <h3>Consejos de Seguridad</h3>
+                <ul>
+                    <li class="espacio-entre-parrafo">Gad Antonio Ante no solicita tu usuario ni contraseña por enlaces de correos electrónicos, llamadas o mensajes.</li>
+                    <li class="espacio-entre-parrafo">Actualiza periodicamente tus claves de acceso con una complejidad adecuada, combinación de: caracteres alfanúmericos, números, caracteres especiales.</li>
+                    <li class="espacio-entre-parrafo">Recuerda, nunca debes compartir tus credenciales de acceso, estarías infringiendo políticas de seguridad y poniendo en riesgo tu información.</li>
+                    <li>Por favor verifica siempre que en tu navegador aparezca la dirección correcta de la página web Gad Antonio Ante: https://www.antonioante.gob.ec/</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

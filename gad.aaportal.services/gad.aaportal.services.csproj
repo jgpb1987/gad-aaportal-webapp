@@ -1,9 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\gad.aaportal.commons\gad.aaportal.commons.csproj" />
     <ProjectReference Include="..\gad.aaportal.dataaccess\gad.aaportal.dataaccess.csproj" />
     <ProjectReference Include="..\gad.aaportal.models\gad.aaportal.models.csproj" />
+    <ProjectReference Include="..\gad.security.algorithm\gad.security.algorithm.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

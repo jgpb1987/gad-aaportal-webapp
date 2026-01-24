@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace gad.aaportal.models.Entity.Seguridad;
 
 public partial class UsuarioSesion
@@ -9,7 +6,7 @@ public partial class UsuarioSesion
 
     public string CodigoUser { get; set; } = null!;
 
-    public DateOnly Fecha { get; set; }
+    public DateTime Fecha { get; set; }
 
     public DateTime FechaHora { get; set; }
 
@@ -34,6 +31,7 @@ public partial class UsuarioSesion
     public string TimeZone { get; set; } = null!;
 
     public bool EstaRevocado { get; set; }
+    public string Accion { get; set; } = null!;
 
     public virtual Usuario CodigoUserNavigation { get; set; } = null!;
 }

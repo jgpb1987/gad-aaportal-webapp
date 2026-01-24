@@ -1,0 +1,71 @@
+﻿using gad.security.algorithm.Extensions;
+using gad.security.algorithm.Misc;
+using gad.security.algorithm.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Nodes;
+using System.Threading.Tasks;
+
+namespace gad.security.algorithm.Cryptography
+{
+    public class Base32Encoder : IEncoder, IDefaultInstance<Base32Encoder>
+    {
+        public static Type SelfType => typeof(Base32Encoder);
+        public string AssemblyName { get => IJsonSerializable.GetName(SelfType); }
+
+        private static readonly Base32Encoder _DefaultInstance = new();
+        public static Base32Encoder DefaultInstance => _DefaultInstance;
+
+        public bool ToLower { get; set; } = false;
+        public bool RemovePadding { get; set; } = false;
+
+
+        public Base32Encoder()
+        {
+        }
+
+        public byte[] Decode(string data)
+        {
+            return data.DecodeFromBase32();
+        }
+
+        public string Encode(byte[] data)
+        {
+            return data.EncodeToBase32(RemovePadding, ToLower);
+        }
+
+        public string Encode(string data)
+        {
+            return Encode(data.ToByteArrayUtf8());
+        }
+
+        public JsonObject ToJsonObject()
+        {
+            return new JsonObject()
+            {
+                [nameof(AssemblyName)] = AssemblyName,
+                [nameof(RemovePadding)] = RemovePadding,
+                [nameof(ToLower)] = ToLower,
+            };
+        }
+
+        public string Serialize(bool indented = false)
+        {
+            return ToJsonObject().ToJsonString(IJsonSerializable.GetIndentOptions(indented));
+        }
+
+        public static IEncoder Deserialize(string json)
+        {
+            JsonNode jsonNode = JsonNode.Parse(json)!;
+            return new Base32Encoder
+            {
+                RemovePadding = jsonNode[nameof(RemovePadding)]!.GetValue<bool>(),
+                ToLower = jsonNode[nameof(ToLower)]!.GetValue<bool>()
+            };
+        }
+
+
+    }
+}

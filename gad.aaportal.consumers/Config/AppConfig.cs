@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace gad.aaportal.consumers.Config
 {
     public class AppConfig
@@ -13,6 +7,11 @@ namespace gad.aaportal.consumers.Config
         public int TimeToast { get; set; }
         public uint Size { get; set; }
         public uint SizeBytes { get; set; }
+        public string SesionStoragePublicKeyServer { get; set; } = null!;
+        public string Expiration { get; set; } = null!;
+        public string Token { get; set; } = null!;
+        public string UltimoAcceso { get; set; } = null!;
+        public string Nombres { get; set; } = null!;
     }
 }
 

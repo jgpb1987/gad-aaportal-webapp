@@ -1,0 +1,89 @@
+<div class="modal fade @(Visible ? "show d-block" : "")" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered @(GetSizeClass())">
+        <div class="modal-content">
+
+            @if (!string.IsNullOrEmpty(Title))
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">@Title</h5>
+                    <button type="button" class="btn-close" @onclick="Cancel"></button>
+                </div>
+            }
+
+            <div class="modal-body">
+
+                @if (TableContent is not null)
+                {
+                    <div class="mb-3">
+                        @TableContent
+                    </div>
+                }
+
+                @if (ChildContent is not null)
+                {
+                    <div>
+                        @ChildContent
+                    </div>
+                }
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
+                <button class="btn btn-primary" @onclick="Accept">Aceptar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public ModalSize Size { get; set; } = ModalSize.Default;
+
+    // Texto o UI opcional
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    // Tabla dinámica
+    [Parameter] public RenderFragment? TableContent { get; set; }
+
+    private TaskCompletionSource<bool>? _tcs;
+    public bool Visible { get; private set; }
+
+    public Task<bool> ShowAsync()
+    {
+        Visible = true;
+        StateHasChanged();
+        _tcs = new();
+        return _tcs.Task;
+    }
+
+    void Accept()
+    {
+        Visible = false;
+        StateHasChanged();
+        _tcs?.SetResult(true);
+    }
+
+    void Cancel()
+    {
+        Visible = false;
+        StateHasChanged();
+        _tcs?.SetResult(false);
+    }
+
+    private string GetSizeClass() =>
+        Size switch
+        {
+            ModalSize.Small => "modal-sm",
+            ModalSize.Large => "modal-lg",
+            ModalSize.ExtraLarge => "modal-xl",
+            ModalSize.Fullscreen => "modal-fullscreen",
+            ModalSize.FullscreenSmDown => "modal-fullscreen-sm-down",
+            ModalSize.FullscreenMdDown => "modal-fullscreen-md-down",
+            ModalSize.FullscreenLgDown => "modal-fullscreen-lg-down",
+            ModalSize.FullscreenXlDown => "modal-fullscreen-xl-down",
+            ModalSize.FullscreenXxlDown => "modal-fullscreen-xxl-down",
+            _ => ""
+        };
+}

@@ -1,16 +1,10 @@
+using gad.aaportal.commons.Dto;
 using gad.aaportal.consumers.Js;
 using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.webapp.Js
 {
-    public class WebSessionStorageService : ISessionStorageService
+    public class WebSessionStorageService : ISessionStorageServices
     {
         private readonly IJSRuntime _jsRuntime;
         public WebSessionStorageService(IJSRuntime jsRuntime)
@@ -30,18 +24,6 @@ namespace gad.aaportal.webapp.Js
         {
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", llave);
         }
-        public async Task SaveSesionStorage(string llave, string content)
-        {
-            await _jsRuntime.InvokeVoidAsync("sessionStorage.setItem", llave, content);
-        }
-        public async Task<string> ObtainSesionStorage(string llave)
-        {
-           return await _jsRuntime.InvokeAsync<string>("sessionStorage.getItem", llave);
-        }
-        public async Task RemoveSesionStorage(string llave)
-        {
-            await _jsRuntime.InvokeVoidAsync("sessionStorage.removeItem", llave);
-        }
 
         public async Task SetItemAsync(string key, string value)
         {
@@ -57,6 +39,12 @@ namespace gad.aaportal.webapp.Js
         {
             await _jsRuntime.InvokeVoidAsync("sessionStorage.removeItem", key);
         }
+        public async Task<InfoBrowserUsuario> GetInfoDispositivoUsuario()
+        {
+            var browserInfo = await _jsRuntime.InvokeAsync<InfoBrowserUsuario>("browserInfo.getBrowserInfo");
+            return browserInfo;
+        }
+
     }
 }
 

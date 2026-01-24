@@ -1,0 +1,12 @@
+﻿.form-control-editable {
+    background-color: #fffef6; /* beige suave */
+    border-color: #6c757d;
+    border-left-width: 3px; /* detalle visual */
+    transition: all .15s ease-in-out;
+}
+
+    .form-control-editable:focus {
+        background-color: #ffffff;
+        border-color: #0d6efd; /* azul Bootstrap */
+        box-shadow: 0 0 0 .15rem rgba(13,110,253,.25);
+    }

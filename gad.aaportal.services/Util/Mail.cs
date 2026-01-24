@@ -13,6 +13,23 @@ namespace gad.aaportal.services.Util
 {
     public class Mail
     {
+        public static string RenderTemplate(string templateHtml, IDictionary<string, string> values)
+        {
+            if (string.IsNullOrWhiteSpace(templateHtml))
+                throw new ArgumentException("La plantilla HTML está vacía.");
+
+            if (values == null || values.Count == 0)
+                return templateHtml;
+
+            // Reemplazo directo {{KEY}} -> value
+            foreach (var kv in values)
+            {
+                var token = "{{" + kv.Key + "}}";
+                templateHtml = templateHtml.Replace(token, kv.Value ?? string.Empty);
+            }
+
+            return templateHtml;
+        }
         public static bool SendEmail(string subject, string mail, string fromAddress, string dominio, string user, string pwd, string puerto)
         {
             bool result = false;

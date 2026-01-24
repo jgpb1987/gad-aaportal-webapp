@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Clave de acceso</title>
+
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+        <o:AllowPNG/>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+
+  <style>
+    html, body { margin:0 !important; padding:0 !important; height:100% !important; width:100% !important; }
+    * { -ms-text-size-adjust:100%; -webkit-text-size-adjust:100%; }
+    table, td { mso-table-lspace:0pt !important; mso-table-rspace:0pt !important; border-collapse:collapse !important; }
+    img { -ms-interpolation-mode:bicubic; border:0; outline:none; text-decoration:none; display:block; }
+    a { text-decoration:none; }
+    .container { width:100%; max-width:700px; }
+    .px { padding-left:24px; padding-right:24px; }
+
+    @media screen and (max-width: 700px) {
+      .container { width:100% !important; }
+      .px { padding-left:16px !important; padding-right:16px !important; }
+      .stack { display:block !important; width:100% !important; }
+      .center { text-align:center !important; }
+      .logo { margin:0 auto !important; }
+      .keyBox { padding:14px !important; }
+      .keyText { font-size:22px !important; letter-spacing:1px !important; word-break:break-all !important; }
+      .btn { width:100% !important; }
+      .btn a { display:block !important; }
+    }
+  </style>
+</head>
+
+<body style="margin:0; padding:0; background:#F3F4F6;">
+  <!-- Preheader -->
+  <div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden; mso-hide:all;">
+    Tu clave de acceso al sistema. Por seguridad, cámbiala al primer ingreso.
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F3F4F6;">
+    <tr>
+      <td align="center" style="padding:22px 12px;">
+
+        <!-- CONTENEDOR -->
+        <table role="presentation" class="container" width="700" cellpadding="0" cellspacing="0" style="width:700px;">
+
+          <!-- Header -->
+          <tr>
+            <td style="padding:0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#C41D17;">
+                <tr>
+                  <td style="padding:16px 0;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td class="stack center" width="25%" align="left" style="padding-left:18px; vertical-align:middle;">
+                          <img class="logo" src="https://www.antonioante.gob.ec/AntonioAnte/wp-content/uploads/2022/06/logo.png"
+                               width="140" height="40" alt="GAD Antonio Ante" style="display:block;">
+                        </td>
+
+                        <td class="stack center" width="50%" align="center" style="vertical-align:middle; font-family:Arial, Helvetica, sans-serif; color:#ffffff;">
+                          <div style="font-size:18px; font-weight:700; letter-spacing:.6px;">{{TITULO_NOTIFICACION}}</div>
+                        </td>
+
+                        <td class="stack center" width="25%" align="right" style="padding-right:18px; vertical-align:middle; font-family:Arial, Helvetica, sans-serif; color:#ffffff; font-size:12px; opacity:.95;">
+                          {{FECHA_HORA}}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Spacer -->
+          <tr><td style="height:14px; line-height:14px; font-size:0;">&nbsp;</td></tr>
+
+          <!-- Tarjeta principal -->
+          <tr>
+            <td class="px" style="padding:0 24px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                     style="background:#FFFFFF; border-radius:12px; overflow:hidden; border:1px solid #E5E7EB;">
+
+                <!-- Saludo -->
+                <tr>
+                  <td style="padding:14px 18px; background:#4B5563; font-family:Arial, Helvetica, sans-serif; color:#ffffff; font-size:16px;">
+                    Hola <strong style="text-transform:uppercase;">{{NOMBRE_COMPLETO}}</strong>
+                  </td>
+                </tr>
+
+                <!-- Body -->
+                <tr>
+                  <td style="padding:18px 18px 8px 18px; font-family:Arial, Helvetica, sans-serif; color:#111827;">
+                    <p style="margin:0; font-size:14px; line-height:1.7; color:#374151;">
+                      Se ha generado tu <strong>clave de acceso</strong> para ingresar al sistema.
+                      Por seguridad, te recomendamos <strong>cambiarla al primer inicio de sesión</strong>.
+                    </p>
+
+                    <p style="margin:12px 0 0 0; font-size:14px; line-height:1.7; color:#374151;">
+                      <strong>Usuario:</strong> {{USUARIO}}
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Caja de clave -->
+                <tr>
+                  <td style="padding:10px 18px 10px 18px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                           style="background:#FFF5F5; border:1px solid #FCA5A5; border-radius:12px;">
+                      <tr>
+                        <td class="keyBox" style="padding:16px; text-align:center; font-family:Arial, Helvetica, sans-serif;">
+                          <div style="font-size:12px; color:#991B1B; letter-spacing:.4px; margin-bottom:8px; font-weight:700;">
+                            CLAVE DE ACCESO
+                          </div>
+                          <div class="keyText" style="font-size:24px; font-weight:800; color:#111827; letter-spacing:1.5px;">
+                            {{CLAVE_ACCESO}}
+                          </div>
+                          <div style="font-size:12px; color:#6B7280; margin-top:10px;">
+                            No compartas esta clave con terceros.
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Botón CTA (opcional pero recomendable) -->
+                <tr>
+                  <td style="padding:8px 18px 0 18px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" class="btn" style="border-radius:10px;">
+                      <tr>
+                        <td align="center">
+                          <!--[if mso]>
+                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
+                                      href="{{URL_SISTEMA}}" style="height:44px;v-text-anchor:middle;width:260px;"
+                                      arcsize="18%" strokecolor="#C41D17" fillcolor="#C41D17">
+                            <w:anchorlock/>
+                            <center style="color:#ffffff;font-family:Arial, Helvetica, sans-serif;font-size:14px;font-weight:bold;">
+                              Ingresar al sistema
+                            </center>
+                          </v:roundrect>
+                          <![endif]-->
+                          <!--[if !mso]><!-- -->
+                          <a href="{{URL_SISTEMA}}"
+                             style="display:inline-block; background:#C41D17; color:#ffffff; font-family:Arial, Helvetica, sans-serif;
+                                    font-size:14px; font-weight:bold; padding:12px 18px; border-radius:10px;">
+                            Ingresar al sistema
+                          </a>
+                          <!--<![endif]-->
+                        </td>
+                      </tr>
+                    </table>
+
+                    <p style="margin:12px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.6; color:#6B7280; text-align:center;">
+                      Si no puedes usar el botón, copia y pega este enlace:
+                      <span style="color:#C41D17;">{{URL_SISTEMA}}</span>
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Aviso seguridad -->
+                <tr>
+                  <td style="padding:12px 18px 0 18px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F9FAFB; border:1px solid #E5E7EB; border-radius:12px;">
+                      <tr>
+                        <td style="padding:12px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.6; color:#374151;">
+                          <strong style="color:#111827;">Importante:</strong> Si tú no solicitaste este acceso o no reconoces esta notificación,
+                          comunícate con soporte a <strong>{{TELEFONO_CONTACTO}}</strong>.
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Nota automática -->
+                <tr>
+                  <td style="padding:12px 18px 18px 18px; font-family:Arial, Helvetica, sans-serif; color:#6B7280;">
+                    <p style="margin:0; font-size:12px; line-height:1.7;">
+                      Este correo fue generado de forma automática. Por favor no respondas a esta dirección.
+                    </p>
+                    <p style="margin:10px 0 0 0; font-size:12px; line-height:1.7;">
+                      Saludos cordiales,<br/>
+                      <strong style="color:#111827;">{{EMPRESA}}</strong>
+                    </p>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+
+          <!-- Spacer -->
+          <tr><td style="height:14px; line-height:14px; font-size:0;">&nbsp;</td></tr>
+
+          <!-- Footer (bloque inferior) -->
+          <tr>
+            <td class="px" style="padding:0 24px 18px 24px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#111827; border-radius:12px; overflow:hidden;">
+                <tr>
+                  <td style="padding:16px 18px; font-family:Arial, Helvetica, sans-serif; color:#ffffff; text-align:center;">
+                    <div style="font-size:14px; font-weight:600;">
+                      Portal institucional y servicios en línea
+                    </div>
+                    <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="border-top:1px solid #374151; font-size:0; line-height:0;">&nbsp;</td>
+                      </tr>
+                    </table>
+                    <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+                    <div style="font-size:13px;">
+                      Visítanos en:
+                      <a href="{{URL_PORTAL}}" style="color:#ffffff; text-decoration:underline;">{{URL_PORTAL}}</a>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <div style="font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:1.6; color:#6B7280; text-align:center; margin-top:10px;">
+                © {{ANIO}} {{EMPRESA}}. Todos los derechos reservados.
+              </div>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /CONTENEDOR -->
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -245,15 +245,29 @@ public class SeguridadServices : ISeguridadServices
             await contexto.UsuarioSesions.AddAsync(userSesion);
             await contexto.SaveChangesAsync();
 
-            //result.Data = new UsuarioDataDtoResult()
-            //{
-            //    Token = token,
-            //    Expiration = expiration,
-            //    UltimoAcceso = fechaHora,
-            //    Nombres = userNew.Nombres
-            //};
-            
-            Mail.SendEmail("Credenciales", "Clave: " + claveRandom.Data.Random, parametro.Email, configMail.Servidor, configMail.Email, configMail.Pwd, configMail.Puerto);
+            //**************************************//
+            var templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", "Template_email.html");
+            var templateHtml = await File.ReadAllTextAsync(templatePath);
+
+            var values = new Dictionary<string, string>
+            {
+                ["TITULO_NOTIFICACION"] = "Notificación creación de cuenta",
+                ["FECHA_HORA"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
+                ["NOMBRE_COMPLETO"] = userNew.Nombres,
+                ["USUARIO"] = userNew.User,
+                ["CLAVE_ACCESO"] = claveRandom.Data.Random,
+                ["URL_SISTEMA"] = "https://www.antonioante.gob.ec/AntonioAnte/",
+                ["URL_SISTEMA_TEXTO"] = "Portal de Acceso",
+                ["TELEFONO_CONTACTO"] = "(06) 2991-670",
+                ["EMPRESA"] = "Gobierno Autónomo Decentralizado Antonio Ante",
+                ["URL_PORTAL"] = "https://www.antonioante.gob.ec/AntonioAnte/",
+                ["ANIO"] = DateTime.Now.Year.ToString(),
+            };
+
+            var htmlBody = Mail.RenderTemplate(templateHtml, values);
+
+            Mail.SendEmail("Notificación creación de cuenta", htmlBody, parametro.Email, configMail.Servidor, configMail.Email, configMail.Pwd, configMail.Puerto);
+            //**************************************//
 
             result.Message=new() {Description="La clave fue enviada al correo electrónico registrado, Por favor cambiar su contraseña en el siguiente inicio de sesión."};
 
@@ -334,8 +348,29 @@ public class SeguridadServices : ISeguridadServices
             await contexto.UsuarioSesions.AddAsync(userSesion);
             await contexto.SaveChangesAsync();
 
+            //**************************************//
+            var templatePath = Path.Combine(AppContext.BaseDirectory,"Templates","Template_email.html");
+            var templateHtml = await File.ReadAllTextAsync(templatePath);
 
-            Mail.SendEmail("Credenciales", "Clave: " + claveRandom.Data.Random, parametro.Email, configMail.Servidor, configMail.Email, configMail.Pwd, configMail.Puerto);
+            var values = new Dictionary<string, string>
+            {
+                ["TITULO_NOTIFICACION"] ="Recuperación de Contraseña",
+                ["FECHA_HORA"]= DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
+                ["NOMBRE_COMPLETO"] = user.Nombres,
+                ["USUARIO"] = user.User,
+                ["CLAVE_ACCESO"] = claveRandom.Data.Random,
+                ["URL_SISTEMA"] = "https://www.antonioante.gob.ec/AntonioAnte/",
+                ["URL_SISTEMA_TEXTO"] = "Portal de Acceso",
+                ["TELEFONO_CONTACTO"] = "(06) 2991-670",
+                ["EMPRESA"] = "Gobierno Autónomo Decentralizado Antonio Ante",
+                ["URL_PORTAL"] = "https://www.antonioante.gob.ec/AntonioAnte/",
+                ["ANIO"] = DateTime.Now.Year.ToString(),
+            };
+
+            var htmlBody = Mail.RenderTemplate(templateHtml, values);
+
+            Mail.SendEmail("Recuperación de Contraseña", htmlBody, parametro.Email, configMail.Servidor, configMail.Email, configMail.Pwd, configMail.Puerto);
+            //**************************************//
 
             result.Message = new() { Description = "La clave fue enviada al correo electrónico registrado, Por favor cambiar su contraseña en el siguiente inicio de sesión." };
 
@@ -355,4 +390,6 @@ public class SeguridadServices : ISeguridadServices
         }
         return result;
     }
+
+
 }

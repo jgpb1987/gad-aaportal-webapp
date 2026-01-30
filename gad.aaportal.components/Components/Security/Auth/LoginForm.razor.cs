@@ -8,6 +8,7 @@ using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,15 +28,16 @@ namespace gad.aaportal.components.Components.Security.Auth
 
         protected override async Task OnInitializedAsync()
         {
-            try {
+            try
+            {
                 var publicKeyServer = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.SesionStoragePublicKeyServer);
                 if (publicKeyServer == null)
                 {
                     var publicServerRsa = await SeguridadConsumers.GetPublicKey();
-                    await  JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.SesionStoragePublicKeyServer, publicServerRsa.Data.PublicKey);
+                    await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.SesionStoragePublicKeyServer, publicServerRsa.Data.PublicKey);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
             }
@@ -43,26 +45,27 @@ namespace gad.aaportal.components.Components.Security.Auth
         }
         private async Task LoginUser()
         {
-            try {
+            try
+            {
                 LoadingBorder!.Open();
                 var publicKeyServer = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.SesionStoragePublicKeyServer);
-                var userRsa= await SecurityAlgorithm.EncryptRsa(Js, LoginParam.User, publicKeyServer!);
+                var userRsa = await SecurityAlgorithm.EncryptRsa(Js, LoginParam.User, publicKeyServer!);
                 var pwdRsa = await SecurityAlgorithm.EncryptRsa(Js, LoginParam.Password, publicKeyServer!);
-                var dataDispositivo= await JSSessionStorageServices.GetInfoDispositivoUsuario();
-                var loginRequest=new UsuarioDtoParam()
+                var dataDispositivo = await JSSessionStorageServices.GetInfoDispositivoUsuario();
+                var loginRequest = new UsuarioDtoParam()
                 {
-                    User= userRsa,
-                    Password= pwdRsa,
-                    Browser= dataDispositivo.Browser==null? string.Empty : dataDispositivo.Browser,
-                    Geolocation= dataDispositivo.Geolocation == null ? string.Empty : dataDispositivo.Geolocation,
-                    Ip= dataDispositivo.Ip == null ? string.Empty : dataDispositivo.Ip,
-                    Language= dataDispositivo.Language == null ? string.Empty : dataDispositivo.Language,
-                    OperatingSystem= dataDispositivo.OperatingSystem == null ? string.Empty : dataDispositivo.OperatingSystem,
-                    Plugins= dataDispositivo.Plugins == null ? string.Empty : dataDispositivo.Plugins,
-                    TimeZone= dataDispositivo.TimeZone == null ? string.Empty : dataDispositivo.TimeZone,
+                    User = userRsa,
+                    Password = pwdRsa,
+                    Browser = dataDispositivo.Browser == null ? string.Empty : dataDispositivo.Browser,
+                    Geolocation = dataDispositivo.Geolocation == null ? string.Empty : dataDispositivo.Geolocation,
+                    Ip = dataDispositivo.Ip == null ? string.Empty : dataDispositivo.Ip,
+                    Language = dataDispositivo.Language == null ? string.Empty : dataDispositivo.Language,
+                    OperatingSystem = dataDispositivo.OperatingSystem == null ? string.Empty : dataDispositivo.OperatingSystem,
+                    Plugins = dataDispositivo.Plugins == null ? string.Empty : dataDispositivo.Plugins,
+                    TimeZone = dataDispositivo.TimeZone == null ? string.Empty : dataDispositivo.TimeZone,
                     UserAgent = dataDispositivo.UserAgent == null ? string.Empty : dataDispositivo.UserAgent
                 };
-                var loginResponse= await SeguridadConsumers.Login(loginRequest);
+                var loginResponse = await SeguridadConsumers.Login(loginRequest);
                 if (loginResponse != null)
                 {
                     if (loginResponse.Data != null)
@@ -76,24 +79,27 @@ namespace gad.aaportal.components.Components.Security.Auth
                             await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.UltimoAcceso, loginResponse.Data.UltimoAcceso.ToString());
                             await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Nombres, loginResponse.Data.Nombres);
                             UriHelper.NavigateTo("/index");
-                           
+
                         }
-                        else {
+                        else
+                        {
                             LoadingBorder!.Close();
                             await Toast!.ShowMessage("error", loginResponse.Message.Code, loginResponse.Message.Description);
                         }
                     }
-                    else {
+                    else
+                    {
                         LoadingBorder!.Close();
                         await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
                     }
                 }
-                else {
+                else
+                {
                     LoadingBorder!.Close();
                     await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LoadingBorder!.Close();
                 await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");

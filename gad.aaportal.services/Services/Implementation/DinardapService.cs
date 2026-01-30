@@ -3,6 +3,7 @@ using gad.aaportal.dataaccess;
 using gad.aaportal.models.Entity.Dinardap;
 using gad.aaportal.services.Services.Interfaces;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace gad.aaportal.services.Services.Implementation
@@ -16,83 +17,74 @@ namespace gad.aaportal.services.Services.Implementation
             this.logger = logger;
         }
 
-        public async Task<Form101SaveDtoResult> SaveForm101Result(AaportalContext contexto, Form101DtoRequest form101)
+        public async Task<bool> SaveForm101(AaportalContext contexto, ListForm101 form101)
         {
-            Form101SaveDtoResult result = new Form101SaveDtoResult();
+            bool result = false;
             try
             {
-                var entity = form101.Adapt<Form101>();
-                entity.FechaInsert = DateTime.Now;
-                contexto.Form101.Add(entity);
-                await contexto.SaveChangesAsync();
-                result.Result = true;
-            }
-            catch (Exception ex)
-            {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
-            }
-            return result;
-        }
+                var entity = form101.Form101s.Adapt<List<Form101>>();
+                entity.ForEach(e => e.FechaInsert = DateTime.Now);
 
-        public async Task<Form101SaveDtoResult> UpdateForm101Result(AaportalContext contexto, Form101DtoRequest form101)
-        {
-            Form101SaveDtoResult result = new Form101SaveDtoResult();
-            try
-            {
-                var entity = form101.Adapt<Form101>();
-                var reg = contexto.Form101.Where(f => f.AnioFiscal == entity.AnioFiscal &&
-                                        f.NumeroIdentificacion == entity.NumeroIdentificacion).FirstOrDefault();
-                if (reg != null)
+                foreach (var item in entity)
                 {
-                    form101.Adapt(reg);
-                    reg.FechaModificado = DateTime.Now;
+                    var query = await contexto.Form101
+                        .FirstOrDefaultAsync(f =>
+                            f.NumeroIdentificacion == item.NumeroIdentificacion &&
+                            f.AnioFiscal == item.AnioFiscal);
+
+                    if (query == null)
+                    {
+                        await contexto.Form101.AddAsync(item);
+                    }
+                    else
+                    {
+                        await contexto.Form101Bkps
+                            .AddAsync(query.Adapt<Form101bkp>());
+                        item.Adapt(query);
+                        query.FechaModificado = DateTime.Now;
+                    }
                 }
+
                 await contexto.SaveChangesAsync();
-                result.Result = true;
+                result = true;
             }
             catch (Exception ex)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
             }
+
             return result;
         }
 
-        public async Task<Form102SaveDtoResult> SaveForm102Result(AaportalContext contexto, Form102DtoRequest form102)
+        public async Task<bool> SaveForm102(AaportalContext contexto, ListForm102 form102)
         {
-            Form102SaveDtoResult result = new Form102SaveDtoResult();
+            bool result = false;
             try
             {
-                var entity = form102.Adapt<Form102>();
-                entity.FechaInsercion = DateTime.Now;
-                contexto.Form102.Add(entity);
-                await contexto.SaveChangesAsync();
-                result.Result = true;
-            }
-            catch (Exception ex)
-            {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
-            }
-            return result;
-        }
+                var entity = form102.Form102s.Adapt<List<Form102>>();
+                entity.ForEach(e => e.FechaInsercion = DateTime.Now);
 
-        public async Task<Form102SaveDtoResult> UpdateForm102Result(AaportalContext contexto, Form102DtoRequest form102)
-        {
-            Form102SaveDtoResult result = new Form102SaveDtoResult();
-            try
-            {
-                var entity = form102.Adapt<Form102>();
-                var reg = contexto.Form102.Where(f => f.AnioFiscal == entity.AnioFiscal &&
-                                        f.NumeroIdentificacion == entity.NumeroIdentificacion).FirstOrDefault();
-                if (reg != null)
+                foreach (var item in entity)
                 {
-                    form102.Adapt(reg);
-                    reg.FechaActualizacion = DateTime.Now;
+                    var query = await contexto.Form102
+                        .FirstOrDefaultAsync(f =>
+                            f.NumeroIdentificacion == item.NumeroIdentificacion &&
+                            f.AnioFiscal == item.AnioFiscal);
+
+                    if (query == null)
+                    {
+                        await contexto.Form102.AddAsync(item);
+                    }
+                    else
+                    {
+                        await contexto.Form102Bkps
+                            .AddAsync(query.Adapt<Form102bkp>());
+                        item.Adapt(query);
+                        query.FechaActualizacion = DateTime.Now;
+                    }
                 }
+
                 await contexto.SaveChangesAsync();
-                result.Result = true;
+                result = true;
             }
             catch (Exception ex)
             {

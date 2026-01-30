@@ -6,8 +6,6 @@ using gad.aaportal.models.Entity.Aplicacion;
 using gad.aaportal.models.Entity.Dinardap;
 using gad.aaportal.models.Entity.Seguridad;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 namespace gad.aaportal.dataaccess;
 
 public partial class AaportalContext : DbContext
@@ -26,7 +24,9 @@ public partial class AaportalContext : DbContext
 
     #region Schema Dinardap
     public DbSet<Form101> Form101 { get; set; }
+    public DbSet<Form101bkp> Form101Bkps { get; set; }
     public DbSet<Form102> Form102 { get; set; } = null!;
+    public DbSet<Form102bkp> Form102Bkps { get; set; } = null!;
     #endregion
 
     #region Schema Aplicacion
@@ -43,14 +43,16 @@ public partial class AaportalContext : DbContext
         modelBuilder.ApplyConfiguration(new UsuarioConfiguracion());
         modelBuilder.ApplyConfiguration(new UsuarioSesionConfiguracion());
         modelBuilder.ApplyConfiguration(new Form101Configuracion());
+        modelBuilder.ApplyConfiguration(new Form101Configuracionbkp());
         modelBuilder.ApplyConfiguration(new Form102Configuracion());
+        modelBuilder.ApplyConfiguration(new Form102bkpConfiguracion());
         modelBuilder.ApplyConfiguration(new CantonConfiguracion());
         modelBuilder.ApplyConfiguration(new TarifaImpositivaConfig());
         modelBuilder.ApplyConfiguration(new DeclaracionPJConfiguracion());
         modelBuilder.ApplyConfiguration(new DistribucionPagoConfiguracion());
         modelBuilder.ApplyConfiguration(new TasaAdministrativaConfiguracion());
-        modelBuilder.ApplyConfiguration(new Configuration.JwtConfiguracion());
-        modelBuilder.ApplyConfiguration(new Configuration.RsaConfiguracion());
-        modelBuilder.ApplyConfiguration(new Configuration.ConfiguracionEmailConfiguracion());
+        modelBuilder.ApplyConfiguration(new JwtConfiguracion());
+        modelBuilder.ApplyConfiguration(new RsaConfiguracion());
+        modelBuilder.ApplyConfiguration(new ConfiguracionEmailConfiguracion());
     }
 }

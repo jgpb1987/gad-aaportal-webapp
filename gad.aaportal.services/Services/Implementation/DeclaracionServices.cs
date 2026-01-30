@@ -21,8 +21,24 @@ namespace gad.aaportal.services.Services.Implementation
             SaveDeclaracionPJResult result = new SaveDeclaracionPJResult();
             try
             {
-                var declaracion = parametros.declaracion.Adapt<DeclaracionPJ>();
-                declaracion.FechaInser = DateTime.Now;
+                var declaracion = new DeclaracionPJ
+                {
+                    AnioFiscal = parametros.declaracion.AnioFiscal,
+                    ValorUnoPorMil = parametros.declaracion.ValorUnoPorMil,
+                    ValorPatente = parametros.declaracion.ValorPatente,
+                    UtilidadEjercicio3420 = parametros.declaracion.UtilidadEjercicio3420,
+                    TotalPasivos1620 = parametros.declaracion.TotalPasivos,
+                    FechaInser = DateTime.Now,
+                    RUC = parametros.declaracion.RUC,
+                    TotActivoNoCorriente1077 = parametros.declaracion.ActivoNoCorriente,
+                    TotalActivo1080 = parametros.declaracion.TotalActivos,
+                    TotalActivoCorriente470 = parametros.declaracion.ActivoCorriente,
+                    TotalIngresos1930 = parametros.declaracion.Ingresos,
+                    TotalPasivosContingente = parametros.declaracion.PasivoContingente,
+                    TotalPasivosLargoPlazo1590 = parametros.declaracion.PasivoLargoPlazo,
+                    TotasCostosGastos3380 = parametros.declaracion.CostosGastos,
+                    TotPasivosCorrientes1340 = parametros.declaracion.PasivoCorriente
+                };
                 contexto.DeclaracionPJs.Add(declaracion);
 
                 foreach (var item in parametros.Cantones)

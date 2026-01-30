@@ -6,11 +6,13 @@ namespace gad.aaportal.commons.Dto
     public class ConsultaIdentificacionRequest
     {
         public string Identificacion { get; set; } = string.Empty;
+        public string TipoPersona { get; set; } = string.Empty;
     }
 
     public class ConsultaIngresosEgresosRequest
     {
         public string Identificacion { get; set; } = string.Empty;
+        public string TipoPersona { get; set; } = string.Empty;
         public int anio { get; set; }
     }
 
@@ -25,15 +27,16 @@ namespace gad.aaportal.commons.Dto
     }
     public class ConsultaIngresosEgresosResponse : BaseResult
     {
-        public decimal? TotalActivoCorriente470 { get; set; }
-        public decimal? TotActivoNoCorriente1077 { get; set; }
-        public decimal? TotalActivo1080 { get; set; }
-        public decimal? TotPasivosCorrientes1340 { get; set; }
-        public decimal? TotalPasivosLargoPlazo1590 { get; set; }
-        public decimal? TotalPasivos1620 { get; set; }
-        public decimal? TotalIngresos1930 { get; set; }
-        public decimal? TotasCostosGastos3380 { get; set; }
-        public decimal? UtilidadEjercicio3420 { get; set; }
+        public decimal? ActivoCorriente { get; set; }
+        public decimal? ActivoNoCorriente { get; set; }
+        public decimal? TotalActivos { get; set; }
+        public decimal? PasivoCorriente { get; set; }
+        public decimal? PasivoNoCorriente { get; set; }
+        public decimal? PasivoContingente { get; set; }
+        public decimal? TotalPasivos { get; set; }
+        public decimal? Ingresos { get; set; }
+        public decimal? CostosGastos { get; set; }
+        public decimal? UtilidadPerdida { get; set; }
         public decimal? ValorPatente { get; set; }
     }
 
@@ -78,7 +81,7 @@ namespace gad.aaportal.commons.Dto
         private decimal _Acorriente = 0;
         private decimal _Anocorriente = 0;
 
-        public decimal TotalActivoCorriente470
+        public decimal ActivoCorriente
         {
             get => _Acorriente;
             set
@@ -86,11 +89,11 @@ namespace gad.aaportal.commons.Dto
                 _Acorriente = value;
                 RecalculateA();
                 RecalculateUnoPuntoCinco();
-                Notify(nameof(TotalActivoCorriente470));
+                Notify(nameof(ActivoCorriente));
             }
         }
 
-        public decimal TotActivoNoCorriente1077
+        public decimal ActivoNoCorriente
         {
             get => _Anocorriente;
             set
@@ -98,22 +101,22 @@ namespace gad.aaportal.commons.Dto
                 _Anocorriente = value;
                 RecalculateA();
                 RecalculateUnoPuntoCinco();
-                Notify(nameof(TotActivoNoCorriente1077));
+                Notify(nameof(ActivoNoCorriente));
             }
         }
 
-        public decimal TotalActivo1080 { get; private set; } = 0;
+        public decimal TotalActivos { get; private set; } = 0;
         private void RecalculateA()
         {
-            TotalActivo1080 = _Acorriente + _Anocorriente;
-            Notify(nameof(TotalActivo1080));
+            TotalActivos = _Acorriente + _Anocorriente;
+            Notify(nameof(TotalActivos));
         }
 
         private decimal _Pcorriente = 0;
         private decimal _PlargoPlazo = 0;
         private decimal _Pcontingente = 0;
 
-        public decimal TotPasivosCorrientes1340
+        public decimal PasivoCorriente
         {
             get => _Pcorriente;
             set
@@ -121,75 +124,75 @@ namespace gad.aaportal.commons.Dto
                 _Pcorriente = value;
                 RecalculateP();
                 RecalculateUnoPuntoCinco();
-                Notify(nameof(TotPasivosCorrientes1340));
+                Notify(nameof(PasivoCorriente));
             }
         }
 
-        public decimal TotalPasivosLargoPlazo1590
+        public decimal PasivoLargoPlazo
         {
             get => _PlargoPlazo;
             set
             {
                 _PlargoPlazo = value;
                 RecalculateP();
-                Notify(nameof(TotalPasivosLargoPlazo1590));
+                Notify(nameof(PasivoLargoPlazo));
             }
         }
 
-        public decimal TotalPasivosContingente
+        public decimal PasivoContingente
         {
             get => _Pcontingente;
             set
             {
                 _Pcontingente = value;
                 RecalculateP();
-                Notify(nameof(TotalPasivosContingente));
+                Notify(nameof(PasivoContingente));
             }
         }
 
-        public decimal TotalPasivos1620 { get; private set; } = 0;
+        public decimal TotalPasivos { get; private set; } = 0;
         private void RecalculateP()
         {
-            TotalPasivos1620 = _Pcorriente + _PlargoPlazo + _Pcontingente;
-            Notify(nameof(TotalPasivos1620));
+            TotalPasivos = _Pcorriente + _PlargoPlazo + _Pcontingente;
+            Notify(nameof(TotalPasivos));
         }
 
         public decimal ValorUnoPorMil { get; private set; } = 0;
         private void RecalculateUnoPuntoCinco()
         {
-            ValorUnoPorMil = Math.Round((TotalActivo1080 - TotPasivosCorrientes1340) * 1.5m / 1000, 2);
+            ValorUnoPorMil = Math.Round((TotalActivos - PasivoCorriente) * 1.5m / 1000, 2);
             ValorUnoPorMil = Math.Max(ValorUnoPorMil, 0m);
             Notify(nameof(ValorUnoPorMil));
         }
 
         private decimal _ingresos = 0;
-        public decimal TotalIngresos1930
+        public decimal Ingresos
         {
             get => _ingresos;
             set
             {
                 _ingresos = value;
                 RecalculateUtilidad();
-                Notify(nameof(TotalIngresos1930));
+                Notify(nameof(Ingresos));
             }
         }
 
         private decimal _egresos = 0;
-        public decimal TotasCostosGastos3380
+        public decimal CostosGastos
         {
             get => _egresos;
             set
             {
                 _egresos = value;
                 RecalculateUtilidad();
-                Notify(nameof(TotasCostosGastos3380));
+                Notify(nameof(CostosGastos));
             }
         }
 
         public decimal UtilidadEjercicio3420 { get; private set; } = 0;
         private void RecalculateUtilidad()
         {
-            UtilidadEjercicio3420 = TotalIngresos1930 - TotasCostosGastos3380;
+            UtilidadEjercicio3420 = Ingresos - CostosGastos;
             Notify(nameof(UtilidadEjercicio3420)); // ← agregado aquí
         }
 

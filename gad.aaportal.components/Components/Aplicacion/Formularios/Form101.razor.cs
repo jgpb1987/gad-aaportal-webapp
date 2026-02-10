@@ -10,9 +10,9 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 {
     public partial class Form101 : ComponentBase
     {
-        private string ruc = "1002001749001";//SE DEBE TOMAR EL VALOR DE SESION
-        //private string ruc = "1091730940001";//SE DEBE TOMAR EL VALOR DE SESION
-        private string tipoPersona = "PN";//SE DEBE TOMAR EL VALOR DE SESION
+        //private string ruc = "1002001749001";//SE DEBE TOMAR EL VALOR DE SESION
+        private string ruc = "1091730940001";//SE DEBE TOMAR EL VALOR DE SESION
+        private string tipoPersona = "PJ";//SE DEBE TOMAR EL VALOR DE SESION
 
         private string? razSocial { get; set; }
         private List<int> anios = new();
@@ -130,6 +130,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                 baseForm = baseForm.HasValue ? Math.Round(baseForm.Value, 2) : 0;
                 StateHasChanged();
                 CalcularPatenteSugerido();
+                await UsarSugeridos();
             }
             else
             {
@@ -172,7 +173,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                 Toast.ShowMessage("error", "Distribución de pago", "La suma de porcentajes debe ser del 100%");
                 return;
             }
-            
+
             await ConsultarTasasAdministrativas();
             var porcentajeXPagar = cantones.Cantones.Where(c => c.PagoAA).Sum(c => c.Porcentaje);
 
@@ -216,41 +217,42 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             }
         }
 
-        private async Task LimpiarForm()
-        {
-            modalTitle = "Limpiar Datos";
-            modalMessage = (MarkupString)("¿Seguro de borrar datos?");
-            modalSize = ModalSize.Small;
-            bool confirm = await myModal.ShowAsync();
-            if (confirm)
-            {
-                declaracion = new();
-                declaracion.PropertyChanged += async (_, args) =>
-                {
-                    if (args.PropertyName == nameof(DeclaracionData.TotalActivos) ||
-                        args.PropertyName == nameof(DeclaracionData.TotalPasivos) ||
-                        args.PropertyName == nameof(DeclaracionData.UtilidadEjercicio3420))
-                    {
-                        CalcularPatenteDeclarada();
-                        StateHasChanged();
-                    }
-                };
-            }
-            cantones.Cantones.ForEach(c =>
-            {
-                c.Seleccionado = false;
-                c.PagoAA = false;
-                c.Porcentaje = 0;
-            });
-            var aa = cantones.Cantones.Where(c => c.Id == 116).FirstOrDefault();
-            aa.Seleccionado = true;
-            aa.PagoAA = true;
-            aa.Porcentaje = 100;
-        }
+        //private async Task LimpiarForm()
+        //{
+        //    modalTitle = "Limpiar Datos";
+        //    modalMessage = (MarkupString)("¿Seguro de borrar datos?");
+        //    modalSize = ModalSize.Small;
+        //    bool confirm = await myModal.ShowAsync();
+        //    if (confirm)
+        //    {
+        //        declaracion = new();
+        //        declaracion.PropertyChanged += async (_, args) =>
+        //        {
+        //            if (args.PropertyName == nameof(DeclaracionData.TotalActivos) ||
+        //                args.PropertyName == nameof(DeclaracionData.TotalPasivos) ||
+        //                args.PropertyName == nameof(DeclaracionData.UtilidadEjercicio3420))
+        //            {
+        //                CalcularPatenteDeclarada();
+        //                StateHasChanged();
+        //            }
+        //        };
+        //    }
+        //    cantones.Cantones.ForEach(c =>
+        //    {
+        //        c.Seleccionado = false;
+        //        c.PagoAA = false;
+        //        c.Porcentaje = 0;
+        //    });
+        //    var aa = cantones.Cantones.Where(c => c.Id == 116).FirstOrDefault();
+        //    aa.Seleccionado = true;
+        //    aa.PagoAA = true;
+        //    aa.Porcentaje = 100;
+        //}
 
         private async Task UsarSugeridos()
         {
             declaracion = ingresosEgresos.Adapt<DeclaracionData>();
+            declaracion.PasivoLargoPlazo = ingresosEgresos.PasivoNoCorriente.Value;
             declaracion.PropertyChanged += async (_, args) =>
             {
                 if (args.PropertyName == nameof(DeclaracionData.TotalActivos) ||
@@ -289,13 +291,32 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             excedente = baseCalculo - tarifa.Desde;
             valor_excedente = excedente * tarifa.Excedente;
             declaracion.ValorPatente = Math.Round(impuesto + valor_excedente, 2);
-            if (!LabelResultado.Equals("Utilidad"))
-                declaracion.ValorPatente = declaracion.ValorPatente / 2;
 
             foreach (var item in cantones.Cantones)
             {
                 if (item.Seleccionado)
                     item.Valor = declaracion.ValorUnoPorMil * item.Porcentaje / 100;
+            }
+        }
+
+        private void ValidarPasivo()
+        {
+            if (declaracion.PasivoCorriente > ingresosEgresos.PasivoCorriente)
+                declaracion.PasivoCorriente = ingresosEgresos.PasivoCorriente.Value;
+
+            if (declaracion.PasivoCorriente < 0)
+                declaracion.PasivoCorriente = 0;
+        }
+
+        private void AplicaDescuento(ChangeEventArgs e)
+        {
+            if ((bool)e.Value)
+            {
+                declaracion.ValorPatente = declaracion.ValorPatente / 2;
+            }
+            else
+            {
+                declaracion.ValorPatente = ingresosEgresos.ValorPatente.Value;
             }
         }
     }

@@ -93,5 +93,83 @@ namespace gad.aaportal.services.Services.Implementation
             }
             return result;
         }
+        public async Task<bool> SavePaquete7728(AaportalContext contexto, Lista7728 paquete7728)
+        {
+            bool result = false;
+            try
+            {
+                var entity = paquete7728.paquete7728s.Adapt<List<ActividadEstablecimiento>>();
+                entity.ForEach(e => e.FechaRegistro = DateTime.Now);
+
+                foreach (var item in entity)
+                {
+                    var query = await contexto.ActividadesEstablecimiento
+                        .FirstOrDefaultAsync(f =>
+                            f.NumeroRuc == item.NumeroRuc &&
+                            f.NumeroEstablecimiento == item.NumeroEstablecimiento &&
+                            f.CodigoActividad == item.CodigoActividad);
+
+                    if (query == null)
+                    {
+                        await contexto.ActividadesEstablecimiento.AddAsync(item);
+                    }
+                    else
+                    {
+                        //await contexto.ActividadesEstablecimiento
+                        //    .AddAsync(query.Adapt<Form102bkp>());
+                        item.Adapt(query);
+                        //query.FechaActualizacion = DateTime.Now;
+                    }
+                }
+
+                await contexto.SaveChangesAsync();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
+
+        public async Task<bool> SavePaquete7730(AaportalContext contexto, Lista7730 paquete7730)
+        {
+            bool result = false;
+            try
+            {
+                var entity = paquete7730.paquete7730s.Adapt<List<SriRucContribuyente>>();
+                entity.ForEach(e => e.FechaRegistro = DateTime.Now);
+
+                foreach (var item in entity)
+                {
+                    var query = await contexto.SriRucContribuyentes
+                        .FirstOrDefaultAsync(f =>
+                            f.ClaseContribuyente == item.ClaseContribuyente &&
+                            f.EstadoContribuyente == item.EstadoContribuyente);
+
+                    if (query == null)
+                    {
+                        await contexto.SriRucContribuyentes.AddAsync(item);
+                    }
+                    else
+                    {
+                        //await contexto.ActividadesEstablecimiento
+                        //    .AddAsync(query.Adapt<Form102bkp>());
+                        item.Adapt(query);
+                        //query.FechaActualizacion = DateTime.Now;
+                    }
+                }
+
+                await contexto.SaveChangesAsync();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
     }
 }

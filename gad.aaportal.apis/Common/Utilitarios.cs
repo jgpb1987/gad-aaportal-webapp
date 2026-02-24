@@ -204,6 +204,162 @@ namespace gad.aaportal.apis.Common
             return lista;
         }
 
+        public static Lista7728 MapearA7728Lista(consultarResponse response)
+        {
+            var lista = new Lista7728();
+            try
+            {
+                foreach (var entidad in response.paquete.entidades)
+                {
+                    foreach (var fila in entidad.filas)
+                    {
+                        var dto = new Paquete7728();
+
+                        foreach (var col in fila.columnas)
+                        {
+                            switch (col.campo)
+                            {
+                                case "actividadEconomica":
+                                    dto.ActividadEconomica = col.valor;
+                                    break;
+                                case "codigoActividadEconomica":
+                                    dto.CodigoActividad = col.valor;
+                                    break;
+                                case "numeroEstablecimiento":
+                                    dto.NumeroEstablecimiento = int.Parse(col.valor);
+                                    break;
+                                case "numeroRuc":
+                                    dto.NumeroRuc = col.valor;
+                                    break;
+                            }
+                        }
+                        lista.paquete7728s.Add(dto);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return lista;
+        }
+
+        public static Lista7730 MapearA7730Lista(consultarResponse response)
+        {
+            var lista = new Lista7730();
+            try
+            {
+                foreach (var entidad in response.paquete.entidades)
+                {
+                    foreach (var fila in entidad.filas)
+                    {
+                        var dto = new Paquete7730();
+
+                        foreach (var col in fila.columnas)
+                        {
+                            switch (col.campo)
+                            {
+                                case "claseContribuyente":
+                                    dto.ClaseContribuyente = col.valor;
+                                    break;
+                                case "codigoClaseContribuyente":
+                                    dto.CodigoClaseContribuyente = col.valor;
+                                    break;
+                                case "codigoEstadoContribuyente":
+                                    dto.CodigoEstadoContribuyente = col.valor;
+                                    break;
+                                case "estadoContribuyente":
+                                    dto.EstadoContribuyente = col.valor;
+                                    break;
+                                case "estadoPersona":
+                                    dto.EstadoPersona = col.valor;
+                                    break;
+                                case "estadoSociedad":
+                                    dto.EstadoSociedad = col.valor;
+                                    break;
+                                case "fechaActualizacion":
+                                    dto.FechaActualizacion = TryDate(col.valor);
+                                    break;
+                                case "fechaCancelacion":
+                                    dto.FechaCancelacion = TryDate(col.valor);
+                                    break;
+                                case "fechaReinicioActividades":
+                                    dto.FechaReinicioActividades = TryDate(col.valor);
+                                    break;
+                                case "fechaSuspensionDefinitiva":
+                                    dto.FechaSuspensionDefinitiva = TryDate(col.valor);
+                                    break;
+                                case "obligado":
+                                    dto.Obligado = col.valor;
+                                    break;
+                                case "personaSociedad":
+                                    dto.PersonaSociedad = col.valor;
+                                    break;
+                                case "fechaInscripcionRuc":
+                                    dto.FechaInscripcionRuc = TryDate(col.valor);
+                                    break;
+                                case "fechaConstitucion":
+                                    dto.FechaConstitucion = TryDate(col.valor);
+                                    break;
+                                case "numeroRegistroMercantil":
+                                    dto.NumeroRegistroMercantil = col.valor;
+                                    break;
+                                case "fechaFusion":
+                                    dto.FechaFusion = TryDate(col.valor);
+                                    break;
+                                case "fechaEscision":
+                                    dto.FechaEscision = TryDate(col.valor);
+                                    break;
+                                case "capitalSuscrito":
+                                    dto.CapitalSuscrito = col.valor;
+                                    break;
+                                case "fechaNombramiento":
+                                    dto.FechaNombramiento = TryDate(col.valor);
+                                    break;
+                                case "categoriaRise":
+                                    dto.CategoriaRise = col.valor;
+                                    break;
+                                case "comercioExterior":
+                                    dto.ComercioExterior = col.valor;
+                                    break;
+                                case "numRucSociedadAdscrita":
+                                    dto.NumRucSociedadAdscrita = col.valor;
+                                    break;
+                                case "numRucSociedadEscisionada":
+                                    dto.NumRucSociedadEscisionada = col.valor;
+                                    break;
+                                case "numeroRucFusionado":
+                                    dto.NumeroRucFusionado = col.valor;
+                                    break;
+                                case "numeroPatronal":
+                                    dto.NumeroPatronal = col.valor;
+                                    break;
+                                case "numeroExpediente":
+                                    dto.NumeroExpediente = col.valor;
+                                    break;
+                                case "origenSociedad":
+                                    dto.OrigenSociedad = col.valor;
+                                    break;
+                                case "gerenteGeneral":
+                                    dto.GerenteGeneral = col.valor;
+                                    break;
+                                case "fechaNombramientoGerente":
+                                    dto.FechaNombramientoGerente = TryDate(col.valor);
+                                    break;
+                                case "numeroRegistroColegioGremio":
+                                    dto.NumeroRegistroColegioGremio = col.valor;
+                                    break;
+                            }
+                        }
+                        lista.paquete7730s.Add(dto);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return lista;
+        }
+
         static decimal? TryDec(string valor)
         {
             return decimal.TryParse(
@@ -212,6 +368,13 @@ namespace gad.aaportal.apis.Common
                 System.Globalization.CultureInfo.InvariantCulture,
                 out var d
             ) ? d : null;
+        }
+
+        static DateTime? TryDate(string valor)
+        {
+            return DateTime.TryParse(valor, out var d)
+                ? d
+                : null;
         }
     }
 }

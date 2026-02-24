@@ -69,6 +69,59 @@ namespace gad.aaportal.commons.Dto
         public List<Form102Dto> Form102s { get; set; } = new List<Form102Dto>();
     }
 
+    public class Paquete7728
+    {
+        public string NumeroRuc { get; set; } = string.Empty;
+        public int NumeroEstablecimiento { get; set; }
+        public string CodigoActividad { get; set; } = string.Empty!;
+        public string? ActividadEconomica { get; set; }
+    }
+
+    public class Lista7728
+    {
+        public List<Paquete7728> paquete7728s { get; set; } = new List<Paquete7728>();
+    }
+
+    public class Paquete7730
+    {
+        public string? ClaseContribuyente { get; set; }
+        public string? CodigoClaseContribuyente { get; set; }
+        public string? CodigoEstadoContribuyente { get; set; }
+        public string? EstadoContribuyente { get; set; }
+        public string? EstadoPersona { get; set; }
+        public string? EstadoSociedad { get; set; }
+        public DateTime? FechaActualizacion { get; set; }
+        public DateTime? FechaCancelacion { get; set; }
+        public DateTime? FechaReinicioActividades { get; set; }
+        public DateTime? FechaSuspensionDefinitiva { get; set; }
+        public string? Obligado { get; set; }
+        public string? PersonaSociedad { get; set; }
+        public DateTime? FechaInscripcionRuc { get; set; }
+        public DateTime? FechaConstitucion { get; set; }
+        public string? NumeroRegistroMercantil { get; set; }
+        public DateTime? FechaFusion { get; set; }
+        public DateTime? FechaEscision { get; set; }
+        public string? CapitalSuscrito { get; set; }
+        public DateTime? FechaNombramiento { get; set; }
+        public string? CategoriaRise { get; set; }
+        public string? ComercioExterior { get; set; }
+        public string? NumRucSociedadAdscrita { get; set; }
+        public string? NumRucSociedadEscisionada { get; set; }
+        public string? NumeroRucFusionado { get; set; }
+        public string? NumeroPatronal { get; set; }
+        public string? NumeroExpediente { get; set; }
+        public string? OrigenSociedad { get; set; }
+        public string? GerenteGeneral { get; set; }
+        public DateTime? FechaNombramientoGerente { get; set; }
+        public string? NumeroRegistroColegioGremio { get; set; }
+        public DateTime FechaRegistro { get; set; }
+    }
+
+    public class Lista7730
+    {
+        public List<Paquete7730> paquete7730s { get; set; } = new List<Paquete7730>();
+    }
+
     public class Form101SaveDtoResult : BaseResult
     {
         public bool Result { get; set; } = false;
@@ -83,5 +136,13 @@ namespace gad.aaportal.commons.Dto
     {
         public bool SaveForm101 { get; set; } = false;
         public bool SaveForm102 { get; set; } = false;
+        public bool Save7728 { get; set; } = false;
+        public bool Save7730 { get; set; } = false;
+    }
+
+    public class PaqueteDinardapRequest
+    {
+        public string identificacion { get; set; }
+        public string paquete { get; set; }
     }
 }

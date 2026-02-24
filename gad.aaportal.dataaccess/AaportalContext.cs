@@ -27,6 +27,8 @@ public partial class AaportalContext : DbContext
     public DbSet<Form101bkp> Form101Bkps { get; set; }
     public DbSet<Form102> Form102 { get; set; } = null!;
     public DbSet<Form102bkp> Form102Bkps { get; set; } = null!;
+    public DbSet<ActividadEstablecimiento> ActividadesEstablecimiento { get; set; }
+    public DbSet<SriRucContribuyente> SriRucContribuyentes { get; set; }
     #endregion
 
     #region Schema Aplicacion
@@ -46,6 +48,8 @@ public partial class AaportalContext : DbContext
         modelBuilder.ApplyConfiguration(new Form101Configuracionbkp());
         modelBuilder.ApplyConfiguration(new Form102Configuracion());
         modelBuilder.ApplyConfiguration(new Form102bkpConfiguracion());
+        modelBuilder.ApplyConfiguration(new ActividadEstablecimientoConfig());
+        modelBuilder.ApplyConfiguration(new SriRucContribuyenteConfig());
         modelBuilder.ApplyConfiguration(new CantonConfiguracion());
         modelBuilder.ApplyConfiguration(new TarifaImpositivaConfig());
         modelBuilder.ApplyConfiguration(new DeclaracionPJConfiguracion());

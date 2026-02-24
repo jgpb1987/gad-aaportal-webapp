@@ -360,6 +360,147 @@ namespace gad.aaportal.apis.Common
             return lista;
         }
 
+        public static Lista7731 MapearA7731Lista(consultarResponse response)
+        {
+            var lista = new Lista7731();
+            try
+            {
+                foreach (var entidad in response.paquete.entidades)
+                {
+                    foreach (var fila in entidad.filas)
+                    {
+                        var dto = new Paquete7731();
+
+                        foreach (var col in fila.columnas)
+                        {
+                            switch (col.campo)
+                            {
+                                case "calle":
+                                    dto.Calle = col.valor;
+                                    break;
+                                case "estadoEstablecimiento":
+                                    dto.EstadoEstablecimiento = col.valor;
+                                    break;
+                                case "interseccion":
+                                    dto.Interseccion = col.valor;
+                                    break;
+                                case "nombreFantasiaComercial":
+                                    dto.NombreFantasiaComercial = col.valor;
+                                    break;
+                                case "numeroEstablecimiento":
+                                    dto.NumeroEstablecimiento = col.valor;
+                                    break;
+                                case "numeroRuc":
+                                    dto.NumeroRuc = col.valor;
+                                    break;
+                                case "tipoEstablecimiento":
+                                    dto.TipoEstablecimiento = col.valor;
+                                    break;
+                                case "referenciaUbicacion":
+                                    dto.ReferenciaUbicacion = col.valor;
+                                    break;
+                                case "fechaInicioActividades":
+                                    dto.FechaInicioActividades = TryDate(col.valor);
+                                    break;
+                                case "fechaReinicioActividades":
+                                    dto.FechaReinicioActividades = TryDate(col.valor);
+                                    break;
+                                case "fechaCierre":
+                                    dto.FechaCierre = TryDate(col.valor);
+                                    break;
+                                case "verificacionUbicacion":
+                                    dto.VerificacionUbicacion = col.valor;
+                                    break;
+                                case "ubicacionGeografica":
+                                    dto.UbicacionGeografica = col.valor;
+                                    break;
+                                case "barrio":
+                                    dto.Barrio = col.valor;
+                                    break;
+                                case "ciudadela":
+                                    dto.Ciudadela = col.valor;
+                                    break;
+                                case "conjunto":
+                                    dto.Conjunto = col.valor;
+                                    break;
+                                case "bloque":
+                                    dto.Bloque = col.valor;
+                                    break;
+                                case "nombreEdificio":
+                                    dto.NombreEdificio = col.valor;
+                                    break;
+                                case "numeroOficina":
+                                    dto.NumeroOficina = col.valor;
+                                    break;
+                                case "manzana":
+                                    dto.Manzana = col.valor;
+                                    break;
+                                case "supermanzana":
+                                    dto.Supermanzana = col.valor;
+                                    break;
+                                case "kilometro":
+                                    dto.Kilometro = col.valor;
+                                    break;
+                                case "carretero":
+                                    dto.Carretero = col.valor;
+                                    break;
+                                case "camino":
+                                    dto.Camino = col.valor;
+                                    break;
+                                case "numeroPiso":
+                                    dto.NumeroPiso = col.valor;
+                                    break;
+                                case "resultadoVerificacion":
+                                    dto.ResultadoVerificacion = col.valor;
+                                    break;
+                                case "direccionPresunta":
+                                    dto.DireccionPresunta = col.valor;
+                                    break;
+                            }
+                        }
+                        lista.paquete7731s.Add(dto);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return lista;
+        }
+
+        public static Lista7732 MapearA7732Lista(consultarResponse response)
+        {
+            var lista = new Lista7732();
+            try
+            {
+                foreach (var entidad in response.paquete.entidades)
+                {
+                    foreach (var fila in entidad.filas)
+                    {
+                        var dto = new Paquete7732();
+
+                        foreach (var col in fila.columnas)
+                        {
+                            switch (col.campo)
+                            {
+                                case "numeroRuc":
+                                    dto.NumeroRuc = col.valor;
+                                    break;
+                                case "marcaListaBlanca":
+                                    dto.MarcaListaBlanca = col.valor;
+                                    break;
+                            }
+                        }
+                        lista.paquete7732s.Add(dto);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return lista;
+        }
+
         static decimal? TryDec(string valor)
         {
             return decimal.TryParse(

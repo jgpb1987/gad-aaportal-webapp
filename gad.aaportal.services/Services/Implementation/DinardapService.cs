@@ -171,5 +171,82 @@ namespace gad.aaportal.services.Services.Implementation
             }
             return result;
         }
+
+        public async Task<bool> SavePaquete7731(AaportalContext contexto, Lista7731 paquete7731)
+        {
+            bool result = false;
+            try
+            {
+                var entity = paquete7731.paquete7731s.Adapt<List<SriRucEstablecimiento>>();
+                entity.ForEach(e => e.FechaGrabado = DateTime.Now);
+
+                foreach (var item in entity)
+                {
+                    var query = await contexto.SriRucEstablecimientos
+                        .FirstOrDefaultAsync(f =>
+                            f.NumeroRuc == item.NumeroRuc
+                            && f.NumeroEstablecimiento == item.NumeroEstablecimiento);
+
+                    if (query == null)
+                    {
+                        await contexto.SriRucEstablecimientos.AddAsync(item);
+                    }
+                    else
+                    {
+                        //await contexto.ActividadesEstablecimiento
+                        //    .AddAsync(query.Adapt<Form102bkp>());
+                        item.Adapt(query);
+                        //query.FechaActualizacion = DateTime.Now;
+                    }
+                }
+
+                await contexto.SaveChangesAsync();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
+
+        public async Task<bool> SavePaquete7732(AaportalContext contexto, Lista7732 paquete7732)
+        {
+            bool result = false;
+            try
+            {
+                var entity = paquete7732.paquete7732s.Adapt<List<SriRucListaBlanca>>();
+                entity.ForEach(e => e.FechaGrabado = DateTime.Now);
+
+                foreach (var item in entity)
+                {
+                    var query = await contexto.SriRucListaBlanca
+                        .FirstOrDefaultAsync(f =>
+                            f.NumeroRuc == item.NumeroRuc);
+
+                    if (query == null)
+                    {
+                        await contexto.SriRucListaBlanca.AddAsync(item);
+                    }
+                    else
+                    {
+                        //await contexto.ActividadesEstablecimiento
+                        //    .AddAsync(query.Adapt<Form102bkp>());
+                        item.Adapt(query);
+                        //query.FechaActualizacion = DateTime.Now;
+                    }
+                }
+
+                await contexto.SaveChangesAsync();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(sex, sex.Description, sex.Code);
+                //throw;
+            }
+            return result;
+        }
     }
 }

@@ -122,6 +122,55 @@ namespace gad.aaportal.commons.Dto
         public List<Paquete7730> paquete7730s { get; set; } = new List<Paquete7730>();
     }
 
+    public class Paquete7731
+    {
+        public string NumeroRuc { get; set; }
+        public string NumeroEstablecimiento { get; set; }
+        public string Calle { get; set; }
+        public string EstadoEstablecimiento { get; set; }
+        public string Interseccion { get; set; }
+        public string NombreFantasiaComercial { get; set; }
+        public string TipoEstablecimiento { get; set; }
+        public string ReferenciaUbicacion { get; set; }
+        public DateTime? FechaInicioActividades { get; set; }
+        public DateTime? FechaReinicioActividades { get; set; }
+        public DateTime? FechaCierre { get; set; }
+        public string VerificacionUbicacion { get; set; }
+        public string UbicacionGeografica { get; set; }
+        public string Barrio { get; set; }
+        public string Ciudadela { get; set; }
+        public string Conjunto { get; set; }
+        public string Bloque { get; set; }
+        public string NombreEdificio { get; set; }
+        public string NumeroOficina { get; set; }
+        public string Manzana { get; set; }
+        public string Supermanzana { get; set; }
+        public string Kilometro { get; set; }
+        public string Carretero { get; set; }
+        public string Camino { get; set; }
+        public string NumeroPiso { get; set; }
+        public string ResultadoVerificacion { get; set; }
+        public string DireccionPresunta { get; set; }
+        public DateTime FechaGrabado { get; set; }
+    }
+
+    public class Lista7731
+    {
+        public List<Paquete7731> paquete7731s { get; set; } = new List<Paquete7731>();
+    }
+
+    public class Paquete7732
+    {
+        public string NumeroRuc { get; set; }
+        public string MarcaListaBlanca { get; set; }
+        public DateTime FechaGrabado { get; set; }
+    }
+
+    public class Lista7732
+    {
+        public List<Paquete7732> paquete7732s { get; set; } = new List<Paquete7732>();
+    }
+
     public class Form101SaveDtoResult : BaseResult
     {
         public bool Result { get; set; } = false;
@@ -138,6 +187,8 @@ namespace gad.aaportal.commons.Dto
         public bool SaveForm102 { get; set; } = false;
         public bool Save7728 { get; set; } = false;
         public bool Save7730 { get; set; } = false;
+        public bool Save7731 { get; set; } = false;
+        public bool Save7732 { get; set; } = false;
     }
 
     public class PaqueteDinardapRequest

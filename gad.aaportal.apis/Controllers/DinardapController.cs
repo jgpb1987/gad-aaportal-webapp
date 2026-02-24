@@ -128,6 +128,16 @@ namespace gad.aaportal.apis.Controllers
                     var paquete7730 = Utilitarios.MapearA7730Lista(response);
                     result.Save7730 = await services.SavePaquete7730(contexto, paquete7730);
                 }
+                else if (request.paquete == "7731")
+                {
+                    var paquete7731 = Utilitarios.MapearA7731Lista(response);
+                    result.Save7731 = await services.SavePaquete7731(contexto, paquete7731);
+                }
+                else if (request.paquete == "7732")
+                {
+                    var paquete7732 = Utilitarios.MapearA7732Lista(response);
+                    result.Save7732 = await services.SavePaquete7732(contexto, paquete7732);
+                }
                 else
                 {
                     string pausa = request.paquete;

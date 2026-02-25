@@ -31,6 +31,14 @@ public partial class AaportalContext : DbContext
     public DbSet<SriRucContribuyente> SriRucContribuyentes { get; set; }
     public DbSet<SriRucEstablecimiento> SriRucEstablecimientos { get; set; }
     public DbSet<SriRucListaBlanca> SriRucListaBlanca { get; set; }
+    public DbSet<SriContribuyenteDatos> SriContribuyenteDatos { get; set; }
+    public DbSet<SriActividadEconomica> SriActividadEconomica { get; set; }
+    public DbSet<SriTipoContribuyente> SriTipoContribuyente { get; set; }
+    public DbSet<SriContador> SriContador { get; set; }
+    public DbSet<SriEstructuraOrganizacional> SriEstructuraOrganizacional { get; set; }
+    public DbSet<SriRepresentanteLegal> SriRepresentanteLegal { get; set; }
+    public DbSet<SriEstadoTributario> SriEstadoTributario { get; set; }
+    public DbSet<SepsOrganizacion> SepsOrganizacion { get; set; }
     #endregion
 
     #region Schema Aplicacion
@@ -54,6 +62,14 @@ public partial class AaportalContext : DbContext
         modelBuilder.ApplyConfiguration(new SriRucContribuyenteConfig());
         modelBuilder.ApplyConfiguration(new SriRucEstablecimientoConfig());
         modelBuilder.ApplyConfiguration(new SriRucListaBlancaConfig());
+        modelBuilder.ApplyConfiguration(new SriContribuyenteDatosConfig());
+        modelBuilder.ApplyConfiguration(new SriActividadEconomicaConfig());
+        modelBuilder.ApplyConfiguration(new SriTipoContribuyenteConfig());
+        modelBuilder.ApplyConfiguration(new SriContadorConfig());
+        modelBuilder.ApplyConfiguration(new SriEstructuraOrganizacionalConfig());
+        modelBuilder.ApplyConfiguration(new SriRepresentanteLegalConfig());
+        modelBuilder.ApplyConfiguration(new SriEstadoTributarioConfig());
+        modelBuilder.ApplyConfiguration(new SepsOrganizacionConfig());
         modelBuilder.ApplyConfiguration(new CantonConfiguracion());
         modelBuilder.ApplyConfiguration(new TarifaImpositivaConfig());
         modelBuilder.ApplyConfiguration(new DeclaracionPJConfiguracion());

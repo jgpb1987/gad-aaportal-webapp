@@ -171,6 +171,160 @@ namespace gad.aaportal.commons.Dto
         public List<Paquete7732> paquete7732s { get; set; } = new List<Paquete7732>();
     }
 
+    public class Paquete7736
+    {
+        public string NumeroRuc { get; set; }
+        public string Estado { get; set; }
+        public string Descripcion { get; set; }
+        public DateTime FechaGrabado { get; set; }
+    }
+
+    public class Lista7736
+    {
+        public List<Paquete7736> paquete7736s { get; set; } = new List<Paquete7736>();
+    }
+
+    public class Paquete7742
+    {
+        public string? Calle { get; set; }
+        public string? Canton { get; set; }
+        public string? CedulaRepresentante { get; set; }
+        public string? CedulaSecretario { get; set; }
+        public string? ClaseOrganizacion { get; set; }
+        public int? CodigoError { get; set; }
+        public string? CodigoRegistroSeps { get; set; }
+        public string? CorreoOrganizacion { get; set; }
+        public string? Error { get; set; }
+        public string? EstadoOrganizacion { get; set; }
+        public DateTime? FechaRegistroSeps { get; set; }
+        public string? GrupoOrganizacion { get; set; }
+        public string? Interseccion { get; set; }
+        public string? NombreRepresentanteLegal { get; set; }
+        public string? NombreSecretario { get; set; }
+        public string? Numero { get; set; }
+        public string? NumeroResolucionSeps { get; set; }
+        public string? Parroquia { get; set; }
+        public string? Provincia { get; set; }
+        public string? RazonSocial { get; set; }
+        public string? Referencia { get; set; }
+        public string Ruc { get; set; } = null!;  
+        public string? Telefono { get; set; }
+        public string? TipoOrganizacion { get; set; }
+        public DateTime FechaGrabado { get; set; }
+    }
+
+    public class Lista7742
+    {
+        public List<Paquete7742> paquete7742s { get; set; } = new List<Paquete7742>();
+    }
+
+    public class ContribuyenteDatos
+    {
+        public string NumeroRuc { get; set; }
+        public string CodClaseContrib { get; set; }
+        public string CodEstado { get; set; }
+        public string DesClaseContrib { get; set; }
+        public string DesEstado { get; set; }
+        public string DireccionCorta { get; set; }
+        public string Email { get; set; }
+        public string NombreComercial { get; set; }
+        public string RazonSocial { get; set; }
+        public string TelefonoDomicilio { get; set; }
+        public string TelefonoTrabajo { get; set; }
+        public string CalificacionArtesanal { get; set; }
+        public string DireccionLarga { get; set; }
+        public string Fax { get; set; }
+        public DateTime? FechaAltaParaEspecial { get; set; }
+        public DateTime? FechaCalificacionArtesanal { get; set; }
+        public DateTime? FechaCambioObligado { get; set; }
+        public DateTime? FechaInicioActividades { get; set; }
+        public DateTime? FechaNacimiento { get; set; }
+        public DateTime? FechaNotificacionEspeciales { get; set; }
+        public DateTime? FechaUltimaDeclaracion { get; set; }
+        public string NumeroCalificacionArtesanal { get; set; }
+        public string ObligadoContabilidad { get; set; }
+        public string ResolucionAltaParaEspecial { get; set; }
+        public string TipoCalificacionArtesanal { get; set; }
+        public string UltimoPeriodoFiscalCumplido { get; set; }
+        public string NombreAgenteRetencion { get; set; }
+        public string EstadoListaBlanca { get; set; }
+        public string MarcaFantasma { get; set; }
+        public DateTime FechaGrabado { get; set; }
+    }
+
+    public class ActividadEconomica
+    {
+        public string NumeroRuc { get; set; }
+        public string ActividadGeneral { get; set; }
+        public string CodN1Familia { get; set; }
+        public string CodN2Grupo { get; set; }
+        public string CodN3SubGrupo { get; set; }
+        public string CodN4Clase { get; set; }
+        public string CodN5SubClase { get; set; }
+        public string CodN6Actividad { get; set; }
+        public string N1Familia { get; set; }
+        public string N2Grupo { get; set; }
+        public string N3SubGrupo { get; set; }
+        public string N4Clase { get; set; }
+        public string N5SubClase { get; set; }
+        public string N6Actividad { get; set; }
+        public DateTime FechaGrabado { get; set; }
+    }
+
+    public class TipoContribuyente
+    {
+        public string NumeroRuc { get; set; }
+        public string Nivel1 { get; set; }
+        public string Nivel2 { get; set; }
+        public string Nivel3 { get; set; }
+        public string Nivel4 { get; set; }
+        public string UltimoNivel { get; set; }
+        public DateTime FechaGrabado { get; set; }
+    }
+
+    public class Contador
+    {
+        public string NumeroRuc { get; set; }
+        public string CedulaContador { get; set; }
+        public string NombreContador { get; set; }
+        public DateTime FechaGrabado { get; set; }
+    }
+
+    public class EstructuraOrganizacional
+    {
+        public string NumeroRuc { get; set; }
+        public string CodigoProvincia { get; set; }
+        public string CodigoRegional { get; set; }
+        public string NombreProvincia { get; set; }
+        public string NombreRegional { get; set; }
+        public DateTime FechaGrabado { get; set; }
+    }
+
+    public class RepresentanteLegal
+    {
+        public string NumeroRuc { get; set; }
+        public string Cargo { get; set; }
+        public string Identificacion { get; set; }
+        public string Nombre { get; set; }
+        public DateTime FechaGrabado { get; set; }
+    }
+
+    public class Paquete6279
+    {
+        public List<ContribuyenteDatos> ContribuyenteDatos { get; set; } = new List<ContribuyenteDatos>();
+        public List<ActividadEconomica> ActividadEconomica { get; set; } = new List<ActividadEconomica>();
+        public List<TipoContribuyente> TipoContribuyente { get; set; } = new List<TipoContribuyente>();
+        public List<Contador> Contador { get; set; } = new List<Contador>();
+        public List<EstructuraOrganizacional> Estructura { get; set; } = new List<EstructuraOrganizacional>();
+        public List<RepresentanteLegal> RepresentanteLegal { get; set; } = new List<RepresentanteLegal>();
+    }
+
+    public class Lista6279
+    {
+        public List<Paquete6279> paquete6279s { get; set; } = new List<Paquete6279>();
+        public string NumeroRuc { get; set; }
+    }
+
     public class Form101SaveDtoResult : BaseResult
     {
         public bool Result { get; set; } = false;
@@ -189,6 +343,9 @@ namespace gad.aaportal.commons.Dto
         public bool Save7730 { get; set; } = false;
         public bool Save7731 { get; set; } = false;
         public bool Save7732 { get; set; } = false;
+        public bool Save6279 { get; set; } = false;
+        public bool Save7736 { get; set; } = false;
+        public bool Save7742 { get; set; } = false;
     }
 
     public class PaqueteDinardapRequest

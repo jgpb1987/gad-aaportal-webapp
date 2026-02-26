@@ -1,22 +1,34 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using Azure;
+using Azure.Core;
+using gad.aainteroperador.soap.Client;
+using gad.aainteroperador.soap.Configuration;
+using gad.aaportal.commons.Dto.Dinardap;
+using gad.aaportal.commons.Dto.Log;
 using gad.aaportal.dataaccess;
 using gad.aaportal.models.Entity.Dinardap;
+using gad.aaportal.services.Config;
 using gad.aaportal.services.Services.Interfaces;
+using gad.aaportal.services.Util;
+using gad.interoperador;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace gad.aaportal.services.Services.Implementation
 {
     public class DinardapService : IDinardapService
     {
         private readonly ILogger<DinardapService> logger;
+        private readonly ApiServerConfig apiServerConfig;
+        private readonly EndPointsConfig endPointsConfig;
 
-        public DinardapService(ILogger<DinardapService> logger)
+        public DinardapService(ILogger<DinardapService> logger, IOptions<ApiServerConfig> apiServerConfig, EndPointsConfig endPointsConfig)
         {
             this.logger = logger;
+            this.apiServerConfig = apiServerConfig.Value;
+            this.endPointsConfig = endPointsConfig;
         }
-
         public async Task<bool> SaveForm101(AaportalContext contexto, ListForm101 form101)
         {
             bool result = false;
@@ -50,11 +62,11 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, ex.StackTrace, ex.Message);
             }
 
             return result;
         }
-
         public async Task<bool> SaveForm102(AaportalContext contexto, ListForm102 form102)
         {
             bool result = false;
@@ -88,8 +100,7 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (Exception ex)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
+                logger.LogError(ex, ex.StackTrace, ex.Message);
             }
             return result;
         }
@@ -127,12 +138,10 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (Exception ex)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
+                logger.LogError(ex, ex.StackTrace, ex.Message);
             }
             return result;
         }
-
         public async Task<bool> SavePaquete7730(AaportalContext contexto, Lista7730 paquete7730)
         {
             bool result = false;
@@ -166,12 +175,10 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (Exception ex)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
+                logger.LogError(ex, ex.StackTrace, ex.Message);
             }
             return result;
         }
-
         public async Task<bool> SavePaquete7731(AaportalContext contexto, Lista7731 paquete7731)
         {
             bool result = false;
@@ -205,12 +212,10 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (Exception ex)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
+                logger.LogError(ex, ex.StackTrace, ex.Message);
             }
             return result;
         }
-
         public async Task<bool> SavePaquete7732(AaportalContext contexto, Lista7732 paquete7732)
         {
             bool result = false;
@@ -243,12 +248,10 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (Exception ex)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
+                logger.LogError(ex, ex.StackTrace, ex.Message);
             }
             return result;
         }
-
         public async Task<bool> SavePaquete6279(AaportalContext contexto, Lista6279 paquete6279)
         {
             bool result = false;
@@ -420,12 +423,10 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (Exception ex)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
+                logger.LogError(ex, ex.StackTrace, ex.Message);
             }
             return result;
         }
-
         public async Task<bool> SavePaquete7736(AaportalContext contexto, Lista7736 paquete7736)
         {
             bool result = false;
@@ -458,12 +459,10 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (Exception ex)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
+                logger.LogError(ex, ex.StackTrace, ex.Message);
             }
             return result;
         }
-
         public async Task<bool> SavePaquete7742(AaportalContext contexto, Lista7742 paquete7742)
         {
             bool result = false;
@@ -490,14 +489,122 @@ namespace gad.aaportal.services.Services.Implementation
                         //query.FechaActualizacion = DateTime.Now;
                     }
                 }
-
                 await contexto.SaveChangesAsync();
                 result = true;
             }
             catch (Exception ex)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
+                logger.LogError(ex, ex.StackTrace, ex.Message);
+            }
+            return result;
+        }
+        public LogParam GeneraLog(string codigoUsuario, DateTime fechaHoraEnvio, string numeroDocumento, string proveedor, long secuencial, string tramaEnvio, string tramaRespuesta, string metodo, string mensaje, string codigo, bool exito)
+        {
+            return new LogParam()
+            {
+                CodigoUsuario = codigoUsuario,
+                FechaHoraEnvio = fechaHoraEnvio,
+                FechaHoraRespuesta = DateTime.Now,
+                NumeroDocumento = numeroDocumento,
+                Proveedor = proveedor,
+                Secuencial = secuencial,
+                TramaEnvio = tramaEnvio,
+                TramaRespuesta = string.IsNullOrEmpty(tramaRespuesta) ? mensaje : tramaRespuesta,
+                Metodo = metodo,
+                Mensaje = mensaje,
+                Codigo = codigo,
+                Exito = exito
+            };
+        }
+        public async Task<ConsumoDinardapResult> SavePackage(AaportalContext contexto, PaqueteDinardapRequest request, consultarResponse response)
+        {
+            ConsumoDinardapResult result=new();
+            try
+            {
+                switch (request.paquete)
+                {
+                    case "6281":
+                        var Form101 = Utilitarios.MapearAForm101Lista(response);
+                        result.SaveForm101 = await SaveForm101(contexto, Form101);
+                        break;
+                    case "6282":
+                        var Form102 = Utilitarios.MapearAForm102Lista(response);
+                        result.SaveForm102 = await SaveForm102(contexto, Form102);
+                        break;
+                    case "7728":
+                        var paquete7728 = Utilitarios.MapearA7728Lista(response);
+                        result.Save7728 = await SavePaquete7728(contexto, paquete7728);
+                        break;
+                    case "7730":
+                        var paquete7730 = Utilitarios.MapearA7730Lista(response);
+                        result.Save7730 = await SavePaquete7730(contexto, paquete7730);
+                        break;
+                    case "7731":
+                        var paquete7731 = Utilitarios.MapearA7731Lista(response);
+                        result.Save7731 = await SavePaquete7731(contexto, paquete7731);
+                        break;
+                    case "7732":
+                        var paquete7732 = Utilitarios.MapearA7732Lista(response);
+                        result.Save7732 = await SavePaquete7732(contexto, paquete7732);
+                        break;
+                    case "6279":
+                        var paquete6279 = Utilitarios.MapearA6279Lista(response);
+                        result.Save6279 = await SavePaquete6279(contexto, paquete6279);
+                        break;
+                    case "7736":
+                        var paquete7736 = Utilitarios.MapearA7736Lista(response);
+                        paquete7736.paquete7736s.ForEach(p => p.NumeroRuc = request.identificacion);
+                        result.Save7736 = await SavePaquete7736(contexto, paquete7736);
+                        break;
+                    case "7742":
+                        var paquete7742 = Utilitarios.MapearA7742Lista(response);
+                        result.Save7742 = await SavePaquete7742(contexto, paquete7742);
+                        break;
+                    default:
+                        string pausa = request.paquete;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.StackTrace, ex.Message);
+            }
+            return result;
+        }
+        public async Task<ConsumoDinardapResult> ConsultPackage(AaportalContext contexto, PaqueteDinardapRequest request)
+        {
+            ConsumoDinardapResult result = new();
+            try
+            {
+                var options = new SoapClientOptions
+                {
+                    Endpoint = apiServerConfig.Dinardap + endPointsConfig.InteroperadorConsultPackge, //http
+                    //Endpoint = "http://interoperabilidad.dinardap.gob.ec/interoperador-v2", //QA
+
+                    Security = new SoapSecurityOptions
+                    {
+                        Type = SoapSecurityType.None
+                        //Type = SoapSecurityType.Basic, //QA
+                        //Username = "InAtRoGeMu", //QA
+                        //Password = "NKG3jt5%zFWeWZ" //QA
+                    }
+                };
+
+                var service = new InteroperadorSoapService(options);
+
+                var parametros = new[]
+                {
+                    new parametro { nombre = "codigoPaquete", valor = request.paquete },
+                    new parametro { nombre = "identificacion", valor = request.identificacion },
+                    new parametro { nombre = "fuenteDatos", valor = "T" }
+                };
+
+                var response = await service.ConsultarAsync(parametros);
+                await SavePackage(contexto, request, response);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.StackTrace, ex.Message);
             }
             return result;
         }

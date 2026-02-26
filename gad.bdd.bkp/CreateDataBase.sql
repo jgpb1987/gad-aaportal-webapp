@@ -1,0 +1,62 @@
+USE master;
+GO
+
+IF DB_ID('GadAntonioAnte') IS NULL
+BEGIN
+    CREATE DATABASE GadAntonioAnte;
+END
+GO
+
+ALTER DATABASE GadAntonioAnte SET COMPATIBILITY_LEVEL = 100;
+GO
+
+USE GadAntonioAnte;
+GO
+
+/* ===== ESQUEMAS ===== */
+
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'Aplicacion')
+    EXEC('CREATE SCHEMA Aplicacion');
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'Dinardap')
+    EXEC('CREATE SCHEMA Dinardap');
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'Seguridad')
+    EXEC('CREATE SCHEMA Seguridad');
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'Log')
+    EXEC('CREATE SCHEMA Log');
+GO
+
+/* ===== CONFIGURACIONES BÁSICAS RECOMENDADAS ===== */
+
+ALTER DATABASE GadAntonioAnte SET RECOVERY SIMPLE;
+GO
+
+ALTER DATABASE GadAntonioAnte SET AUTO_UPDATE_STATISTICS ON;
+GO
+
+ALTER DATABASE GadAntonioAnte SET AUTO_CLOSE OFF;
+GO
+
+ALTER DATABASE GadAntonioAnte SET AUTO_SHRINK OFF;
+GO
+
+/* ===== OPCIONES DE SESIÓN ===== */
+
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+
+
+/* ===== AQUÍ CONTINÚAN TUS TABLAS ===== */
+/* EJEMPLO: */
+
+-- CREATE TABLE Aplicacion.Cantones(
+--     Id INT IDENTITY PRIMARY KEY,
+--     Nombre VARCHAR(100)
+-- );

@@ -1,5 +1,5 @@
 ﻿using ClosedXML.Excel;
-using gad.aaportal.commons.Dto;
+using gad.aaportal.commons.Dto.Dinardap;
 using System.Net.Http.Json;
 
 namespace gad.admin.app

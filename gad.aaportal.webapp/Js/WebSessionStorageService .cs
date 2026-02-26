@@ -1,4 +1,4 @@
-using gad.aaportal.commons.Dto;
+using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.consumers.Js;
 using Microsoft.JSInterop;
 

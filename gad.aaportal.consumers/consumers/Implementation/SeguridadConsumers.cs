@@ -1,5 +1,5 @@
 ﻿using gad.aaportal.commons.Base;
-using gad.aaportal.commons.Dto;
+using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.Consumers.Interface;
 using gad.aaportal.consumers.Utilitarian;

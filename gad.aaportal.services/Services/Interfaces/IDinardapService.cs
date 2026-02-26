@@ -1,4 +1,4 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using gad.aaportal.commons.Dto.Dinardap;
 using gad.aaportal.dataaccess;
 
 namespace gad.aaportal.services.Services.Interfaces
@@ -14,5 +14,6 @@ namespace gad.aaportal.services.Services.Interfaces
         Task<bool> SavePaquete6279(AaportalContext contexto, Lista6279 paquete6279);
         Task<bool> SavePaquete7736(AaportalContext contexto, Lista7736 paquete7736);
         Task<bool> SavePaquete7742(AaportalContext contexto, Lista7742 paquete7742);
+        Task<ConsumoDinardapResult> ConsultPackage(AaportalContext contexto, PaqueteDinardapRequest request);
     }
 }

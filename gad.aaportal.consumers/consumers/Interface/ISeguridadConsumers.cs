@@ -1,5 +1,5 @@
 ﻿using gad.aaportal.commons.Base;
-using gad.aaportal.commons.Dto;
+using gad.aaportal.commons.Dto.Seguridad;
 using System;
 using System.Collections.Generic;
 using System.Linq;

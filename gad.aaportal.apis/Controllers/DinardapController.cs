@@ -1,7 +1,6 @@
 ﻿using gad.aainteroperador.soap.Client;
 using gad.aainteroperador.soap.Configuration;
-using gad.aaportal.apis.Common;
-using gad.aaportal.commons.Dto;
+using gad.aaportal.commons.Dto.Dinardap;
 using gad.aaportal.dataaccess;
 using gad.aaportal.services.Services.Interfaces;
 using gad.interoperador;
@@ -22,147 +21,10 @@ namespace gad.aaportal.apis.Controllers
             this.services = services;
         }
 
-        [HttpPost("ConsultaDinardap")]
-        public async Task<ConsumoDinardapResult> ConsultaDinardap([FromBody] string identificacion)
-        {
-            ConsumoDinardapResult result = new();
-            try
-            {
-                var options = new SoapClientOptions
-                {
-                    Endpoint = "http://127.0.0.1:8088/mockinteroperadorSoapBinding", //http
-                    //Endpoint = "http://interoperabilidad.dinardap.gob.ec/interoperador-v2", //QA
-
-                    Security = new SoapSecurityOptions
-                    {
-                        Type = SoapSecurityType.None
-                        //Type = SoapSecurityType.Basic, //QA
-                        //Username = "InAtRoGeMu", //QA
-                        //Password = "NKG3jt5%zFWeWZ" //QA
-                    }
-                };
-
-                var service = new InteroperadorSoapService(options);
-
-                var parametros = new[]
-                {
-                    new parametro { nombre = "codigoPaquete", valor = "6281" },
-                    new parametro { nombre = "identificacion", valor = identificacion },
-                    new parametro { nombre = "fuenteDatos", valor = "T" }
-                };
-
-                var response = await service.ConsultarAsync(parametros);
-                if (response.paquete.numeroPaquete == "6281")
-                {
-                    var Form101 = Utilitarios.MapearAForm101Lista(response);
-                    result.SaveForm101 = await services.SaveForm101(contexto, Form101);
-                }
-
-
-                parametros = new[]
-                {
-                    new parametro { nombre = "codigoPaquete", valor = "6282" },
-                    new parametro { nombre = "identificacion", valor = identificacion },
-                    new parametro { nombre = "fuenteDatos", valor = "T" }
-                };
-                response = await service.ConsultarAsync(parametros);
-                if (response.paquete.numeroPaquete == "6282")
-                {
-                    var Form102 = Utilitarios.MapearAForm102Lista(response);
-                    result.SaveForm102 = await services.SaveForm102(contexto, Form102);
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return result;
-        }
-
         [HttpPost("PaqueteIndividual")]
         public async Task<ConsumoDinardapResult> PaqueteIndividual([FromBody] PaqueteDinardapRequest request)
         {
-            ConsumoDinardapResult result = new();
-            try
-            {
-                var options = new SoapClientOptions
-                {
-                    Endpoint = "http://127.0.0.1:8088/mockinteroperadorSoapBinding", //http
-                    //Endpoint = "http://interoperabilidad.dinardap.gob.ec/interoperador-v2", //QA
-
-                    Security = new SoapSecurityOptions
-                    {
-                        Type = SoapSecurityType.None
-                        //Type = SoapSecurityType.Basic, //QA
-                        //Username = "InAtRoGeMu", //QA
-                        //Password = "NKG3jt5%zFWeWZ" //QA
-                    }
-                };
-
-                var service = new InteroperadorSoapService(options);
-
-                var parametros = new[]
-                {
-                    new parametro { nombre = "codigoPaquete", valor = request.paquete },
-                    new parametro { nombre = "identificacion", valor = request.identificacion },
-                    new parametro { nombre = "fuenteDatos", valor = "T" }
-                };
-
-                var response = await service.ConsultarAsync(parametros);
-                if (request.paquete == "6281")
-                {
-                    var Form101 = Utilitarios.MapearAForm101Lista(response);
-                    result.SaveForm101 = await services.SaveForm101(contexto, Form101);
-                }
-                else if (request.paquete == "6282")
-                {
-                    var Form102 = Utilitarios.MapearAForm102Lista(response);
-                    result.SaveForm102 = await services.SaveForm102(contexto, Form102);
-                }
-                else if (request.paquete == "7728")
-                {
-                    var paquete7728 = Utilitarios.MapearA7728Lista(response);
-                    result.Save7728 = await services.SavePaquete7728(contexto, paquete7728);
-                }
-                else if (request.paquete == "7730")
-                {
-                    var paquete7730 = Utilitarios.MapearA7730Lista(response);
-                    result.Save7730 = await services.SavePaquete7730(contexto, paquete7730);
-                }
-                else if (request.paquete == "7731")
-                {
-                    var paquete7731 = Utilitarios.MapearA7731Lista(response);
-                    result.Save7731 = await services.SavePaquete7731(contexto, paquete7731);
-                }
-                else if (request.paquete == "7732")
-                {
-                    var paquete7732 = Utilitarios.MapearA7732Lista(response);
-                    result.Save7732 = await services.SavePaquete7732(contexto, paquete7732);
-                }
-                else if (request.paquete == "6279")
-                {
-                    var paquete6279 = Utilitarios.MapearA6279Lista(response);
-                    result.Save6279 = await services.SavePaquete6279(contexto, paquete6279);
-                }
-                else if (request.paquete == "7736")
-                {
-                    var paquete7736 = Utilitarios.MapearA7736Lista(response);
-                    paquete7736.paquete7736s.ForEach(p=>p.NumeroRuc =  request.identificacion);
-                    result.Save7736 = await services.SavePaquete7736(contexto, paquete7736);
-                }
-                else if (request.paquete == "7742")
-                {
-                    var paquete7742 = Utilitarios.MapearA7742Lista(response);
-                    result.Save7742 = await services.SavePaquete7742(contexto, paquete7742);
-                }
-                else
-                {
-                    string pausa = request.paquete;
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return result;
+            return await services.ConsultPackage(contexto, request); 
         }
     }
 }

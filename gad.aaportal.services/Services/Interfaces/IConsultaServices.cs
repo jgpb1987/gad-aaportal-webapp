@@ -1,4 +1,4 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using gad.aaportal.commons.Dto.Aplicacion;
 using gad.aaportal.dataaccess;
 
 namespace gad.aaportal.services.Services.Interfaces

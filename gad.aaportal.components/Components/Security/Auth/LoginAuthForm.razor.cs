@@ -1,4 +1,5 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using gad.aaportal.commons.Dto.Dinardap;
+using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.Consumers.Implementation;
 using gad.aaportal.consumers.Consumers.Interface;

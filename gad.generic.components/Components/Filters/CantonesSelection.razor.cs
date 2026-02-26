@@ -1,4 +1,4 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using gad.aaportal.commons.Dto.Aplicacion;
 using gad.generic.components.Components.Several;
 using Microsoft.AspNetCore.Components;
 

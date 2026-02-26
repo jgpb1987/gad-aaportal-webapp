@@ -47,6 +47,8 @@ builder.Services.AddCors(
 //Fin Políticas de Cors
 //Inicio archivo configuración
 builder.Services.Configure<ServicesConfig>(builder.Configuration.GetSection("ServicesConfig"));
+builder.Services.Configure<ApiServerConfig>(builder.Configuration.GetSection("ApiServerConfig"));
+builder.Services.Configure<EndPointsConfig>(builder.Configuration.GetSection("EndPointsConfig"));
 //Fin archivo configuración
 
 var app = builder.Build();

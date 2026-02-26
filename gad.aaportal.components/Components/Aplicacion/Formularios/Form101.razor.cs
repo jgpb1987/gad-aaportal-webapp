@@ -1,4 +1,4 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using gad.aaportal.commons.Dto.Aplicacion;
 using gad.aaportal.commons.Enum;
 using gad.generic.components.Components.Several;
 using gad.generic.components.Modal;

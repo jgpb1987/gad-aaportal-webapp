@@ -1,6 +1,6 @@
 ﻿using gad.aainteroperador.soap.Client;
 using gad.aainteroperador.soap.Configuration;
-using gad.aaportal.commons.Dto;
+using gad.aaportal.commons.Dto.Dinardap;
 using gad.interoperador;
 using System.Net.Http.Json;
 

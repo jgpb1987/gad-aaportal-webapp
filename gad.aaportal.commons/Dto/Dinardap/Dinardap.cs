@@ -350,7 +350,8 @@ namespace gad.aaportal.commons.Dto.Dinardap
 
     public class PaqueteDinardapRequest
     {
-        public string identificacion { get; set; }
-        public string paquete { get; set; }
+        public string Identificacion { get; set; } = null!;
+        public string Paquete { get; set; } = null!;
+        public string Usuario { get; set; } = null!;
     }
 }

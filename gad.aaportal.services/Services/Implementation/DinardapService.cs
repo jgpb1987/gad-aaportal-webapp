@@ -14,20 +14,23 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
 
 namespace gad.aaportal.services.Services.Implementation
 {
     public class DinardapService : IDinardapService
     {
         private readonly ILogger<DinardapService> logger;
+        private readonly ISolicitudRespuestaServices solicitudRespuestaServices;
         private readonly ApiServerConfig apiServerConfig;
         private readonly EndPointsConfig endPointsConfig;
 
-        public DinardapService(ILogger<DinardapService> logger, IOptions<ApiServerConfig> apiServerConfig, EndPointsConfig endPointsConfig)
+        public DinardapService(ILogger<DinardapService> logger, ISolicitudRespuestaServices solicitudRespuestaServices, IOptions<ApiServerConfig> apiServerConfig, EndPointsConfig endPointsConfig)
         {
             this.logger = logger;
             this.apiServerConfig = apiServerConfig.Value;
             this.endPointsConfig = endPointsConfig;
+            this.solicitudRespuestaServices = solicitudRespuestaServices;
         }
         public async Task<bool> SaveForm101(AaportalContext contexto, ListForm101 form101)
         {
@@ -521,7 +524,7 @@ namespace gad.aaportal.services.Services.Implementation
             ConsumoDinardapResult result=new();
             try
             {
-                switch (request.paquete)
+                switch (request.Paquete)
                 {
                     case "6281":
                         var Form101 = Utilitarios.MapearAForm101Lista(response);
@@ -553,7 +556,7 @@ namespace gad.aaportal.services.Services.Implementation
                         break;
                     case "7736":
                         var paquete7736 = Utilitarios.MapearA7736Lista(response);
-                        paquete7736.paquete7736s.ForEach(p => p.NumeroRuc = request.identificacion);
+                        paquete7736.paquete7736s.ForEach(p => p.NumeroRuc = request.Identificacion);
                         result.Save7736 = await SavePaquete7736(contexto, paquete7736);
                         break;
                     case "7742":
@@ -561,7 +564,7 @@ namespace gad.aaportal.services.Services.Implementation
                         result.Save7742 = await SavePaquete7742(contexto, paquete7742);
                         break;
                     default:
-                        string pausa = request.paquete;
+                        string pausa = request.Paquete;
                         break;
                 }
             }
@@ -574,6 +577,8 @@ namespace gad.aaportal.services.Services.Implementation
         public async Task<ConsumoDinardapResult> ConsultPackage(AaportalContext contexto, PaqueteDinardapRequest request)
         {
             ConsumoDinardapResult result = new();
+            DateTime fechaInicioConsulta= DateTime.Now;
+            consultarResponse response = new();
             try
             {
                 var options = new SoapClientOptions
@@ -594,17 +599,20 @@ namespace gad.aaportal.services.Services.Implementation
 
                 var parametros = new[]
                 {
-                    new parametro { nombre = "codigoPaquete", valor = request.paquete },
-                    new parametro { nombre = "identificacion", valor = request.identificacion },
+                    new parametro { nombre = "codigoPaquete", valor = request.Paquete },
+                    new parametro { nombre = "identificacion", valor = request.Identificacion },
                     new parametro { nombre = "fuenteDatos", valor = "T" }
                 };
 
-                var response = await service.ConsultarAsync(parametros);
+                response = await service.ConsultarAsync(parametros);
                 await SavePackage(contexto, request, response);
+                await solicitudRespuestaServices.GenerarLogApis(contexto, GeneraLog(request.Usuario, fechaInicioConsulta, request.Identificacion, "Dinardap", 1, JsonSerializer.Serialize(request), JsonSerializer.Serialize(response), request.Paquete, "Proceso Ejecutado exitosamente", "OK", true));
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, ex.StackTrace, ex.Message);
+                await solicitudRespuestaServices.GenerarLogApis(contexto, GeneraLog(request.Usuario, fechaInicioConsulta, request.Identificacion, "Dinardap", 1, JsonSerializer.Serialize(request), JsonSerializer.Serialize(response), request.Paquete, ex.Message, "ERROR", false));
+
             }
             return result;
         }

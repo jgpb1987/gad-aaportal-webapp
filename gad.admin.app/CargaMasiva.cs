@@ -12,7 +12,6 @@ namespace gad.admin.app
             , 
             //"7733","7738","7739" ANALIZAR SI ES POSIBLE
         };
-
         string rutaArchivo = string.Empty;
 
         public CargaMasiva()

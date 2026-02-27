@@ -31,6 +31,7 @@ builder.Services.AddScoped<ISecurityAlgorithmServices, SecurityAlgorithmServices
 builder.Services.AddScoped<IDinardapService, DinardapService>();
 builder.Services.AddScoped<IConsultaServices, ConsultaService>();
 builder.Services.AddScoped<IDeclaracionServices, DeclaracionServices>();
+builder.Services.AddScoped<ISolicitudRespuestaServices, SolicitudRespuestaServices>();
 //Fin Services
 //Inicio Politicas de Cors
 builder.Services.AddCors(

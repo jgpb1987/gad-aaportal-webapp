@@ -77,14 +77,23 @@ namespace gad.admin.app
 
         public async Task ConsumoDinardap(string identificacion)
         {
-            foreach (var paquete in paquetes)
+            try
             {
-                using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
-                var parametros = new { Identificacion = identificacion, Paquete = paquete, Usuario="usrPruebas" };
-                var resp = await http.PostAsJsonAsync("api/Dinardap/PaqueteIndividual", parametros);
-                resp.EnsureSuccessStatusCode();
-                var result = await resp.Content.ReadFromJsonAsync<ConsumoDinardapResult>();
+                var apiServer = Program.Settings.ApplicationSettings.ApiServer;
+                var endPointPaqueteIndividuatl = Program.Settings.ApplicationSettings.EndPointPaqueteIndividuatl;
+                var usuarioproceso = Program.Settings.ApplicationSettings.UsuarioProceso;
+                foreach (var paquete in paquetes)
+                {
+                    using var http = new HttpClient { BaseAddress = new Uri(apiServer) };
+                    var parametros = new { Identificacion = identificacion, Paquete = paquete, Usuario = usuarioproceso };
+                    var resp = await http.PostAsJsonAsync(endPointPaqueteIndividuatl, parametros);
+                    resp.EnsureSuccessStatusCode();
+                    var result = await resp.Content.ReadFromJsonAsync<ConsumoDinardapResult>();
+                }
             }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }            
         }
 
         private async void btnProcesar_Click(object sender, EventArgs e)

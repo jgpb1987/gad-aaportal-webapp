@@ -80,7 +80,7 @@ namespace gad.admin.app
             foreach (var paquete in paquetes)
             {
                 using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
-                var parametros = new { identificacion = identificacion, paquete = paquete };
+                var parametros = new { Identificacion = identificacion, Paquete = paquete, Usuario="usrPruebas" };
                 var resp = await http.PostAsJsonAsync("api/Dinardap/PaqueteIndividual", parametros);
                 resp.EnsureSuccessStatusCode();
                 var result = await resp.Content.ReadFromJsonAsync<ConsumoDinardapResult>();

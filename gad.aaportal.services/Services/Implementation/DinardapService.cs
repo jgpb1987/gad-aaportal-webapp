@@ -24,13 +24,15 @@ namespace gad.aaportal.services.Services.Implementation
         private readonly ISolicitudRespuestaServices solicitudRespuestaServices;
         private readonly ApiServerConfig apiServerConfig;
         private readonly EndPointsConfig endPointsConfig;
+        private readonly ServicesConfig servicesConfig;
 
-        public DinardapService(ILogger<DinardapService> logger, ISolicitudRespuestaServices solicitudRespuestaServices, IOptions<ApiServerConfig> apiServerConfig, EndPointsConfig endPointsConfig)
+        public DinardapService(ILogger<DinardapService> logger, ISolicitudRespuestaServices solicitudRespuestaServices, IOptions<ApiServerConfig> apiServerConfig, IOptions<EndPointsConfig> endPointsConfig, IOptions<ServicesConfig> servicesConfig)
         {
             this.logger = logger;
             this.apiServerConfig = apiServerConfig.Value;
-            this.endPointsConfig = endPointsConfig;
+            this.endPointsConfig = endPointsConfig.Value;
             this.solicitudRespuestaServices = solicitudRespuestaServices;
+            this.servicesConfig = servicesConfig.Value;
         }
         public async Task<bool> SaveForm101(AaportalContext contexto, ListForm101 form101)
         {
@@ -588,10 +590,12 @@ namespace gad.aaportal.services.Services.Implementation
 
                     Security = new SoapSecurityOptions
                     {
-                        Type = SoapSecurityType.None
-                        //Type = SoapSecurityType.Basic, //QA
+                        //Type = SoapSecurityType.None
                         //Username = "InAtRoGeMu", //QA
                         //Password = "NKG3jt5%zFWeWZ" //QA
+                        Type = SoapSecurityType.Basic, //QA
+                        Username = servicesConfig.DinardapUser, //QA
+                        Password = servicesConfig.DinardapPwd //QA
                     }
                 };
 

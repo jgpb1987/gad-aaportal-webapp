@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace gad.aaportal.models.Entity.Log
+﻿namespace gad.aaportal.models.Entity.Log
 {
     public partial class SolicitudRespuesta
     {

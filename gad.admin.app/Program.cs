@@ -1,5 +1,4 @@
 using gad.admin.app.Settings;
-using System.Configuration;
 
 namespace gad.admin.app
 {

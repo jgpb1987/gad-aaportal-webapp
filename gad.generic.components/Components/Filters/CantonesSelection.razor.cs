@@ -16,7 +16,7 @@ namespace gad.generic.components.Components.Filters
         public ToastsServices? Toast { get; set; }
         [Parameter]
         public EventCallback<Canton> OnPorcentajeCambiado { get; set; }
-        
+
         private HashSet<string> collapsedStates = new();
         private string filtroCanton = string.Empty;
 

@@ -3,12 +3,6 @@ using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.Consumers.Interface;
 using gad.aaportal.consumers.Utilitarian;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.consumers.Consumers.Implementation
 {

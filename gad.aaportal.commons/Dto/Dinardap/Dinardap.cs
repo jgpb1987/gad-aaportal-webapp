@@ -207,7 +207,7 @@ namespace gad.aaportal.commons.Dto.Dinardap
         public string? Provincia { get; set; }
         public string? RazonSocial { get; set; }
         public string? Referencia { get; set; }
-        public string Ruc { get; set; } = null!;  
+        public string Ruc { get; set; } = null!;
         public string? Telefono { get; set; }
         public string? TipoOrganizacion { get; set; }
         public DateTime FechaGrabado { get; set; }

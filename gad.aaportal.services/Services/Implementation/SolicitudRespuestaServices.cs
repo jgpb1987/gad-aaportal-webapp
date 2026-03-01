@@ -5,11 +5,6 @@ using gad.aaportal.models.Entity.Log;
 using gad.aaportal.services.MessageException;
 using gad.aaportal.services.Services.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.services.Services.Implementation
 {

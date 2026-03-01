@@ -10,7 +10,7 @@ namespace gad.admin.app
         {
             "6282", "6281", "7728", "7730","7731","7732","6279","7736","7742"
             , 
-            //"7733","7738","7739" ANALIZAR SI ES POSIBLE
+            //"7733","7738","7739","7737" ANALIZAR SI ES POSIBLE
         };
         string rutaArchivo = string.Empty;
 
@@ -91,9 +91,10 @@ namespace gad.admin.app
                     var result = await resp.Content.ReadFromJsonAsync<ConsumoDinardapResult>();
                 }
             }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message);
-            }            
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+            }
         }
 
         private async void btnProcesar_Click(object sender, EventArgs e)

@@ -1,9 +1,6 @@
-﻿using gad.aainteroperador.soap.Client;
-using gad.aainteroperador.soap.Configuration;
-using gad.aaportal.commons.Dto.Dinardap;
+﻿using gad.aaportal.commons.Dto.Dinardap;
 using gad.aaportal.dataaccess;
 using gad.aaportal.services.Services.Interfaces;
-using gad.interoperador;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gad.aaportal.apis.Controllers
@@ -24,7 +21,7 @@ namespace gad.aaportal.apis.Controllers
         [HttpPost("PaqueteIndividual")]
         public async Task<ConsumoDinardapResult> PaqueteIndividual([FromBody] PaqueteDinardapRequest request)
         {
-            return await services.ConsultPackage(contexto, request); 
+            return await services.ConsultPackage(contexto, request);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Azure;
-using Azure.Core;
-using gad.aainteroperador.soap.Client;
+﻿using gad.aainteroperador.soap.Client;
 using gad.aainteroperador.soap.Configuration;
 using gad.aaportal.commons.Dto.Dinardap;
 using gad.aaportal.commons.Dto.Log;
@@ -523,7 +521,7 @@ namespace gad.aaportal.services.Services.Implementation
         }
         public async Task<ConsumoDinardapResult> SavePackage(AaportalContext contexto, PaqueteDinardapRequest request, consultarResponse response)
         {
-            ConsumoDinardapResult result=new();
+            ConsumoDinardapResult result = new();
             try
             {
                 switch (request.Paquete)
@@ -579,23 +577,21 @@ namespace gad.aaportal.services.Services.Implementation
         public async Task<ConsumoDinardapResult> ConsultPackage(AaportalContext contexto, PaqueteDinardapRequest request)
         {
             ConsumoDinardapResult result = new();
-            DateTime fechaInicioConsulta= DateTime.Now;
+            DateTime fechaInicioConsulta = DateTime.Now;
             consultarResponse response = new();
             try
             {
                 var options = new SoapClientOptions
                 {
-                    Endpoint = apiServerConfig.Dinardap + endPointsConfig.InteroperadorConsultPackge, //http
-                    //Endpoint = "http://interoperabilidad.dinardap.gob.ec/interoperador-v2", //QA
+                    //Endpoint = apiServerConfig.Dinardap + endPointsConfig.InteroperadorConsultPackge, //http
+                    Endpoint = "http://interoperabilidad.dinardap.gob.ec/interoperador-v2", //QA
 
                     Security = new SoapSecurityOptions
                     {
-                        //Type = SoapSecurityType.None
-                        //Username = "InAtRoGeMu", //QA
-                        //Password = "NKG3jt5%zFWeWZ" //QA
-                        Type = SoapSecurityType.Basic, //QA
-                        Username = servicesConfig.DinardapUser, //QA
-                        Password = servicesConfig.DinardapPwd //QA
+                        //Type = SoapSecurityType.None,
+                        Type = SoapSecurityType.Basic,
+                        Username = "InAtRoGeMu",
+                        Password = "NKG3jt5%zFWeWZ"
                     }
                 };
 
@@ -610,7 +606,7 @@ namespace gad.aaportal.services.Services.Implementation
 
                 response = await service.ConsultarAsync(parametros);
                 await SavePackage(contexto, request, response);
-                await solicitudRespuestaServices.GenerarLogApis(contexto, GeneraLog(request.Usuario, fechaInicioConsulta, request.Identificacion, "Dinardap", 1, JsonSerializer.Serialize(request), JsonSerializer.Serialize(response), request.Paquete, "Proceso Ejecutado exitosamente", "OK", true));
+                await solicitudRespuestaServices.GenerarLogApis(contexto, GeneraLog(request.Usuario, fechaInicioConsulta, request.Identificacion, "Dinardap", 1, JsonSerializer.Serialize(request), JsonSerializer.Serialize(response.paquete), request.Paquete, "Proceso Ejecutado exitosamente", "OK", true));
             }
             catch (Exception ex)
             {

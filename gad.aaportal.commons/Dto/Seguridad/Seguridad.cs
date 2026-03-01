@@ -1,10 +1,5 @@
 ﻿using gad.aaportal.commons.Base;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.commons.Dto.Seguridad
 {
@@ -33,7 +28,7 @@ namespace gad.aaportal.commons.Dto.Seguridad
         [Required(ErrorMessage = "{0} es obligatorio")]
         public string Password { get; set; } = null!;
     }
-    public class UsuarioDataDtoResult 
+    public class UsuarioDataDtoResult
     {
         public DateTime Expiration { get; set; }
         public string Token { get; set; } = null!;
@@ -44,7 +39,7 @@ namespace gad.aaportal.commons.Dto.Seguridad
     {
         public UsuarioDataDtoResult Data { get; set; } = null!;
     }
-    public class RsaDtoDataResult 
+    public class RsaDtoDataResult
     {
         public string PublicKey { get; set; } = null!;
     }

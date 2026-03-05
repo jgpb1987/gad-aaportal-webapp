@@ -23,5 +23,10 @@ namespace gad.aaportal.apis.Controllers
         {
             return await services.ConsultPackage(contexto, request);
         }
+        [HttpPost("searchRucListPackage")]
+        public async Task<ConsumoDinardapResult> SearchRucListPackage([FromBody] PaqueteDinardapListRequest request)
+        {
+            return await services.SearchRucListPackage(contexto, request);
+        }
     }
 }

@@ -15,5 +15,6 @@ namespace gad.aaportal.services.Services.Interfaces
         Task<bool> SavePaquete7736(AaportalContext contexto, Lista7736 paquete7736);
         Task<bool> SavePaquete7742(AaportalContext contexto, Lista7742 paquete7742);
         Task<ConsumoDinardapResult> ConsultPackage(AaportalContext contexto, PaqueteDinardapRequest request);
+        public Task<ConsumoDinardapResult> SearchRucListPackage(AaportalContext contexto, PaqueteDinardapListRequest request);
     }
 }

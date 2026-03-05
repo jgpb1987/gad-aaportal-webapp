@@ -575,6 +575,22 @@ namespace gad.aaportal.services.Services.Implementation
             }
             return result;
         }
+        public async Task<ConsumoDinardapResult> SearchRucListPackage(AaportalContext contexto, PaqueteDinardapListRequest request)
+        {
+            ConsumoDinardapResult result = new();
+            try
+            {
+                foreach (var paquete in request.CodigosPaquetes)
+                {
+                    result = await ConsultPackage(contexto, new PaqueteDinardapRequest() { Identificacion = request.Identificacion, Usuario = request.Usuario, Paquete = paquete });
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.StackTrace, ex.Message);
+            }
+            return result;
+        }
         public async Task<consultarResponse> ConsultPackageDinardap(AaportalContext contexto, PaqueteDinardapRequest request)
         {
             DateTime fechaInicioConsulta = DateTime.Now;

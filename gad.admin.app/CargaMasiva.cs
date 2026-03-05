@@ -6,12 +6,12 @@ namespace gad.admin.app
 {
     public partial class CargaMasiva : Form
     {
-        string[] paquetes =
+        /*string[] paquetes =
         {
             "6282", "6281", "7728", "7730","7731","7732","6279","7736","7742"
             , 
             //"7733","7738","7739","7737" ANALIZAR SI ES POSIBLE
-        };
+        };*/
         string rutaArchivo = string.Empty;
 
         public CargaMasiva()
@@ -82,6 +82,7 @@ namespace gad.admin.app
                 var apiServer = Program.Settings.ApplicationSettings.ApiServer;
                 var endPointPaqueteIndividuatl = Program.Settings.ApplicationSettings.EndPointPaqueteIndividuatl;
                 var usuarioproceso = Program.Settings.ApplicationSettings.UsuarioProceso;
+                var paquetes= Program.Settings.ApplicationSettings.CodigosPaquetes;
                 foreach (var paquete in paquetes)
                 {
                     using var http = new HttpClient { BaseAddress = new Uri(apiServer) };

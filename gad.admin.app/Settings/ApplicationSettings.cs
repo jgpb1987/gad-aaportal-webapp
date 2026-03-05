@@ -6,5 +6,6 @@
         public string EndPointPaqueteIndividuatl { get; set; } = string.Empty;
         public string UsuarioProceso { get; set; } = null!;
         public string ApiPackages { get; set; } = null!;
+        public List<string> CodigosPaquetes { get; set; } = new();
     }
 }

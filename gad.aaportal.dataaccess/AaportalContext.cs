@@ -1,13 +1,12 @@
-using gad.aaportal.dataaccess.Aplicacion.Aplicacion;
-using gad.aaportal.dataaccess.Aplicacion.Dinardap;
 using gad.aaportal.dataaccess.Configuration;
+using gad.aaportal.dataaccess.Configuration.Aplicacion;
+using gad.aaportal.dataaccess.Configuration.Dinardap;
 using gad.aaportal.models.Configuration.Seguridad;
 using gad.aaportal.models.Entity.Aplicacion;
 using gad.aaportal.models.Entity.Dinardap;
+using gad.aaportal.models.Entity.Log;
 using gad.aaportal.models.Entity.Seguridad;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 namespace gad.aaportal.dataaccess;
 
 public partial class AaportalContext : DbContext
@@ -26,7 +25,21 @@ public partial class AaportalContext : DbContext
 
     #region Schema Dinardap
     public DbSet<Form101> Form101 { get; set; }
+    public DbSet<Form101bkp> Form101Bkps { get; set; }
     public DbSet<Form102> Form102 { get; set; } = null!;
+    public DbSet<Form102bkp> Form102Bkps { get; set; } = null!;
+    public DbSet<ActividadEstablecimiento> ActividadesEstablecimiento { get; set; }
+    public DbSet<SriRucContribuyente> SriRucContribuyentes { get; set; }
+    public DbSet<SriRucEstablecimiento> SriRucEstablecimientos { get; set; }
+    public DbSet<SriRucListaBlanca> SriRucListaBlanca { get; set; }
+    public DbSet<SriContribuyenteDatos> SriContribuyenteDatos { get; set; }
+    public DbSet<SriActividadEconomica> SriActividadEconomica { get; set; }
+    public DbSet<SriTipoContribuyente> SriTipoContribuyente { get; set; }
+    public DbSet<SriContador> SriContador { get; set; }
+    public DbSet<SriEstructuraOrganizacional> SriEstructuraOrganizacional { get; set; }
+    public DbSet<SriRepresentanteLegal> SriRepresentanteLegal { get; set; }
+    public DbSet<SriEstadoTributario> SriEstadoTributario { get; set; }
+    public DbSet<SepsOrganizacion> SepsOrganizacion { get; set; }
     #endregion
 
     #region Schema Aplicacion
@@ -38,19 +51,38 @@ public partial class AaportalContext : DbContext
 
     #endregion
 
+    #region Log
+    public virtual DbSet<SolicitudRespuesta> SolicitudRespuestas { get; set; } = null!;
+    #endregion
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UsuarioConfiguracion());
         modelBuilder.ApplyConfiguration(new UsuarioSesionConfiguracion());
         modelBuilder.ApplyConfiguration(new Form101Configuracion());
+        modelBuilder.ApplyConfiguration(new Form101Configuracionbkp());
         modelBuilder.ApplyConfiguration(new Form102Configuracion());
+        modelBuilder.ApplyConfiguration(new Form102bkpConfiguracion());
+        modelBuilder.ApplyConfiguration(new ActividadEstablecimientoConfig());
+        modelBuilder.ApplyConfiguration(new SriRucContribuyenteConfig());
+        modelBuilder.ApplyConfiguration(new SriRucEstablecimientoConfig());
+        modelBuilder.ApplyConfiguration(new SriRucListaBlancaConfig());
+        modelBuilder.ApplyConfiguration(new SriContribuyenteDatosConfig());
+        modelBuilder.ApplyConfiguration(new SriActividadEconomicaConfig());
+        modelBuilder.ApplyConfiguration(new SriTipoContribuyenteConfig());
+        modelBuilder.ApplyConfiguration(new SriContadorConfig());
+        modelBuilder.ApplyConfiguration(new SriEstructuraOrganizacionalConfig());
+        modelBuilder.ApplyConfiguration(new SriRepresentanteLegalConfig());
+        modelBuilder.ApplyConfiguration(new SriEstadoTributarioConfig());
+        modelBuilder.ApplyConfiguration(new SepsOrganizacionConfig());
         modelBuilder.ApplyConfiguration(new CantonConfiguracion());
         modelBuilder.ApplyConfiguration(new TarifaImpositivaConfig());
         modelBuilder.ApplyConfiguration(new DeclaracionPJConfiguracion());
         modelBuilder.ApplyConfiguration(new DistribucionPagoConfiguracion());
         modelBuilder.ApplyConfiguration(new TasaAdministrativaConfiguracion());
-        modelBuilder.ApplyConfiguration(new Configuration.JwtConfiguracion());
-        modelBuilder.ApplyConfiguration(new Configuration.RsaConfiguracion());
-        modelBuilder.ApplyConfiguration(new Configuration.ConfiguracionEmailConfiguracion());
+        modelBuilder.ApplyConfiguration(new JwtConfiguracion());
+        modelBuilder.ApplyConfiguration(new RsaConfiguracion());
+        modelBuilder.ApplyConfiguration(new ConfiguracionEmailConfiguracion());
+        modelBuilder.ApplyConfiguration(new Configuration.SolicitudRespuestaConfiguration());
     }
 }

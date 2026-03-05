@@ -1,4 +1,4 @@
-using gad.aaportal.commons.Dto;
+using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.Js;
 using Microsoft.AspNetCore.Components;
@@ -27,15 +27,16 @@ namespace gad.aaportal.webapp.Layout
         }
         protected override async Task OnInitializedAsync()
         {
-           var exp= await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Expiration);
-           var token= await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Token);
-           var ultacceso= await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.UltimoAcceso);
-           var nombres= await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Nombres);
-            DatosUsuarioResult = new() { 
-                Expiration=DateTime.Parse(exp),
-                Token=token,
-                UltimoAcceso=DateTime.Parse(ultacceso),
-                Nombres=nombres
+            var exp = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Expiration);
+            var token = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Token);
+            var ultacceso = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.UltimoAcceso);
+            var nombres = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Nombres);
+            DatosUsuarioResult = new()
+            {
+                Expiration = DateTime.Parse(exp),
+                Token = token,
+                UltimoAcceso = DateTime.Parse(ultacceso),
+                Nombres = nombres
             };
         }
     }

@@ -1,4 +1,4 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using gad.aaportal.commons.Dto.Aplicacion;
 using gad.aaportal.dataaccess;
 using gad.aaportal.services.MessageException;
 using gad.aaportal.services.Services.Interfaces;

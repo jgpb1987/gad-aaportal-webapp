@@ -1,16 +1,12 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using gad.aaportal.commons.Dto.Dinardap;
+using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.consumers.Config;
-using gad.aaportal.consumers.Consumers.Implementation;
 using gad.aaportal.consumers.Consumers.Interface;
 using gad.aaportal.consumers.Js;
 using gad.generic.components.Components.Several;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http.Json;
 
 namespace gad.aaportal.components.Components.Security.Auth
 {
@@ -123,29 +119,29 @@ namespace gad.aaportal.components.Components.Security.Auth
                     Plugins = dataDispositivo.Plugins == null ? string.Empty : dataDispositivo.Plugins,
                     TimeZone = dataDispositivo.TimeZone == null ? string.Empty : dataDispositivo.TimeZone,
                     UserAgent = dataDispositivo.UserAgent == null ? string.Empty : dataDispositivo.UserAgent,
-                    User=_userRegistrationParam.User,
-                    Email=_userRegistrationParam.Email,
-                    Nombres=_userRegistrationParam.Nombres
+                    User = _userRegistrationParam.User,
+                    Email = _userRegistrationParam.Email,
+                    Nombres = _userRegistrationParam.Nombres
                 };
                 var urResponse = await SeguridadConsumers.UserRegistration(userRegistrationRequest);
                 if (urResponse != null)
                 {
-                        if (urResponse.Message.Code.Equals("OK"))
-                        {
-                            LoadingBorder!.Close();
-                            _view = LoginView.Login;
-                            await Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
-                            //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Expiration, urResponse.Data.Expiration.ToString());
-                            //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Token, urResponse.Data.Token);
-                            //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.UltimoAcceso, urResponse.Data.UltimoAcceso.ToString());
-                            //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Nombres, urResponse.Data.Nombres);
-                            //UriHelper.NavigateTo("/index");
-                        }
-                        else
-                        {
-                            LoadingBorder!.Close();
-                            await Toast!.ShowMessage("error", urResponse.Message.Code, urResponse.Message.Description);
-                        }
+                    if (urResponse.Message.Code.Equals("OK"))
+                    {
+                        LoadingBorder!.Close();
+                        _view = LoginView.Login;
+                        await Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
+                        //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Expiration, urResponse.Data.Expiration.ToString());
+                        //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Token, urResponse.Data.Token);
+                        //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.UltimoAcceso, urResponse.Data.UltimoAcceso.ToString());
+                        //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Nombres, urResponse.Data.Nombres);
+                        //UriHelper.NavigateTo("/index");
+                    }
+                    else
+                    {
+                        LoadingBorder!.Close();
+                        await Toast!.ShowMessage("error", urResponse.Message.Code, urResponse.Message.Description);
+                    }
                 }
                 else
                 {
@@ -194,6 +190,7 @@ namespace gad.aaportal.components.Components.Security.Auth
                             await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.UltimoAcceso, loginResponse.Data.UltimoAcceso.ToString());
                             await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Nombres, loginResponse.Data.Nombres);
                             LoadingBorder!.Close();
+                            await ConsultaDinardap();
                             UriHelper.NavigateTo("/index");
                             await Toast!.ShowMessage("success", loginResponse.Message.Code, loginResponse.Message.Description);
                         }
@@ -220,6 +217,14 @@ namespace gad.aaportal.components.Components.Security.Auth
                 LoadingBorder!.Close();
                 await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
             }
+        }
+
+        private async Task ConsultaDinardap()
+        {
+            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+            var resp = await http.PostAsJsonAsync("api/Dinardap/ConsultaDinardap", "tomar cedula del session");
+            resp.EnsureSuccessStatusCode();
+            var result = await resp.Content.ReadFromJsonAsync<ConsumoDinardapResult>();
         }
     }
 }

@@ -5,6 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\gad.aainteroperador.soap\gad.aainteroperador.soap.csproj" />
     <ProjectReference Include="..\gad.aaportal.commons\gad.aaportal.commons.csproj" />
     <ProjectReference Include="..\gad.aaportal.dataaccess\gad.aaportal.dataaccess.csproj" />
     <ProjectReference Include="..\gad.aaportal.models\gad.aaportal.models.csproj" />

@@ -1,6 +1,6 @@
 ﻿using gad.aainteroperador.soap.Client;
 using gad.aainteroperador.soap.Configuration;
-using gad.aaportal.commons.Dto;
+using gad.aaportal.commons.Dto.Dinardap;
 using gad.interoperador;
 using System.Net.Http.Json;
 
@@ -44,14 +44,14 @@ foreach (var item in lista)
 Console.ReadLine();
 
 #region Metodos publicos
-static List<Form101DtoRequest> MapearAForm101Lista(consultarResponse response)
+static List<Form101Dto> MapearAForm101Lista(consultarResponse response)
 {
-    var lista = new List<Form101DtoRequest>();
+    var lista = new List<Form101Dto>();
     foreach (var entidad in response.paquete.entidades)
     {
         foreach (var fila in entidad.filas)
         {
-            var dto = new Form101DtoRequest();
+            var dto = new Form101Dto();
 
             foreach (var col in fila.columnas)
             {
@@ -120,15 +120,15 @@ static decimal? TryDec(string valor)
     ) ? d : null;
 }
 
-static List<Form102DtoRequest> MapearAForm102Lista(consultarResponse response)
+static List<Form102Dto> MapearAForm102Lista(consultarResponse response)
 {
-    var lista = new List<Form102DtoRequest>();
+    var lista = new List<Form102Dto>();
 
     foreach (var entidad in response.paquete.entidades)
     {
         foreach (var fila in entidad.filas)
         {
-            var dto = new Form102DtoRequest();
+            var dto = new Form102Dto();
 
             foreach (var col in fila.columnas)
             {

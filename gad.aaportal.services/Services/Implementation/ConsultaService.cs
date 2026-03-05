@@ -1,4 +1,4 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using gad.aaportal.commons.Dto.Aplicacion;
 using gad.aaportal.dataaccess;
 using gad.aaportal.services.Services.Interfaces;
 using Mapster;
@@ -19,15 +19,30 @@ namespace gad.aaportal.services.Services.Implementation
         public async Task<ConsultaAniosResponse> ConsultaAnios(AaportalContext contexto, ConsultaIdentificacionRequest parametros)
         {
             ConsultaAniosResponse result = new ConsultaAniosResponse();
+
             try
             {
-                var query = contexto.Form101.Where(f => f.NumeroIdentificacion == parametros.Identificacion).ToList();
-                result.anios = query.Select(f => f.AnioFiscal).ToList();
+                if (parametros.TipoPersona == "PJ")
+                {
+                    result.anios = await contexto.Form101
+                        .Where(f => f.NumeroIdentificacion == parametros.Identificacion)
+                        .Select(f => f.AnioFiscal)
+                        .ToListAsync();
+                }
+                else if (parametros.TipoPersona == "PN")
+                {
+                    result.anios = await contexto.Form102
+                        .Where(f => f.NumeroIdentificacion == parametros.Identificacion)
+                        .Select(f => f.AnioFiscal)
+                        .ToListAsync();
+                }
+                else
+                {
+                    result.anios = new List<int>();
+                }
             }
             catch (Exception ex)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
             }
             return result;
         }
@@ -37,16 +52,29 @@ namespace gad.aaportal.services.Services.Implementation
             ConsultaRazSocialResponse result = new ConsultaRazSocialResponse();
             try
             {
-                var query = await contexto.Form101.Where(f => f.NumeroIdentificacion == parametros.Identificacion).FirstOrDefaultAsync();
-                if (query != null)
-                    result.RazSocial = query.RazonSocial;
-
+                if (parametros.TipoPersona == "PJ")
+                {
+                    result.RazSocial = await contexto.Form101
+                        .Where(f => f.NumeroIdentificacion == parametros.Identificacion)
+                        .Select(f => f.RazonSocial)
+                        .FirstOrDefaultAsync();
+                }
+                else if (parametros.TipoPersona == "PN")
+                {
+                    result.RazSocial = await contexto.Form102
+                        .Where(f => f.NumeroIdentificacion == parametros.Identificacion)
+                        .Select(f => f.RazonSocial)
+                        .FirstOrDefaultAsync();
+                }
+                else
+                {
+                    result.RazSocial = string.Empty;
+                }
             }
             catch (Exception ex)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
             }
+
             return result;
         }
 
@@ -55,21 +83,40 @@ namespace gad.aaportal.services.Services.Implementation
             ConsultaIngresosEgresosResponse result = new ConsultaIngresosEgresosResponse();
             try
             {
-                var query = await contexto.Form101.Where(f => f.NumeroIdentificacion == parametros.Identificacion
-                                                && f.AnioFiscal == parametros.anio).FirstOrDefaultAsync();
-                if (query != null)
+                if (parametros.TipoPersona == "PJ")
                 {
-                    result.TotalActivoCorriente470 = query.TotalActivoCorriente470.HasValue ? Math.Round(query.TotalActivoCorriente470.Value, 2) : 0;
-                    result.TotActivoNoCorriente1077 = query.TotActivoNoCorriente1077.HasValue ? Math.Round(query.TotActivoNoCorriente1077.Value, 2) : 0;
-                    result.TotalActivo1080 = query.TotalActivo1080.HasValue ? Math.Round(query.TotalActivo1080.Value, 2) : 0;
-                    result.TotPasivosCorrientes1340 = query.TotPasivosCorrientes1340.HasValue ? Math.Round(query.TotPasivosCorrientes1340.Value, 2) : 0;
-                    result.TotalPasivosLargoPlazo1590 = query.TotalPasivosLargoPlazo1590.HasValue ? Math.Round(query.TotalPasivosLargoPlazo1590.Value, 2) : 0;
-                    result.TotalPasivos1620 = query.TotalPasivos1620.HasValue ? Math.Round(query.TotalPasivos1620.Value, 2) : 0;
-                    result.TotalIngresos1930 = query.TotalIngresos1930.HasValue ? Math.Round(query.TotalIngresos1930.Value, 2) : 0;
-                    result.TotasCostosGastos3380 = query.TotasCostosGastos3380.HasValue ? Math.Round(query.TotasCostosGastos3380.Value, 2) : 0;
-                    result.UtilidadEjercicio3420 = query.UtilidadEjercicio3420.HasValue ? Math.Round(query.UtilidadEjercicio3420.Value, 2) : 0;
+                    var query = await contexto.Form101.Where(f => f.NumeroIdentificacion == parametros.Identificacion
+                                                    && f.AnioFiscal == parametros.anio).FirstOrDefaultAsync();
+                    if (query != null)
+                    {
+                        result.ActivoCorriente = query.TotalActivoCorriente470.HasValue ? Math.Round(query.TotalActivoCorriente470.Value, 2) : 0;
+                        result.ActivoNoCorriente = query.TotActivoNoCorriente1077.HasValue ? Math.Round(query.TotActivoNoCorriente1077.Value, 2) : 0;
+                        result.TotalActivos = query.TotalActivo1080.HasValue ? Math.Round(query.TotalActivo1080.Value, 2) : 0;
+                        result.PasivoCorriente = query.TotPasivosCorrientes1340.HasValue ? Math.Round(query.TotPasivosCorrientes1340.Value, 2) : 0;
+                        result.PasivoNoCorriente = query.TotalPasivosLargoPlazo1590.HasValue ? Math.Round(query.TotalPasivosLargoPlazo1590.Value, 2) : 0;
+                        result.TotalPasivos = query.TotalPasivos1620.HasValue ? Math.Round(query.TotalPasivos1620.Value, 2) : 0;
+                        result.Ingresos = query.TotalIngresos1930.HasValue ? Math.Round(query.TotalIngresos1930.Value, 2) : 0;
+                        result.CostosGastos = query.TotasCostosGastos3380.HasValue ? Math.Round(query.TotasCostosGastos3380.Value, 2) : 0;
+                        result.UtilidadPerdida = query.UtilidadEjercicio3420.HasValue ? Math.Round(query.UtilidadEjercicio3420.Value, 2) : 0;
+                    }
                 }
-
+                else if (parametros.TipoPersona == "PN")
+                {
+                    var query = await contexto.Form102.Where(f => f.NumeroIdentificacion == parametros.Identificacion
+                                                    && f.AnioFiscal == parametros.anio).FirstOrDefaultAsync();
+                    if (query != null)
+                    {
+                        result.ActivoCorriente = query.TotActCorriente410.HasValue ? Math.Round(query.TotActCorriente410.Value, 2) : 0;
+                        result.ActivoNoCorriente = query.TotActivoNoCorriente812.HasValue ? Math.Round(query.TotActivoNoCorriente812.Value, 2) : 0;
+                        result.TotalActivos = query.TotalActivo830.HasValue ? Math.Round(query.TotalActivo830.Value, 2) : 0;
+                        result.PasivoCorriente = query.TotPasivoCorriente1030.HasValue ? Math.Round(query.TotPasivoCorriente1030.Value, 2) : 0;
+                        result.PasivoNoCorriente = 0m;
+                        result.TotalPasivos = query.TotalPasivo1310.HasValue ? Math.Round(query.TotalPasivo1310.Value, 2) : 0;
+                        result.Ingresos = query.TotalIngresos1440.HasValue ? Math.Round(query.TotalIngresos1440.Value, 2) : 0;
+                        result.CostosGastos = query.TotalCostosGastos2760.HasValue ? Math.Round(query.TotalCostosGastos2760.Value, 2) : 0;
+                        result.UtilidadPerdida = query.UtilidadNetaEjercicio2800.HasValue ? Math.Round(query.UtilidadNetaEjercicio2800.Value, 2) : 0;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -152,7 +199,23 @@ namespace gad.aaportal.services.Services.Implementation
             DeclaracionResponse result = new DeclaracionResponse();
             try
             {
-                result.declaracion = contexto.DeclaracionPJs.FirstOrDefault(d => d.RUC == parametos.RUC && d.AnioFiscal == parametos.AnioFiscal).Adapt<DeclaracionData>();
+                var declaracion = contexto.DeclaracionPJs.FirstOrDefault(d => d.RUC == parametos.RUC && d.AnioFiscal == parametos.AnioFiscal);
+                if (declaracion != null)
+                {
+                    result.declaracion = new DeclaracionData
+                    {
+                        ActivoCorriente = declaracion.TotalActivoCorriente470,
+                        ActivoNoCorriente = declaracion.TotActivoNoCorriente1077,
+                        AnioFiscal = declaracion.AnioFiscal,
+                        CostosGastos = declaracion.TotasCostosGastos3380,
+                        Ingresos = declaracion.TotalIngresos1930,
+                        PasivoCorriente = declaracion.TotPasivosCorrientes1340,
+                        PasivoContingente = declaracion.TotalPasivosContingente,
+                        PasivoLargoPlazo = declaracion.TotalPasivosLargoPlazo1590,
+                        RUC = declaracion.RUC,
+                        ValorPatente = declaracion.ValorPatente,
+                    };
+                }
                 result.distribuciones = contexto.DistribucionPagos.Where(d => d.RUC == parametos.RUC && d.AnioFiscal == parametos.AnioFiscal).ToList().Adapt<List<DistribucionPagoDto>>();
             }
             catch (Exception ex)

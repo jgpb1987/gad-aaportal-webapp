@@ -31,6 +31,7 @@ builder.Services.AddScoped<ISecurityAlgorithmServices, SecurityAlgorithmServices
 builder.Services.AddScoped<IDinardapService, DinardapService>();
 builder.Services.AddScoped<IConsultaServices, ConsultaService>();
 builder.Services.AddScoped<IDeclaracionServices, DeclaracionServices>();
+builder.Services.AddScoped<ISolicitudRespuestaServices, SolicitudRespuestaServices>();
 //Fin Services
 //Inicio Politicas de Cors
 builder.Services.AddCors(
@@ -47,6 +48,8 @@ builder.Services.AddCors(
 //Fin Políticas de Cors
 //Inicio archivo configuración
 builder.Services.Configure<ServicesConfig>(builder.Configuration.GetSection("ServicesConfig"));
+builder.Services.Configure<ApiServerConfig>(builder.Configuration.GetSection("ApiServerConfig"));
+builder.Services.Configure<EndPointsConfig>(builder.Configuration.GetSection("EndPointsConfig"));
 //Fin archivo configuración
 
 var app = builder.Build();

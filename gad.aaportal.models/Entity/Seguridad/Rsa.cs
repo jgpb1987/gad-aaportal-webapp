@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace gad.aaportal.models.Configuration.Seguridad
+﻿namespace gad.aaportal.models.Configuration.Seguridad
 {
     public class Rsa
     {

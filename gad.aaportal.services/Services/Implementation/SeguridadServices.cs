@@ -1,5 +1,5 @@
 using gad.aaportal.commons.Base;
-using gad.aaportal.commons.Dto;
+using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.dataaccess;
 using gad.aaportal.models.Entity.Seguridad;
 using gad.aaportal.services.Config;
@@ -13,7 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.services.Services.Implementation;
 
@@ -47,8 +46,8 @@ public class SeguridadServices : ISeguridadServices
         RsaDtoResult result = new();
         try
         {
-            var consulta= await contexto.Rsas.FirstOrDefaultAsync(r => r.Estado);
-            result.Data = new() {PublicKey= consulta != null ? consulta.PublicKey : string.Empty };
+            var consulta = await contexto.Rsas.FirstOrDefaultAsync(r => r.Estado);
+            result.Data = new() { PublicKey = consulta != null ? consulta.PublicKey : string.Empty };
         }
         catch (SystemExceptionCustomized sex)
         {
@@ -98,34 +97,34 @@ public class SeguridadServices : ISeguridadServices
         try
         {
             var rsa = await contexto.Rsas.FirstOrDefaultAsync(r => r.Estado);
-            if (rsa==null)
+            if (rsa == null)
                 throw SystemExceptionCustomized.CreateException("LGIOO1", "Error al obtener llaves");
 
-            var decryptUser= await securityAlgorithmServices.GetDecryptRsa(new EncryptDecryptDtoParam() {Key=rsa.PrivateKey, Data=parametro.User});
-            var decryptPwd= await securityAlgorithmServices.GetDecryptRsa(new EncryptDecryptDtoParam() { Key = rsa.PrivateKey, Data = parametro.Password });
+            var decryptUser = await securityAlgorithmServices.GetDecryptRsa(new EncryptDecryptDtoParam() { Key = rsa.PrivateKey, Data = parametro.User });
+            var decryptPwd = await securityAlgorithmServices.GetDecryptRsa(new EncryptDecryptDtoParam() { Key = rsa.PrivateKey, Data = parametro.Password });
 
-            if (decryptUser.Data.EncryptDecrypt.Length<=0)
+            if (decryptUser.Data.EncryptDecrypt.Length <= 0)
                 throw SystemExceptionCustomized.CreateException("LGIOO2", "Error no es posible desencriptar claves.");
 
-            var user= await contexto.Usuarios.FirstOrDefaultAsync(u => u.User == decryptUser.Data.EncryptDecrypt && u.Estado);
-            
-            if (user==null)
+            var user = await contexto.Usuarios.FirstOrDefaultAsync(u => u.User == decryptUser.Data.EncryptDecrypt && u.Estado);
+
+            if (user == null)
                 throw SystemExceptionCustomized.CreateException("LGIOO3", "Usuario no existe");
 
-            var pwd= await securityAlgorithmServices.GetGenerateComputeHashSha(new ComputeHashSha1DtoParam() {Usuario= decryptUser.Data.EncryptDecrypt, Password= decryptPwd.Data.EncryptDecrypt });
-            if(user.Password!=pwd.Data.Hash)
+            var pwd = await securityAlgorithmServices.GetGenerateComputeHashSha(new ComputeHashSha1DtoParam() { Usuario = decryptUser.Data.EncryptDecrypt, Password = decryptPwd.Data.EncryptDecrypt });
+            if (user.Password != pwd.Data.Hash)
                 throw SystemExceptionCustomized.CreateException("LGIOO4", "Password incorrecto");
 
             var appJwt = await contexto.Jwts.FirstOrDefaultAsync(a => a.Estado);
-            if (appJwt==null)
+            if (appJwt == null)
                 throw SystemExceptionCustomized.CreateException("LGIOO5", "Error al obtener configuracion de token.");
 
-            var usuarioSesion=await contexto.UsuarioSesions.Where(us => us.CodigoUser == user.User).OrderByDescending(us => us.FechaHora).FirstOrDefaultAsync();
+            var usuarioSesion = await contexto.UsuarioSesions.Where(us => us.CodigoUser == user.User).OrderByDescending(us => us.FechaHora).FirstOrDefaultAsync();
 
             var expiration = DateTime.Now.AddSeconds(appJwt.JwtTime);
             var fechaHora = DateTime.Now;
             var jtiSession = System.Guid.NewGuid().ToString();
-            var token = GenerateJWT(servicesConfig.NameApp, servicesConfig.WebSiteCompany, jtiSession, user.Nombres, user.Email, appJwt.SecurityKey, expiration, servicesConfig.Audiencia, servicesConfig.WebSiteCompany, fechaHora, usuarioSesion!=null ? usuarioSesion.FechaHora : fechaHora);
+            var token = GenerateJWT(servicesConfig.NameApp, servicesConfig.WebSiteCompany, jtiSession, user.Nombres, user.Email, appJwt.SecurityKey, expiration, servicesConfig.Audiencia, servicesConfig.WebSiteCompany, fechaHora, usuarioSesion != null ? usuarioSesion.FechaHora : fechaHora);
 
             var userSesion = new UsuarioSesion()
             {
@@ -143,8 +142,8 @@ public class SeguridadServices : ISeguridadServices
                 Plugins = parametro.Plugins,
                 Geolocation = parametro.Geolocation,
                 TimeZone = parametro.TimeZone,
-                Fecha=fechaHora,
-                FechaRevocatoria=fechaHora,
+                Fecha = fechaHora,
+                FechaRevocatoria = fechaHora,
                 Accion = servicesConfig.AccionLogin
             };
             await contexto.UsuarioSesions.AddAsync(userSesion);
@@ -154,7 +153,7 @@ public class SeguridadServices : ISeguridadServices
             {
                 Token = token,
                 Expiration = expiration,
-                UltimoAcceso = usuarioSesion!=null ? usuarioSesion.FechaHora : fechaHora,
+                UltimoAcceso = usuarioSesion != null ? usuarioSesion.FechaHora : fechaHora,
                 Nombres = user.Nombres
             };
         }
@@ -186,10 +185,10 @@ public class SeguridadServices : ISeguridadServices
 
             var user = await contexto.Usuarios.FirstOrDefaultAsync(u => u.User == parametro.User);
 
-            if(user != null)
+            if (user != null)
                 throw SystemExceptionCustomized.CreateException("UREOO3", "Usuario ya se encuentra registrado");
 
-            var configMail= await contexto.ConfiguracionEmails.Where(p => p.Estado).FirstOrDefaultAsync();
+            var configMail = await contexto.ConfiguracionEmails.Where(p => p.Estado).FirstOrDefaultAsync();
             if (configMail == null)
                 throw SystemExceptionCustomized.CreateException("UREOO4", "No existe configuración para envío de credenciales");
 
@@ -205,21 +204,21 @@ public class SeguridadServices : ISeguridadServices
             var userNew = new Usuario()
             {
                 User = parametro.User,
-                Password = pwd.Data.Hash, 
+                Password = pwd.Data.Hash,
                 Fecha = fechaHora,
                 FechaUltimoCambioClave = fechaHora,
                 DiasParaCambiarClave = servicesConfig.DiasParaCambiarClave,
                 Nombres = parametro.Nombres,
                 Email = parametro.Email,
                 CambiaClave = false,
-                EstaBloqueado = false,               
-                Estado = true,            
+                EstaBloqueado = false,
+                Estado = true,
             };
             contexto.Usuarios.Add(userNew);
 
             var expiration = DateTime.Now.AddSeconds(appJwt.JwtTime);
             var jtiSession = System.Guid.NewGuid().ToString();
-            var token = GenerateJWT(servicesConfig.NameApp, servicesConfig.WebSiteCompany, jtiSession, userNew.Nombres, userNew.Email, appJwt.SecurityKey, expiration, servicesConfig.Audiencia, servicesConfig.WebSiteCompany, fechaHora,  fechaHora);
+            var token = GenerateJWT(servicesConfig.NameApp, servicesConfig.WebSiteCompany, jtiSession, userNew.Nombres, userNew.Email, appJwt.SecurityKey, expiration, servicesConfig.Audiencia, servicesConfig.WebSiteCompany, fechaHora, fechaHora);
 
             var userSesion = new UsuarioSesion()
             {
@@ -239,7 +238,7 @@ public class SeguridadServices : ISeguridadServices
                 TimeZone = parametro.TimeZone,
                 Fecha = fechaHora,
                 FechaRevocatoria = fechaHora,
-                Accion= servicesConfig.AccionUserRegsitration
+                Accion = servicesConfig.AccionUserRegsitration
             };
 
             await contexto.UsuarioSesions.AddAsync(userSesion);
@@ -269,7 +268,7 @@ public class SeguridadServices : ISeguridadServices
             Mail.SendEmail("Notificación creación de cuenta", htmlBody, parametro.Email, configMail.Servidor, configMail.Email, configMail.Pwd, configMail.Puerto);
             //**************************************//
 
-            result.Message=new() {Description="La clave fue enviada al correo electrónico registrado, Por favor cambiar su contraseña en el siguiente inicio de sesión."};
+            result.Message = new() { Description = "La clave fue enviada al correo electrónico registrado, Por favor cambiar su contraseña en el siguiente inicio de sesión." };
 
             await transaction.CommitAsync();
         }
@@ -302,7 +301,7 @@ public class SeguridadServices : ISeguridadServices
             if (appJwt == null)
                 throw SystemExceptionCustomized.CreateException("FPAOO2", "Error al obtener configuracion de token.");
 
-            var user = await contexto.Usuarios.FirstOrDefaultAsync(u => u.User == parametro.User && u.Email==parametro.Email);
+            var user = await contexto.Usuarios.FirstOrDefaultAsync(u => u.User == parametro.User && u.Email == parametro.Email);
 
             if (user == null)
                 throw SystemExceptionCustomized.CreateException("FPAOO3", "Usuario no existe");
@@ -349,13 +348,13 @@ public class SeguridadServices : ISeguridadServices
             await contexto.SaveChangesAsync();
 
             //**************************************//
-            var templatePath = Path.Combine(AppContext.BaseDirectory,"Templates","Template_email.html");
+            var templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", "Template_email.html");
             var templateHtml = await File.ReadAllTextAsync(templatePath);
 
             var values = new Dictionary<string, string>
             {
-                ["TITULO_NOTIFICACION"] ="Recuperación de Contraseña",
-                ["FECHA_HORA"]= DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
+                ["TITULO_NOTIFICACION"] = "Recuperación de Contraseña",
+                ["FECHA_HORA"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
                 ["NOMBRE_COMPLETO"] = user.Nombres,
                 ["USUARIO"] = user.User,
                 ["CLAVE_ACCESO"] = claveRandom.Data.Random,

@@ -1,4 +1,4 @@
-﻿using gad.aaportal.commons.Dto;
+﻿using gad.aaportal.commons.Dto.Aplicacion;
 using gad.generic.components.Components.Several;
 using Microsoft.AspNetCore.Components;
 
@@ -16,7 +16,7 @@ namespace gad.generic.components.Components.Filters
         public ToastsServices? Toast { get; set; }
         [Parameter]
         public EventCallback<Canton> OnPorcentajeCambiado { get; set; }
-        
+
         private HashSet<string> collapsedStates = new();
         private string filtroCanton = string.Empty;
 

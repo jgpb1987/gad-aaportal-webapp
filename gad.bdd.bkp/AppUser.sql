@@ -2,7 +2,7 @@
 CREATE LOGIN user_app WITH PASSWORD = 'P@n3c1ll0!';
 
 -- 2. Usar la base de datos
-USE TuBaseDeDatos;
+USE GadAntonioAnte;
 GO
 
 -- 3. Crear usuario dentro de la BD

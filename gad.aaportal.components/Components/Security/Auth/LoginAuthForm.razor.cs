@@ -222,7 +222,8 @@ namespace gad.aaportal.components.Components.Security.Auth
         private async Task ConsultaDinardap()
         {
             using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
-            var resp = await http.PostAsJsonAsync("api/Dinardap/ConsultaDinardap", "tomar cedula del session");
+            var parametros = new { Identificacion = "asd", Paquete = "6282", Usuario = "ccabrera"};
+            var resp = await http.PostAsJsonAsync("api/Dinardap/PaqueteIndividual", parametros);
             resp.EnsureSuccessStatusCode();
             var result = await resp.Content.ReadFromJsonAsync<ConsumoDinardapResult>();
         }

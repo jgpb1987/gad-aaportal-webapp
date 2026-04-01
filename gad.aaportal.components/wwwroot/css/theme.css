@@ -1,0 +1,42 @@
+﻿html, body {
+    font-family: 'Montserrat', sans-serif;
+}
+:root {
+    --pro-background-color: #1a75cc;
+    --pro-button-background-color: #1a75cc;
+    --pro-button-background-color-hover: #005eb8;
+    --pro-button-text-color: #ffffff;
+    --pro-text-background-color-login: #ffffff;
+    --pro-sidebar-background-color: #ffffff;
+    --pro-button-sidebar-color: #ced4da;
+    --pro-button-sidebar-color-hover: #ffffff;
+    --pro-text-sidebar-color: #ced4da;
+    --pro-text-sidebar-color-hover: #ffffff;
+    --pro-li-sidebar-hover: #1a75cc;
+}
+/*:root {
+    --pro-background-color: rgba(228, 34, 27, 1);
+    --pro-button-background-color: rgba(228, 34, 27, 1);
+    --pro-button-background-color-hover: rgba(196, 29, 23, 1);
+    --pro-button-text-color: #ffffff;
+    --pro-text-background-color-login: #ffffff;
+    --pro-sidebar-background-color: #ffffff;
+    --pro-button-sidebar-color: #ced4da;
+    --pro-button-sidebar-color-hover: #ffffff;
+    --pro-text-sidebar-color: #ced4da;
+    --pro-text-sidebar-color-hover: #ffffff;
+    --pro-li-sidebar-hover: rgba(228, 34, 27, 1);
+}*/
+/*:root {
+    --pro-background-color: #333333;
+    --pro-button-background-color: #333333;
+    --pro-button-background-color-hover: #4d4d4d;
+    --pro-button-text-color: #ffffff;
+    --pro-text-background-color-login: #ffffff;
+    --pro-sidebar-background-color: #ffffff;
+    --pro-button-sidebar-color: #ced4da;
+    --pro-button-sidebar-color-hover: #ffffff;
+    --pro-text-sidebar-color: #ced4da;
+    --pro-text-sidebar-color-hover: #ffffff;
+    --pro-li-sidebar-hover: #333333;
+}*/

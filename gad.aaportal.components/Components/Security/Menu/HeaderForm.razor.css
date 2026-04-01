@@ -7,44 +7,53 @@
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
     height: 65px;
-    background: rgba(196, 29, 23, 1);
+    background-color: var(--pro-background-color);
 }
+
 .margen-button-sidebar {
     margin-left: 10px;
     margin-right: 20px;
 }
+
 .margen-button-logo-sidebar {
     margin-top: 5px;
 }
+
 .button-sidebar {
-    color: #fff;
+    color: var(--pro-button-sidebar-color);
     cursor: pointer;
 }
-.button-sidebar :hover {
-        color: #fff;
+
+    .button-sidebar :hover {
+        color: var(--pro-button-sidebar-color-hover);
         transition: 0.5s;
-}
+    }
+
 .top-row {
     justify-content: flex-end;
     height: 3.5rem;
     display: flex;
-/*    align-items: center;*/
+    /*    align-items: center;*/
 }
+
 .top-perfil {
     justify-content: flex-end;
     display: flex;
 }
+
 .button-perfil {
     position: absolute;
     top: 22%;
-/*    color: #808080;*/
     margin-right: 10px;
 }
+
 .button-perfil-link {
-    color: #ced4da;
+    color: var( --pro-text-sidebar-color);
+    cursor: pointer;
 }
+
     .button-perfil-link :hover {
-        color: #fff;
+        color: var( --pro-text-sidebar-color-hover);
         transition: 0.5s;
     }
 /*inicio texto header*/
@@ -53,7 +62,7 @@
     top: 15%;
     text-align: left;
     line-height: 16px;
-    color: #FFF;
+    color: var( --pro-text-sidebar-color-hover);
     font-size: 11px;
     margin-right: 60px
 }
@@ -82,56 +91,12 @@
 .text-header-bold {
     font-weight: 700;
 }
+
 .text-name-app {
     font-size: 14px;
 }
 /*fin texto header*/
 
-.info-perfil-container {
-    position: absolute;
-    margin-top: 49px;
-    padding: 1rem;
-    right: 0;
-    top: 0;
-    z-index: 5;
-}
-.info-perfil {
-    width: 275px;
-    height: 200px;
-    font-size: 0.700rem;
-    pointer-events: auto;
-    background-color: #333333;
-    background-clip: padding-box;
-    border: 1px solid rgba(0,0,0,.1);
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
-    border-radius: 0.35rem;
-    color: #f8f9fa;
-    padding: 10px;
-}
-.info-perfil-card {
-    margin-left:10px;
-    margin-top: 10px;
-    line-height: 20px;
-}
-.btn-card-cerrar-sesion {
-    justify-content: center;
-    height: 40px;
-    border-radius: 5px;
-    width: 60%;
-    margin-top: 20px;
-    margin-left: 10px;
-}
-
-.btn-color-cpn {
-    color: #fff;
-    background-color: #FF7500;
-}
-
-.btn-color-cpn:hover {
-        color: #fff;
-        background-color: #FF7500;
-        border-color: #FF7500;
-}
 /* Clase para ocultar en pantallas pequeñas */
 @media (max-width: 580px) {
     .ocultar-en-pequenas {
@@ -145,4 +110,3 @@
         display: block;
     }
 }
-

@@ -1,14 +1,8 @@
 ﻿<ToastsServices @ref="Toast" Time="5000" />
 <LoadingBorderModalServices @ref="LoadingBorder" />
-
 <section class="container-fluid ">
     <div class="row d-flex justify-content-center heigth-full-screen">
         <div class="col-12 col-md-7 col-lg-7 col-xl-7">
-            <div class="card-login">
-                <div class="card-login-shadow">
-                    <a class="a-img-login" href="https://www.antonioante.gob.ec" target="_blank">
-                        <img class="img-login" src="img\logoAA4.png" />
-                    </a>
                     @switch (_view)
                     {
                         case LoginView.Login:
@@ -30,10 +24,7 @@
                                                 OnBack="ShowLogin" />
                             break;
                     }
-                </div>
-            </div>
         </div>
-
         <div class="col-12 col-md-5 col-lg-5 col-xl-5 background-color-parte-derecha posicion-politicas">
             <div class="login-politicas-seguridad text-color-login-texto-politicas-seguridad color-parte-derecha background-color-parte-derecha">
                 <h3>Consejos de Seguridad</h3>

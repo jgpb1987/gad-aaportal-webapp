@@ -16,8 +16,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
         //private string tipoPersona = "PN";//SE DEBE TOMAR EL VALOR DE SESION
 
         private string? razSocial { get; set; }
-        private List<int> anios = new();
-        private int? anioSeleccionado { get; set; }
+        private int anio = new();
         private decimal? baseForm = 0;
         private decimal impuesto = 0;
         private decimal excedente = 0;
@@ -25,7 +24,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
         bool bloqueoFormulario = false;
         string modalTitle = string.Empty;
         ModalSize modalSize;
-        MarkupString modalMessage;
+        RenderFragment? modalMessage;
         private decimal valor_excedente = 0;
         private string LabelResultado =>
                         declaracion.UtilidadEjercicio3420 >= 0
@@ -44,9 +43,9 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
         {
             var parametros = new { identificacion = ruc, tipoPersona = tipoPersona };
             await ConsultaRazSocial(parametros);
-            await ConsultaAnios(parametros);
-            await ConsultaTarifas();
             await ConsultaCantones();
+            await ConsultaTarifas();
+            await ConsultaAnios(parametros);
         }
 
         private async Task ConsultaAnios(object parametros)
@@ -55,12 +54,13 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             var resp = await http.PostAsJsonAsync("api/Consultas/ConsultaAnios", parametros);
             resp.EnsureSuccessStatusCode();
             var result = await resp.Content.ReadFromJsonAsync<ConsultaAniosResponse>();
-            anios = result.anios;
+            anio = result.anios;
+            await OnAnioChanged();
         }
 
         private async Task ConsultaDeclaracion()
         {
-            var parametros = new { RUC = ruc, anioFiscal = anioSeleccionado, tipoPersona = tipoPersona };
+            var parametros = new { RUC = ruc, anioFiscal = anio, tipoPersona = tipoPersona };
             using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
             var resp = await http.PostAsJsonAsync("api/Consultas/ConsultaDeclaracion", parametros);
             resp.EnsureSuccessStatusCode();
@@ -115,12 +115,12 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                     StateHasChanged();
                 }
             };
-            if (anioSeleccionado.HasValue)
+            if (anio != 0)
             {
                 await ConsultaDeclaracion();
 
                 btnMains = false;
-                var parametros = new { identificacion = ruc, anio = anioSeleccionado, tipoPersona = tipoPersona };
+                var parametros = new { identificacion = ruc, anio = anio, tipoPersona = tipoPersona };
                 using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
                 var resp = await http.PostAsJsonAsync("api/Consultas/ConsultaIngresosEgresos", parametros);
                 resp.EnsureSuccessStatusCode();
@@ -176,79 +176,95 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             }
 
             await ConsultarTasasAdministrativas();
-            var porcentajeXPagar = cantones.Cantones.Where(c => c.PagoAA).Sum(c => c.Porcentaje);
 
-            modalTitle = "Valores Declarados";
-            var tasasHtml = string.Join("<br>",
-                                tasas.Tasas.Select(t => $"<b>{t.Concepto}:</b> ${t.Valor}")
-                            );
+            var porcentajeXPagar = cantones.Cantones
+                .Where(c => c.PagoAA)
+                .Sum(c => c.Porcentaje);
 
-            modalMessage = (MarkupString)($@"
-                                De acuerdo a sus datos declarados usted deberá pagar: <br>
-                                <b>Valor Patente:</b> ${declaracion.ValorPatente}<br>
-                                <b>Valor 1.5 x Mil:</b> ${Math.Round((declaracion.ValorUnoPorMil * porcentajeXPagar / 100), 2)}<br>
-                                {tasasHtml} <br>
-                                <b>TOTAL: ${(declaracion.ValorPatente
-                                    + Math.Round((declaracion.ValorUnoPorMil * porcentajeXPagar / 100), 2)
-                                    + tasas.Tasas.Sum(t => t.Valor))}</b><br>
-                                ¿Acepta los valores?");
+            modalTitle = "Confirmación de Pago";
 
-            modalSize = ModalSize.Default;
+            modalMessage = builder =>
+            {
+                var valor15 = Math.Round((declaracion.ValorUnoPorMil * porcentajeXPagar / 100), 2);
+
+                var total = declaracion.ValorPatente
+                    + valor15
+                    + tasas.Tasas.Sum(t => t.Valor);
+
+                builder.AddMarkupContent(0, $@"
+                    <div class='text-center mb-3'>
+                        <div style='font-size: 2rem;'>💰</div>
+                        <h5 class='fw-bold text-success'>Resumen de Pago</h5>
+                        <small class='text-muted'>Verifique antes de confirmar</small>
+                    </div>
+                    <div class='card border-0 shadow-sm mb-3'>
+                        <div class='card-body'>
+                            <div class='d-flex justify-content-between mb-2'>
+                                <span>Valor Patente</span>
+                                <strong>${declaracion.ValorPatente:N2}</strong>
+                            </div>
+                            <div class='d-flex justify-content-between mb-2'>
+                                <span>1.5 x Mil</span>
+                                <strong>${valor15:N2}</strong>
+                            </div>
+                            <hr />
+                            {string.Join("", tasas.Tasas.Select(t => $@"
+                                <div class='d-flex justify-content-between mb-1'>
+                                    <span>{t.Concepto}</span>
+                                    <span>${t.Valor:N2}</span>
+                                </div>
+                            "))}
+                            <hr />
+                            <div class='d-flex justify-content-between fw-bold fs-5 text-primary'>
+                                <span>Total</span>
+                                <span>${total:N2}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='text-center'>
+                        <span class='text-muted'>¿Desea confirmar esta declaración?</span>
+                    </div>");
+            };
+
+            modalSize = ModalSize.Small;
+
             bool confirm = await myModal.ShowAsync();
+
             if (confirm)
             {
                 DeclaracionRequest parametros = new DeclaracionRequest();
                 parametros.declaracion = declaracion;
+
                 declaracion.RUC = ruc;
-                declaracion.AnioFiscal = anioSeleccionado.Value;
-                parametros.Cantones = cantones.Cantones.Where(c => c.Seleccionado).ToList();
+                declaracion.AnioFiscal = anio;
+
+                parametros.Cantones = cantones.Cantones
+                    .Where(c => c.Seleccionado)
+                    .ToList();
+
                 using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+
                 var resp = await http.PostAsJsonAsync("api/Declaracion/DeclaracionPJ", parametros);
                 resp.EnsureSuccessStatusCode();
+
                 var declaracionResult = await resp.Content.ReadFromJsonAsync<SaveDeclaracionPJResult>();
+
                 if (declaracionResult.grabado)
                 {
                     bloqueoFormulario = true;
-                    Toast.ShowMessage("succes", "Declaración Procesada", "Su declaración ha sido procesada correctamente");
+
+                    Toast.ShowMessage("succes",
+                        "Declaración Procesada",
+                        "Su declaración ha sido procesada correctamente");
                 }
                 else
                 {
-                    Toast.ShowMessage("error", "Declaración No Procesada", "Ocurrió un error al procesar su declaración, inténtelo nuevamente");
+                    Toast.ShowMessage("error",
+                        "Declaración No Procesada",
+                        "Ocurrió un error, inténtelo nuevamente");
                 }
             }
         }
-
-        //private async Task LimpiarForm()
-        //{
-        //    modalTitle = "Limpiar Datos";
-        //    modalMessage = (MarkupString)("¿Seguro de borrar datos?");
-        //    modalSize = ModalSize.Small;
-        //    bool confirm = await myModal.ShowAsync();
-        //    if (confirm)
-        //    {
-        //        declaracion = new();
-        //        declaracion.PropertyChanged += async (_, args) =>
-        //        {
-        //            if (args.PropertyName == nameof(DeclaracionData.TotalActivos) ||
-        //                args.PropertyName == nameof(DeclaracionData.TotalPasivos) ||
-        //                args.PropertyName == nameof(DeclaracionData.UtilidadEjercicio3420))
-        //            {
-        //                CalcularPatenteDeclarada();
-        //                StateHasChanged();
-        //            }
-        //        };
-        //    }
-        //    cantones.Cantones.ForEach(c =>
-        //    {
-        //        c.Seleccionado = false;
-        //        c.PagoAA = false;
-        //        c.Porcentaje = 0;
-        //    });
-        //    var aa = cantones.Cantones.Where(c => c.Id == 116).FirstOrDefault();
-        //    aa.Seleccionado = true;
-        //    aa.PagoAA = true;
-        //    aa.Porcentaje = 100;
-        //}
 
         private async Task UsarSugeridos()
         {

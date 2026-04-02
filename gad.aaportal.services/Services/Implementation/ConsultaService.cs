@@ -25,20 +25,18 @@ namespace gad.aaportal.services.Services.Implementation
                 if (parametros.TipoPersona == "PJ")
                 {
                     result.anios = await contexto.Form101
-                        .Where(f => f.NumeroIdentificacion == parametros.Identificacion)
+                        .Where(f => f.NumeroIdentificacion == parametros.Identificacion &&
+                                    f.AnioFiscal >= (DateTime.Now.Year - 5) && f.AnioFiscal < (DateTime.Now.Year - 1))
                         .Select(f => f.AnioFiscal)
-                        .ToListAsync();
+                        .FirstOrDefaultAsync();
                 }
                 else if (parametros.TipoPersona == "PN")
                 {
                     result.anios = await contexto.Form102
-                        .Where(f => f.NumeroIdentificacion == parametros.Identificacion)
+                        .Where(f => f.NumeroIdentificacion == parametros.Identificacion &&
+                                    f.AnioFiscal>=(DateTime.Now.Year - 5) && f.AnioFiscal < (DateTime.Now.Year - 1))
                         .Select(f => f.AnioFiscal)
-                        .ToListAsync();
-                }
-                else
-                {
-                    result.anios = new List<int>();
+                        .FirstOrDefaultAsync();
                 }
             }
             catch (Exception ex)

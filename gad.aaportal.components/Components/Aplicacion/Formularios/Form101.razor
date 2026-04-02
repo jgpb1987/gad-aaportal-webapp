@@ -28,15 +28,7 @@
 
                 <div class="col-md-2">
                     <label class="fw-bold">Año</label>
-                    <select class="form-select"
-                            @bind="anioSeleccionado"
-                            @bind:after="OnAnioChanged">
-                        <option value="">-- Seleccione --</option>
-                        @foreach (var a in anios)
-                        {
-                            <option value="@a">@a</option>
-                        }
-                    </select>
+                    <div>@anio</div>
                 </div>
 
                 <div class="col-md-2 text-end">

@@ -18,7 +18,7 @@ namespace gad.aaportal.commons.Dto.Aplicacion
 
     public class ConsultaAniosResponse : BaseResult
     {
-        public List<int> anios { get; set; } = new List<int>();
+        public int anios { get; set; } 
     }
 
     public class ConsultaRazSocialResponse : BaseResult

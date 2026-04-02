@@ -10,8 +10,10 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 {
     public partial class Form101 : ComponentBase
     {
-        private string ruc = "1002346649001";//SE DEBE TOMAR EL VALOR DE SESION
-        private string tipoPersona = "PN";//SE DEBE TOMAR EL VALOR DE SESION
+        private string ruc = "0190003299001";//SE DEBE TOMAR EL VALOR DE SESION
+        private string tipoPersona = "PJ";//SE DEBE TOMAR EL VALOR DE SESION
+        //private string ruc = "1002346649001";//SE DEBE TOMAR EL VALOR DE SESION
+        //private string tipoPersona = "PN";//SE DEBE TOMAR EL VALOR DE SESION
 
         private string? razSocial { get; set; }
         private List<int> anios = new();

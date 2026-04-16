@@ -203,6 +203,7 @@ namespace gad.aaportal.commons.Dto.Aplicacion
     {
         public DeclaracionData declaracion { get; set; }
         public List<Canton> Cantones { get; set; } = new List<Canton>();
+        public string RazonSocial { get; set; }
     }
 
     public class SaveDeclaracionPJResult : BaseResult
@@ -240,4 +241,6 @@ namespace gad.aaportal.commons.Dto.Aplicacion
         public DeclaracionData declaracion { get; set; }
         public List<DistribucionPagoDto> distribuciones { get; set; }
     }
+
+    
 }

@@ -6,7 +6,15 @@
          Title="@modalTitle"
          Size="@modalSize">
     <ChildContent>
-        @modalMessage
+        @* @modalMessage *@
+        @if (!string.IsNullOrEmpty(pdfBase64))
+        {
+            <iframe src="@($"data:application/pdf;base64,{pdfBase64}")"
+                    width="100%"
+                    height="600px"
+                    style="border:none;">
+            </iframe>
+        }
     </ChildContent>
 </BsModal>
 

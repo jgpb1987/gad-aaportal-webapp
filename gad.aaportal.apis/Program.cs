@@ -5,6 +5,7 @@ using gad.aaportal.services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
+using QuestPDF.Infrastructure;
 
 var PolicyCors = "_policyCors";
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -51,6 +52,8 @@ builder.Services.Configure<ServicesConfig>(builder.Configuration.GetSection("Ser
 builder.Services.Configure<ApiServerConfig>(builder.Configuration.GetSection("ApiServerConfig"));
 builder.Services.Configure<EndPointsConfig>(builder.Configuration.GetSection("EndPointsConfig"));
 //Fin archivo configuración
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

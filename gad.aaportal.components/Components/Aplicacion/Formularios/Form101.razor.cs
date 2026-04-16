@@ -23,7 +23,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
         bool btnMains = true;
         bool bloqueoFormulario = false;
         string modalTitle = string.Empty;
-        ModalSize modalSize;
+        ModalSize modalSize = ModalSize.ExtraLarge;
         RenderFragment? modalMessage;
         private decimal valor_excedente = 0;
         private string LabelResultado =>
@@ -183,6 +183,18 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 
             modalTitle = "Confirmación de Pago";
 
+            DeclaracionRequest parametros = new DeclaracionRequest();
+            parametros.declaracion = declaracion;
+            declaracion.RUC = ruc;
+            declaracion.AnioFiscal = anio;
+            parametros.RazonSocial = razSocial;
+
+            parametros.Cantones = cantones.Cantones
+                .Where(c => c.Seleccionado)
+                .ToList();
+
+            await GeneraPdf(parametros);
+
             modalMessage = builder =>
             {
                 var valor15 = Math.Round((declaracion.ValorUnoPorMil * porcentajeXPagar / 100), 2);
@@ -226,24 +238,11 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                     </div>");
             };
 
-            modalSize = ModalSize.Small;
-
             bool confirm = await myModal.ShowAsync();
 
             if (confirm)
             {
-                DeclaracionRequest parametros = new DeclaracionRequest();
-                parametros.declaracion = declaracion;
-
-                declaracion.RUC = ruc;
-                declaracion.AnioFiscal = anio;
-
-                parametros.Cantones = cantones.Cantones
-                    .Where(c => c.Seleccionado)
-                    .ToList();
-
                 using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
-
                 var resp = await http.PostAsJsonAsync("api/Declaracion/DeclaracionPJ", parametros);
                 resp.EnsureSuccessStatusCode();
 
@@ -335,6 +334,16 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             {
                 declaracion.ValorPatente = ingresosEgresos.ValorPatente.Value;
             }
+        }
+
+        string pdfBase64 = string.Empty;
+        private async Task GeneraPdf(DeclaracionRequest request)
+        {
+            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+            var resp = await http.PostAsJsonAsync("api/Declaracion/OrdenPagoPdf", request);
+            resp.EnsureSuccessStatusCode();
+            var pdfBytes = await resp.Content.ReadAsByteArrayAsync();
+            pdfBase64 = Convert.ToBase64String(pdfBytes);
         }
     }
 }

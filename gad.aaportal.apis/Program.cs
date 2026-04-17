@@ -26,7 +26,7 @@ builder.Services.AddDbContext<AaportalContext>(options =>
 });
 builder.Services.AddDbContext<BddGmaaContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MunicipioConnectionString"));
 });
 // === Fin DbContext ===
 
@@ -37,6 +37,7 @@ builder.Services.AddScoped<IDinardapService, DinardapService>();
 builder.Services.AddScoped<IConsultaServices, ConsultaService>();
 builder.Services.AddScoped<IDeclaracionServices, DeclaracionServices>();
 builder.Services.AddScoped<ISolicitudRespuestaServices, SolicitudRespuestaServices>();
+builder.Services.AddScoped<ISpMunicipioServices, SpMunicipioServices>();
 //Fin Services
 //Inicio Politicas de Cors
 builder.Services.AddCors(

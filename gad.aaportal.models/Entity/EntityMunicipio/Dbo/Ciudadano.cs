@@ -16,8 +16,8 @@ namespace gad.aaportal.models.Entity.Dbo
             PredioAccionarios = new HashSet<PredioAccionario>();
             PredioComodatos = new HashSet<PredioComodato>();
             Predios = new HashSet<Predio>();
-            SaDenunciasAciudadanoCedulaCiudadanoDenunciadoNavigations = new HashSet<SaDenunciasAciudadano>();
-            SaDenunciasAciudadanoCedulaCiudadanoDenuncianteNavigations = new HashSet<SaDenunciasAciudadano>();
+            //SaDenunciasAciudadanoCedulaCiudadanoDenunciadoNavigations = new HashSet<SaDenunciasAciudadano>();
+            //SaDenunciasAciudadanoCedulaCiudadanoDenuncianteNavigations = new HashSet<SaDenunciasAciudadano>();
             SaDenunciasActividadesEconomicas = new HashSet<SaDenunciasActividadesEconomica>();
             TelefonoCiudadanos = new HashSet<TelefonoCiudadano>();
         }
@@ -65,8 +65,8 @@ namespace gad.aaportal.models.Entity.Dbo
         public virtual ICollection<PredioAccionario> PredioAccionarios { get; set; }
         public virtual ICollection<PredioComodato> PredioComodatos { get; set; }
         public virtual ICollection<Predio> Predios { get; set; }
-        public virtual ICollection<SaDenunciasAciudadano> SaDenunciasAciudadanoCedulaCiudadanoDenunciadoNavigations { get; set; }
-        public virtual ICollection<SaDenunciasAciudadano> SaDenunciasAciudadanoCedulaCiudadanoDenuncianteNavigations { get; set; }
+        //public virtual ICollection<SaDenunciasAciudadano> SaDenunciasAciudadanoCedulaCiudadanoDenunciadoNavigations { get; set; }
+        //public virtual ICollection<SaDenunciasAciudadano> SaDenunciasAciudadanoCedulaCiudadanoDenuncianteNavigations { get; set; }
         public virtual ICollection<SaDenunciasActividadesEconomica> SaDenunciasActividadesEconomicas { get; set; }
         public virtual ICollection<TelefonoCiudadano> TelefonoCiudadanos { get; set; }
     }

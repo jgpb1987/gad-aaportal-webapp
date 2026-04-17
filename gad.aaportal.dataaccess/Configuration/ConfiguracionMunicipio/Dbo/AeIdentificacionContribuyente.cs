@@ -32,7 +32,6 @@ namespace gad.aaportal.dataaccess.Configuration.Dbo
                 .IsUnicode(false);
 
             entity.Property(e => e.FechaInicioActividades).HasColumnType("datetime");
-
             entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
 
             entity.Property(e => e.Observaciones)
@@ -40,26 +39,12 @@ namespace gad.aaportal.dataaccess.Configuration.Dbo
                 .IsUnicode(false);
 
             entity.Property(e => e.RazonSocial).HasMaxLength(250);
-
             entity.Property(e => e.Rise).HasMaxLength(1);
-
             entity.Property(e => e.UsuarioRegistro).HasMaxLength(30);
 
-            entity.HasOne(d => d.CiPropietarioRepresentanteNavigation)
-                .WithMany(p => p.AeIdentificacionContribuyentes)
-                .HasForeignKey(d => d.CiPropietarioRepresentante)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("AE_IdentificacionContribuyente_fk2");
-
-            entity.HasOne(d => d.EstadoRucNavigation)
-                .WithMany(p => p.AeIdentificacionContribuyentes)
-                .HasForeignKey(d => d.EstadoRuc)
-                .HasConstraintName("AE_IdentificacionContribuyente_fk");
-
-            entity.HasOne(d => d.IdPersoneriaNavigation)
-                .WithMany(p => p.AeIdentificacionContribuyentes)
-                .HasForeignKey(d => d.IdPersoneria)
-                .HasConstraintName("FK_AE_IDENT_REFERENCE_AE_PERSO");
+            //entity.Ignore(e => e.CiPropietarioRepresentanteNavigation);
+            //entity.Ignore(e => e.EstadoRucNavigation);
+            //entity.Ignore(e => e.IdPersoneriaNavigation);
         }
     }
 }

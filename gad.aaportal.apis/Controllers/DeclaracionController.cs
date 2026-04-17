@@ -67,5 +67,15 @@ namespace gad.aaportal.apis.Controllers
             }
             return result;
         }
+
+        [HttpPost("OrdenPagoPdf")]
+        public IActionResult GenerarPdf([FromBody] DeclaracionRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var pdfBytes = services.Generar(request);
+            return File(pdfBytes, "application/pdf", "Declaracion.pdf");
+        }
     }
 }

@@ -1,3 +1,15 @@
 ﻿.modal.show.d-block {
     background-color: rgba(0, 0, 0, 0.5);
 }
+
+.modal-content {
+    border-radius: 12px;
+}
+
+.modal-body {
+    font-size: 0.95rem;
+}
+
+.modal-footer .btn {
+    border-radius: 8px;
+}

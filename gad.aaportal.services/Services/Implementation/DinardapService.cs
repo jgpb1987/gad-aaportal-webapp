@@ -599,17 +599,15 @@ namespace gad.aaportal.services.Services.Implementation
             {
                 var options = new SoapClientOptions
                 {
-                     Endpoint = apiServerConfig.Dinardap + endPointsConfig.InteroperadorConsultPackge, //http
-                    //Endpoint = "http://interoperabilidad.dinardap.gob.ec/interoperador-v2", //QA
+                     //Endpoint = apiServerConfig.Dinardap + endPointsConfig.InteroperadorConsultPackge, //http
+                    Endpoint = "http://localhost:8088/mockinteroperadorSoapBinding", //QA
 
                     Security = new SoapSecurityOptions
                     {
-                        //Type = SoapSecurityType.None,
-                        /*Username = "InAtRoGeMu",
-                          Password = "NKG3jt5%zFWeWZ"*/
-                        Type = SoapSecurityType.Basic,
-                        Username=servicesConfig.DinardapUser,
-                        Password=servicesConfig.DinardapPwd
+                        Type = SoapSecurityType.None,
+                        //Type = SoapSecurityType.Basic,
+                        //Username=servicesConfig.DinardapUser,
+                        //Password=servicesConfig.DinardapPwd
                     }
                 };
 

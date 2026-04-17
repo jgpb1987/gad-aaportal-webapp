@@ -1,3 +1,4 @@
+using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.Js;
 using gad.generic.components.Components.Several;
@@ -5,13 +6,16 @@ using Microsoft.AspNetCore.Components;
 
 namespace gad.aaportal.components.Components.Security.Menu
 {
-    public partial class NavMenuForm
+    public partial class NavMenuForm : ComponentBase
     {
-        [Inject] private ISessionStorageServices JSSessionStorageServices { get; set; } = null!;
-        [Inject] private ConfiguracionesApp Configuraciones { get; set; } = null!;
-        [Inject] private NavigationManager UriHelper { get; set; } = null!;
-        private LoadingBorderModalServices? LoadingBorder { get; set; }
+        [Parameter] public EventCallback OnNavigate { get; set; }
+        [Parameter] public UsuarioDataDtoResult DatosUsuarioResult { get; set; } = null!;
+        public UsuarioDataDtoResult DatosUsuario { get; set; } = null!;
         private string SearchTerm { get; set; } = string.Empty;
+        protected override async Task OnParametersSetAsync()
+        {
+            DatosUsuario = DatosUsuarioResult == null ? new UsuarioDataDtoResult() : DatosUsuarioResult;
+        }
         private void OnSearchInput(ChangeEventArgs e)
         {
             SearchTerm = e.Value!.ToString()!;
@@ -36,16 +40,11 @@ namespace gad.aaportal.components.Components.Security.Menu
             }
             StateHasChanged();
         }
-        private async Task CerrarSesion()
+
+        private async Task NotifyNavigate()
         {
-            LoadingBorder!.Open();
-            await JSSessionStorageServices.RemoveItemAsync(Configuraciones.AppConfig.Expiration);
-            await JSSessionStorageServices.RemoveItemAsync(Configuraciones.AppConfig.Token);
-            await JSSessionStorageServices.RemoveItemAsync(Configuraciones.AppConfig.UltimoAcceso);
-            await JSSessionStorageServices.RemoveItemAsync(Configuraciones.AppConfig.Nombres);
-            await Task.Delay(2000);
-            LoadingBorder!.Close();
-            UriHelper.NavigateTo("/");
+            if (OnNavigate.HasDelegate)
+                await OnNavigate.InvokeAsync();
         }
     }
 }

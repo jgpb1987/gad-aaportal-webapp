@@ -10,3 +10,27 @@
         border-color: #0d6efd; /* azul Bootstrap */
         box-shadow: 0 0 0 .15rem rgba(13,110,253,.25);
     }
+
+body {
+    background-color: #f4f6f9;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+}
+
+.form-control {
+    border-radius: 8px;
+}
+
+button {
+    border-radius: 10px;
+}
+
+.input-group-text {
+    font-size: 0.85rem;
+}

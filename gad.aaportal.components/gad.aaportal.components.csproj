@@ -17,16 +17,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Reports\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\gad.aaportal.consumers\gad.aaportal.consumers.csproj" />
     <ProjectReference Include="..\gad.generic.components\gad.generic.components.csproj" />
   </ItemGroup>
 
 	<ItemGroup>
+		<Compile Remove="Components\Reports\**" />
+		<Content Remove="Components\Reports\**" />
 		<Content Remove="wwwroot\**" />
+		<EmbeddedResource Remove="Components\Reports\**" />
+		<None Remove="Components\Reports\**" />
 		<None Remove="wwwroot\**" />
 		<EmbeddedResource Include="wwwroot\**" />
 	</ItemGroup>

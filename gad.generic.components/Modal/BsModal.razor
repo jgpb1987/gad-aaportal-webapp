@@ -1,16 +1,16 @@
-<div class="modal fade @(Visible ? "show d-block" : "")" tabindex="-1">
+﻿<div class="modal fade @(Visible ? "show d-block" : "")" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
     <div class="modal-dialog modal-dialog-centered @(GetSizeClass())">
         <div class="modal-content">
 
             @if (!string.IsNullOrEmpty(Title))
             {
-                <div class="modal-header">
+                <div class="modal-header border-0 pb-0">
                     <h5 class="modal-title fw-bold">@Title</h5>
                     <button type="button" class="btn-close" @onclick="Cancel"></button>
                 </div>
             }
 
-            <div class="modal-body">
+            <div class="modal-body pt-2">
 
                 @if (TableContent is not null)
                 {
@@ -28,9 +28,18 @@
 
             </div>
 
-            <div class="modal-footer">
-                <button class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
-                <button class="btn btn-primary" @onclick="Accept">Aceptar</button>
+            <div class="modal-footer border-0">
+
+                <button class="btn btn-outline-secondary"
+                        @onclick="Cancel">
+                    Cancelar
+                </button>
+
+                <button class="btn btn-success px-4"
+                        @onclick="Accept">
+                    ✅ Confirmar
+                </button>
+
             </div>
 
         </div>
@@ -41,10 +50,7 @@
     [Parameter] public string? Title { get; set; }
     [Parameter] public ModalSize Size { get; set; } = ModalSize.Default;
 
-    // Texto o UI opcional
     [Parameter] public RenderFragment? ChildContent { get; set; }
-
-    // Tabla din�mica
     [Parameter] public RenderFragment? TableContent { get; set; }
 
     private TaskCompletionSource<bool>? _tcs;

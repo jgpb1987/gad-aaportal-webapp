@@ -1,4 +1,8 @@
-﻿<EditForm Model="Model" OnValidSubmit="OnSubmit">
+﻿ <div class="card-login">
+                    <a class="a-img-login" href="https://www.antonioante.gob.ec" target="_blank">
+                        <img class="img-login" src="img\logoAA4.png" />
+                    </a>
+<EditForm Model="Model" OnValidSubmit="OnSubmit">
     <DataAnnotationsValidator />
 
     <div class="row card-body justify-content-center">
@@ -7,10 +11,10 @@
         <label class="lbl-card-login-usuario">Identificación (RUC/CI):</label>
         <InputText class="txtbox-login" placeholder="Identificación" @bind-Value="Model.User" />
 
-        <label class="lbl-card-login-contrasenia">Nombres:</label>
+            <label class="lbl-card-login-usuario">Nombres:</label>
         <InputText class="txtbox-login" placeholder="Nombres" @bind-Value="Model.Nombres" />
 
-        <label class="lbl-card-login-contrasenia">Email:</label>
+            <label class="lbl-card-login-usuario">Email:</label>
         <InputText class="txtbox-login" placeholder="usuario@correo.com" @bind-Value="Model.Email" />
 
         <button type="submit" class="btn btn-lg btn-color-per btn-card-login">Regístrate</button>
@@ -18,3 +22,4 @@
         <button type="button" class="btn btn-link" @onclick="OnBack">Volver al login</button>
     </div>
 </EditForm>
+</div>

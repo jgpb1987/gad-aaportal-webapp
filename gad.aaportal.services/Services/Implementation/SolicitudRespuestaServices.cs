@@ -1,6 +1,6 @@
 ﻿using gad.aaportal.commons.Base;
 using gad.aaportal.commons.Dto.Log;
-using gad.aaportal.dataaccess;
+using gad.aaportal.dataaccess.Configuration;
 using gad.aaportal.models.Entity.Log;
 using gad.aaportal.services.MessageException;
 using gad.aaportal.services.Services.Interfaces;

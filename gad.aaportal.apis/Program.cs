@@ -1,4 +1,4 @@
-using gad.aaportal.dataaccess;
+using gad.aaportal.dataaccess.Configuration;
 using gad.aaportal.services.Config;
 using gad.aaportal.services.Services.Implementation;
 using gad.aaportal.services.Services.Interfaces;
@@ -21,6 +21,10 @@ builder.Services.AddSwaggerGen();
 
 // === Inicio DbContext ===
 builder.Services.AddDbContext<AaportalContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
+});
+builder.Services.AddDbContext<BddGmaaContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
 });

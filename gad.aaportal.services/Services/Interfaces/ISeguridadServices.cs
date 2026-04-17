@@ -1,6 +1,6 @@
 using gad.aaportal.commons.Base;
 using gad.aaportal.commons.Dto.Seguridad;
-using gad.aaportal.dataaccess;
+using gad.aaportal.dataaccess.Configuration;
 
 namespace gad.aaportal.services.Services.Interfaces;
 

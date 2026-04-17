@@ -1,5 +1,5 @@
 ﻿using gad.aaportal.commons.Dto.Dinardap;
-using gad.aaportal.dataaccess;
+using gad.aaportal.dataaccess.Configuration;
 
 namespace gad.aaportal.services.Services.Interfaces
 {

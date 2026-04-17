@@ -1,6 +1,6 @@
 using gad.aaportal.commons.Base;
 using gad.aaportal.commons.Dto.Seguridad;
-using gad.aaportal.dataaccess;
+using gad.aaportal.dataaccess.Configuration;
 using gad.aaportal.models.Entity.Seguridad;
 using gad.aaportal.services.Config;
 using gad.aaportal.services.MessageException;

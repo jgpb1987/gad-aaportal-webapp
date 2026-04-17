@@ -1,5 +1,5 @@
 ﻿using gad.aaportal.commons.Dto.Aplicacion;
-using gad.aaportal.dataaccess;
+using gad.aaportal.dataaccess.Configuration;
 using gad.aaportal.services.Services.Interfaces;
 using Mapster;
 using Microsoft.EntityFrameworkCore;

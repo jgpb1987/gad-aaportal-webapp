@@ -2,7 +2,7 @@
 using gad.aainteroperador.soap.Configuration;
 using gad.aaportal.commons.Dto.Dinardap;
 using gad.aaportal.commons.Dto.Log;
-using gad.aaportal.dataaccess;
+using gad.aaportal.dataaccess.Configuration;
 using gad.aaportal.models.Entity.Dinardap;
 using gad.aaportal.services.Config;
 using gad.aaportal.services.Services.Interfaces;

@@ -1,10 +1,5 @@
 ﻿using gad.aaportal.commons.Dto.DtoMunicipio;
 using gad.aaportal.dataaccess.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.services.Services.Interfaces
 {

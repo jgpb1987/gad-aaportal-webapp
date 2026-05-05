@@ -162,5 +162,85 @@ namespace gad.aaportal.apis.Controllers
 
             return result;
         }
+        [HttpPost("validadorPermisos")]
+        public async Task<ActionResult<ValidadorPermisosDtoResult>> ValidadorPermisos([FromBody] ValidadorPermisosDtoParam parametro)
+        {
+            ValidadorPermisosDtoResult result = new();
+
+            try
+            {
+                result = await services.ValidadorPermisos(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
+        [HttpPost("consultarValorBomberos")]
+        public async Task<ActionResult<ConsultarValorBomberosDtoResult>> ConsultarValorBomberos([FromBody] ConsultarValorBomberosDtoParam parametro)
+        {
+            ConsultarValorBomberosDtoResult result = new();
+
+            try
+            {
+                result = await services.ConsultarValorBomberos(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
+        [HttpPost("consultarRucExoneraciones")]
+        public async Task<ActionResult<ConsultarRucExoneracionesDtoResult>> ConsultarRucExoneraciones([FromBody] ConsultarRucExoneracionesDtoParam parametro)
+        {
+            ConsultarRucExoneracionesDtoResult result = new();
+
+            try
+            {
+                result = await services.ConsultarRucExoneraciones(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
+        [HttpPost("insertarTranferenciaIat")]
+        public async Task<ActionResult<InsertarTranferenciaIatDtoResult>> InsertarTranferenciaIat([FromBody] InsertarTranferenciaIatDtoParam parametro)
+        {
+            InsertarTranferenciaIatDtoResult result = new();
+
+            try
+            {
+                result = await services.InsertarTranferenciaIat(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
+        [HttpPost("consultarAnioAdeuda")]
+        public async Task<ActionResult<ConsultarAnioAdeudaDtoResult>> ConsultarAnioAdeuda([FromBody] ConsultarAnioAdeudaDtoParam parametro)
+        {
+            ConsultarAnioAdeudaDtoResult result = new();
+
+            try
+            {
+                result = await services.ConsultarAnioAdeuda(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
     }
 }

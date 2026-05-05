@@ -502,5 +502,204 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
+        public async Task<ValidadorPermisosDtoResult> ValidadorPermisos(BddGmaaContext contexto, ValidadorPermisosDtoParam parametro)
+        {
+            ValidadorPermisosDtoResult result = new();
+
+            try
+            {
+                await using var connection = contexto.Database.GetDbConnection();
+
+                if (connection.State != ConnectionState.Open)
+                    await connection.OpenAsync();
+
+                await using var command = connection.CreateCommand();
+                command.CommandText = "dbo.SP_Pat_ValidadorPermisos";
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@RUC", SqlDbType.VarChar, 15)
+                {
+                    Value = parametro.Ruc
+                });
+
+                await using var reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    result.Data.Estado = reader["Estado"] != DBNull.Value
+                        && Convert.ToBoolean(reader["Estado"]);
+
+                    result.Data.Mensaje = reader["Mensaje"] != DBNull.Value
+                        ? reader["Mensaje"].ToString()!
+                        : string.Empty;
+                }
+            }
+            catch (SystemExceptionCustomized sex)
+            {
+                logger.LogError(sex, sex.Description, sex.Code);
+                throw;
+            }
+
+            return result;
+        }
+        public async Task<ConsultarValorBomberosDtoResult> ConsultarValorBomberos(
+    BddGmaaContext contexto,
+    ConsultarValorBomberosDtoParam parametro)
+        {
+            ConsultarValorBomberosDtoResult result = new();
+
+            try
+            {
+                await using var connection = contexto.Database.GetDbConnection();
+
+                if (connection.State != ConnectionState.Open)
+                    await connection.OpenAsync();
+
+                await using var command = connection.CreateCommand();
+                command.CommandText = "dbo.SP_Pat_ConsultarValorBomberos";
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@RUC", SqlDbType.VarChar, 15)
+                {
+                    Value = parametro.Ruc
+                });
+
+                await using var reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    result.Data.Ruc = reader["RUC"] != DBNull.Value
+                        ? reader["RUC"].ToString()!
+                        : string.Empty;
+
+                    result.Data.ValorBomberos = reader["ValorBomberos"] != DBNull.Value
+                        ? Convert.ToDouble(reader["ValorBomberos"])
+                        : 0;
+                }
+            }
+            catch (SystemExceptionCustomized sex)
+            {
+                logger.LogError(sex, sex.Description, sex.Code);
+                throw;
+            }
+
+            return result;
+        }
+        public async Task<ConsultarRucExoneracionesDtoResult> ConsultarRucExoneraciones(BddGmaaContext contexto, ConsultarRucExoneracionesDtoParam parametro)
+        {
+            ConsultarRucExoneracionesDtoResult result = new();
+
+            try
+            {
+                await using var connection = contexto.Database.GetDbConnection();
+
+                if (connection.State != ConnectionState.Open)
+                    await connection.OpenAsync();
+
+                await using var command = connection.CreateCommand();
+                command.CommandText = "dbo.SP_Pat_ConsultarRucExoneraciones";
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@RUC", SqlDbType.VarChar, 15)
+                {
+                    Value = parametro.Ruc
+                });
+
+                await using var reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    result.Data.ExoneracionPatente = reader["ExoneracionPatente"] != DBNull.Value
+                        ? reader["ExoneracionPatente"].ToString()!
+                        : string.Empty;
+
+                    result.Data.ExoneracionIat = reader["ExoneracionIAT"] != DBNull.Value
+                        ? reader["ExoneracionIAT"].ToString()!
+                        : string.Empty;
+                }
+            }
+            catch (SystemExceptionCustomized sex)
+            {
+                logger.LogError(sex, sex.Description, sex.Code);
+                throw;
+            }
+
+            return result;
+        }
+        public async Task<InsertarTranferenciaIatDtoResult> InsertarTranferenciaIat(
+    BddGmaaContext contexto,
+    InsertarTranferenciaIatDtoParam parametro)
+        {
+            InsertarTranferenciaIatDtoResult result = new();
+
+            try
+            {
+                await using var connection = contexto.Database.GetDbConnection();
+
+                if (connection.State != ConnectionState.Open)
+                    await connection.OpenAsync();
+
+                await using var command = connection.CreateCommand();
+                command.CommandText = "dbo.SP_Pat_InsertarTranferenciaIAT";
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@Canton", SqlDbType.VarChar, 100) { Value = parametro.Canton });
+                command.Parameters.Add(new SqlParameter("@FechaPago", SqlDbType.Date) { Value = parametro.FechaPago.Date });
+                command.Parameters.Add(new SqlParameter("@FormaPago", SqlDbType.VarChar, 150) { Value = parametro.FormaPago });
+                command.Parameters.Add(new SqlParameter("@NroDocumento", SqlDbType.VarChar, 150) { Value = parametro.NroDocumento });
+                command.Parameters.Add(new SqlParameter("@Valor", SqlDbType.Float) { Value = parametro.Valor });
+                command.Parameters.Add(new SqlParameter("@UsuarioIngreso", SqlDbType.VarChar, 50) { Value = parametro.UsuarioIngreso });
+                command.Parameters.Add(new SqlParameter("@Banco", SqlDbType.VarChar, 150) { Value = parametro.Banco });
+
+                var filasAfectadas = await command.ExecuteNonQueryAsync();
+                result.Data.Insertado = filasAfectadas > 0;
+            }
+            catch (SystemExceptionCustomized sex)
+            {
+                logger.LogError(sex, sex.Description, sex.Code);
+                throw;
+            }
+
+            return result;
+        }
+        public async Task<ConsultarAnioAdeudaDtoResult> ConsultarAnioAdeuda(
+    BddGmaaContext contexto,
+    ConsultarAnioAdeudaDtoParam parametro)
+        {
+            ConsultarAnioAdeudaDtoResult result = new();
+
+            try
+            {
+                await using var connection = contexto.Database.GetDbConnection();
+
+                if (connection.State != ConnectionState.Open)
+                    await connection.OpenAsync();
+
+                await using var command = connection.CreateCommand();
+                command.CommandText = "dbo.SP_Pat_ConsultarAnioAdeuda";
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@RUC", SqlDbType.VarChar, 15)
+                {
+                    Value = parametro.Ruc
+                });
+
+                await using var reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    result.Data.Anio = reader["Anio"] != DBNull.Value
+                        ? Convert.ToInt32(reader["Anio"])
+                        : 0;
+                }
+            }
+            catch (SystemExceptionCustomized sex)
+            {
+                logger.LogError(sex, sex.Description, sex.Code);
+                throw;
+            }
+
+            return result;
+        }
     }
 }

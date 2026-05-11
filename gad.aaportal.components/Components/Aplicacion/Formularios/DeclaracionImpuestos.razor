@@ -6,7 +6,6 @@
          Title="@modalTitle"
          Size="@modalSize">
     <ChildContent>
-        @* @modalMessage *@
         @if (!string.IsNullOrEmpty(pdfBase64))
         {
             <iframe src="@($"data:application/pdf;base64,{pdfBase64}")"
@@ -18,144 +17,222 @@
     </ChildContent>
 </BsModal>
 
-<div class="container mt-4">
-    <!-- HEADER -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <div class="row g-3 align-items-center">
+<!-- HEADER -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row g-3 align-items-center">
 
-                <div class="col-md-3">
-                    <label class="fw-bold">RUC</label>
-                    <div>@ruc</div>
-                </div>
-
-                <div class="col-md-5">
-                    <label class="fw-bold">Razón Social</label>
-                    <div>@razSocial</div>
-                </div>
-
-                <div class="col-md-2">
-                    <label class="fw-bold">Año</label>
-                    <div>@anio</div>
-                </div>
-
-                <div class="col-md-2 text-end">
-                    <button class="btn btn-success btn-lg w-100 shadow"
-                            disabled="@(btnMains || bloqueoFormulario)"
-                            @onclick="GeneraOrdenPago">
-                        💾 Guardar
-                    </button>
-                </div>
-
+            <div class="col-md-3">
+                <label class="fw-bold">RUC</label>
+                <div>@identificacion</div>
             </div>
+
+            <div class="col-md-5">
+                <label class="fw-bold">Razón Social</label>
+                <div>@razSocial</div>
+            </div>
+
+            <div class="col-md-2">
+                <label class="fw-bold">Año</label>
+                <div>@anio</div>
+            </div>
+
+            <div class="col-md-2 text-end">
+                <button class="btn btn-success btn-lg w-100 shadow"
+                        disabled="@(btnMains || bloqueoFormulario)"
+                        @onclick="GeneraOrdenPago">
+                    💾 Guardar
+                </button>
+            </div>
+
         </div>
     </div>
+</div>
+@if (ingresosEgresos != null)
+{
 
-    @if (ingresosEgresos != null)
-    {
-        <fieldset disabled="@bloqueoFormulario">
-            <div class="row">
-                <!-- IZQUIERDA -->
-                <div class="col-md-6 d-flex flex-column gap-3">
-                    <!-- ACTIVOS -->
-                    <div class="card shadow-sm">
-                        <div class="card-header fw-bold">Activos</div>
-                        <div class="card-body">
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="row g-3">
+
+        <!-- ========================= -->
+        <!-- IZQUIERDA -->
+        <!-- ========================= -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <div class="d-flex flex-column gap-3">
+
+                        <!-- ACTIVOS -->
+                        <div class="border rounded p-3">
+                            <div class="fw-bold mb-2">Activos</div>
+
                             <div class="d-flex justify-content-between">
                                 <span>Corrientes</span>
                                 <strong>@ingresosEgresos.ActivoCorriente</strong>
                             </div>
+
                             <div class="d-flex justify-content-between">
                                 <span>No Corrientes</span>
                                 <strong>@ingresosEgresos.ActivoNoCorriente</strong>
                             </div>
+
                             <hr />
+
                             <div class="d-flex justify-content-between fw-bold">
                                 <span>Total</span>
                                 <span>@ingresosEgresos.TotalActivos</span>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- INGRESOS -->
-                    <div class="card shadow-sm">
-                        <div class="card-header fw-bold">Ingresos / Costos</div>
-                        <div class="card-body">
+                        <!-- PASIVOS -->
+                        <div class="border rounded p-3">
+                            <div class="fw-bold mb-2">Pasivos</div>
+
+                            <div class="row align-items-center mb-2">
+                                <label class="col-6">Corriente</label>
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input class="form-control text-end"
+                                               type="number"
+                                               @bind-value="PasivoCorriente"
+                                               @bind-value:event="oninput"
+                                               step="0.01" min="0" />
+
+                                        <span class="input-group-text">
+                                            S: @ingresosEgresos.PasivoCorriente
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row align-items-center mb-2">
+                                <label class="col-6">No Corriente</label>
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input class="form-control text-end"
+                                               type="number"
+                                               @bind-value="PasivoNoCorriente"
+                                               @bind-value:event="oninput"
+                                               step="0.01" min="0" />
+
+                                        <span class="input-group-text">
+                                            S: @ingresosEgresos.PasivoNoCorriente
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row align-items-center mb-2">
+                                <label class="col-6">Contingente</label>
+                                <div class="col-6">
+                                    <input class="form-control text-end"
+                                           type="number"
+                                           @bind-value="PasivoContingente"
+                                           @bind-value:event="oninput"
+                                           step="0.01" min="0" />
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>Total</span>
+                                <span>@TotalPasivos</span>
+                            </div>
+                        </div>
+
+                        <!-- INGRESOS -->
+                        <div class="border rounded p-3">
+                            <div class="fw-bold mb-2">Ingresos / Costos</div>
+
                             <div class="d-flex justify-content-between">
                                 <span>Ingresos</span>
                                 <strong>@ingresosEgresos.Ingresos</strong>
                             </div>
+
                             <div class="d-flex justify-content-between">
                                 <span>Costos / Gastos</span>
                                 <strong>@ingresosEgresos.CostosGastos</strong>
                             </div>
+
                             <hr />
+
                             <div class="d-flex justify-content-between">
                                 <span>@LabelResultado</span>
                                 <strong class="@((ingresosEgresos.Ingresos - ingresosEgresos.CostosGastos) < 0 ? "text-danger" : "text-success")">
                                     @(Math.Abs(ingresosEgresos.Ingresos.Value - ingresosEgresos.CostosGastos.Value).ToString("N2"))
                                 </strong>
                             </div>
+
+                            <hr />
+
+                            <div class="d-flex justify-content-between">
+                                <span>Patrimonio:</span>
+                                <strong>
+                                    @{
+                                        var diferencia = ingresosEgresos.TotalActivos - TotalPasivos;
+                                    }
+                                    @diferencia
+                                </strong>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= -->
+        <!-- DERECHA -->
+        <!-- ========================= -->
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="border rounded p-3 h-100">
+                        <div class="fw-bold mb-3">
+                            Valores a pagar
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Impuesto Patente</span>
+                            <strong>
+                                @impuestoPatente.Data.ValorImpuesto
+                            </strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Multa x retraso sobre la patente</span>
+                            <strong>
+                                @multaPatente
+                            </strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Descuento 3era Edad Patente</span>
+                            <strong>
+                                @descuentoPatente
+                            </strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Impuesto Activos Totales</span>
+                            <strong>
+                                @impuestoIAT.Data.ImpuestoIat
+                            </strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Multa x retraso sobre el impuesto de activos totales</span>
+                            <strong>
+                                @multaIAT
+                            </strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Descuento 3era Edad IAT</span>
+                            <strong>
+                                @descuentoIAT
+                            </strong>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- DERECHA -->
-            <div class="col-md-6 d-flex flex-column gap-3">
-                <!-- PASIVOS -->
-                <div class="card shadow-sm">
-                    <div class="card-header fw-bold">
-                        Pasivos
-                    </div>
-                    <div class="card-body">
-                        <!-- Pasivo Corriente -->
-                        <div class="row align-items-center mb-2">
-                            <label class="col-6 col-form-label">
-                                Pasivo Corriente
-                            </label>
-                            <div class="col-6">
-                                <div class="input-group">
-                                    <input class="form-control text-end"
-                                           type="number"/>
-
-                                    <span class="input-group-text">
-                                        S: @ingresosEgresos.PasivoCorriente
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pasivo No Corriente -->
-                        <div class="row align-items-center mb-2">
-                            <label class="col-6 col-form-label">
-                                Pasivo No Corriente
-                            </label>
-                            <div class="col-6">
-                                <input class="form-control text-end"
-                                       type="number"/>
-                            </div>
-                        </div>
-
-                        <!-- Pasivo Contingente -->
-                        <div class="row align-items-center mb-2">
-                            <label class="col-6 col-form-label">
-                                Pasivo Contingente
-                            </label>
-                            <div class="col-6">
-                                <input class="form-control text-end"
-                                       type="number"/>
-                            </div>
-                        </div>
-                        <hr />
-                        <!-- TOTAL -->
-                        <div class="d-flex justify-content-between fw-bold">
-                            <span>Total</span>
-                            @* <span>@declaracion.TotalPasivos</span> *@
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-    }
-</div>
+        </div>
+    </div>
+}

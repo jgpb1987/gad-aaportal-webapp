@@ -78,49 +78,61 @@ namespace gad.aaportal.services.Services.Implementation
 
         public async Task<ConsultaIngresosEgresosResponse> ConsultaIngresosEgresos(AaportalContext contexto, ConsultaIngresosEgresosRequest parametros)
         {
-            ConsultaIngresosEgresosResponse result = new ConsultaIngresosEgresosResponse();
+            ConsultaIngresosEgresosResponse? result = null;
+
             try
             {
                 if (parametros.TipoPersona == "PJ")
                 {
-                    var query = await contexto.Form101.Where(f => f.NumeroIdentificacion == parametros.Identificacion
-                                                    && f.AnioFiscal == parametros.anio).FirstOrDefaultAsync();
+                    var query = await contexto.Form101
+                        .Where(f => f.NumeroIdentificacion == parametros.Identificacion
+                                 && f.AnioFiscal == parametros.anio)
+                        .FirstOrDefaultAsync();
+
                     if (query != null)
                     {
-                        result.ActivoCorriente = query.TotalActivoCorriente470.HasValue ? Math.Round(query.TotalActivoCorriente470.Value, 2) : 0;
-                        result.ActivoNoCorriente = query.TotActivoNoCorriente1077.HasValue ? Math.Round(query.TotActivoNoCorriente1077.Value, 2) : 0;
-                        result.TotalActivos = query.TotalActivo1080.HasValue ? Math.Round(query.TotalActivo1080.Value, 2) : 0;
-                        result.PasivoCorriente = query.TotPasivosCorrientes1340.HasValue ? Math.Round(query.TotPasivosCorrientes1340.Value, 2) : 0;
-                        result.PasivoNoCorriente = query.TotalPasivosLargoPlazo1590.HasValue ? Math.Round(query.TotalPasivosLargoPlazo1590.Value, 2) : 0;
-                        result.TotalPasivos = query.TotalPasivos1620.HasValue ? Math.Round(query.TotalPasivos1620.Value, 2) : 0;
-                        result.Ingresos = query.TotalIngresos1930.HasValue ? Math.Round(query.TotalIngresos1930.Value, 2) : 0;
-                        result.CostosGastos = query.TotasCostosGastos3380.HasValue ? Math.Round(query.TotasCostosGastos3380.Value, 2) : 0;
-                        result.UtilidadPerdida = query.UtilidadEjercicio3420.HasValue ? Math.Round(query.UtilidadEjercicio3420.Value, 2) : 0;
+                        result = new ConsultaIngresosEgresosResponse
+                        {
+                            ActivoCorriente = query.TotalActivoCorriente470.HasValue ? Math.Round(query.TotalActivoCorriente470.Value, 2) : 0,
+                            ActivoNoCorriente = query.TotActivoNoCorriente1077.HasValue ? Math.Round(query.TotActivoNoCorriente1077.Value, 2) : 0,
+                            TotalActivos = query.TotalActivo1080.HasValue ? Math.Round(query.TotalActivo1080.Value, 2) : 0,
+                            PasivoCorriente = query.TotPasivosCorrientes1340.HasValue ? Math.Round(query.TotPasivosCorrientes1340.Value, 2) : 0,
+                            PasivoNoCorriente = query.TotalPasivosLargoPlazo1590.HasValue ? Math.Round(query.TotalPasivosLargoPlazo1590.Value, 2) : 0,
+                            TotalPasivos = query.TotalPasivos1620.HasValue ? Math.Round(query.TotalPasivos1620.Value, 2) : 0,
+                            Ingresos = query.TotalIngresos1930.HasValue ? Math.Round(query.TotalIngresos1930.Value, 2) : 0,
+                            CostosGastos = query.TotasCostosGastos3380.HasValue ? Math.Round(query.TotasCostosGastos3380.Value, 2) : 0,
+                            UtilidadPerdida = query.UtilidadEjercicio3420.HasValue ? Math.Round(query.UtilidadEjercicio3420.Value, 2) : 0
+                        };
                     }
                 }
                 else if (parametros.TipoPersona == "PN")
                 {
-                    var query = await contexto.Form102.Where(f => f.NumeroIdentificacion == parametros.Identificacion
-                                                    && f.AnioFiscal == parametros.anio).FirstOrDefaultAsync();
+                    var query = await contexto.Form102
+                        .Where(f => f.NumeroIdentificacion == parametros.Identificacion
+                                 && f.AnioFiscal == parametros.anio)
+                        .FirstOrDefaultAsync();
+
                     if (query != null)
                     {
-                        result.ActivoCorriente = query.TotActCorriente410.HasValue ? Math.Round(query.TotActCorriente410.Value, 2) : 0;
-                        result.ActivoNoCorriente = query.TotActivoNoCorriente812.HasValue ? Math.Round(query.TotActivoNoCorriente812.Value, 2) : 0;
-                        result.TotalActivos = query.TotalActivo830.HasValue ? Math.Round(query.TotalActivo830.Value, 2) : 0;
-                        result.PasivoCorriente = query.TotPasivoCorriente1030.HasValue ? Math.Round(query.TotPasivoCorriente1030.Value, 2) : 0;
-                        result.PasivoNoCorriente = 0m;
-                        result.TotalPasivos = query.TotalPasivo1310.HasValue ? Math.Round(query.TotalPasivo1310.Value, 2) : 0;
-                        result.Ingresos = query.TotalIngresos1440.HasValue ? Math.Round(query.TotalIngresos1440.Value, 2) : 0;
-                        result.CostosGastos = query.TotalCostosGastos2760.HasValue ? Math.Round(query.TotalCostosGastos2760.Value, 2) : 0;
-                        result.UtilidadPerdida = query.UtilidadNetaEjercicio2800.HasValue ? Math.Round(query.UtilidadNetaEjercicio2800.Value, 2) : 0;
+                        result = new ConsultaIngresosEgresosResponse
+                        {
+                            ActivoCorriente = query.TotActCorriente410.HasValue ? Math.Round(query.TotActCorriente410.Value, 2) : 0,
+                            ActivoNoCorriente = query.TotActivoNoCorriente812.HasValue ? Math.Round(query.TotActivoNoCorriente812.Value, 2) : 0,
+                            TotalActivos = query.TotalActivo830.HasValue ? Math.Round(query.TotalActivo830.Value, 2) : 0,
+                            PasivoCorriente = query.TotPasivoCorriente1030.HasValue ? Math.Round(query.TotPasivoCorriente1030.Value, 2) : 0,
+                            PasivoNoCorriente = 0m,
+                            TotalPasivos = query.TotalPasivo1310.HasValue ? Math.Round(query.TotalPasivo1310.Value, 2) : 0,
+                            Ingresos = query.TotalIngresos1440.HasValue ? Math.Round(query.TotalIngresos1440.Value, 2) : 0,
+                            CostosGastos = query.TotalCostosGastos2760.HasValue ? Math.Round(query.TotalCostosGastos2760.Value, 2) : 0,
+                            UtilidadPerdida = query.UtilidadNetaEjercicio2800.HasValue ? Math.Round(query.UtilidadNetaEjercicio2800.Value, 2) : 0
+                        };
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //logger.LogError(sex, sex.Description, sex.Code);
-                //throw;
             }
+
             return result;
         }
 

@@ -135,14 +135,14 @@ namespace gad.aaportal.services.Services.Implementation
                 command.CommandText = "dbo.SP_Pat_CalcularMulta";
                 command.CommandType = CommandType.StoredProcedure;
 
-                var parametroPeriodoFin = new SqlParameter("@PeriodoFin", SqlDbType.Date)
+                var parametroPeriodoFin = new SqlParameter("@Ruc", SqlDbType.VarChar)
                 {
-                    Value = parametro.PeriodoFin.Date
+                    Value = parametro.Ruc
                 };
 
-                var parametroFechaEmision = new SqlParameter("@FechaEmision", SqlDbType.Date)
+                var parametroFechaEmision = new SqlParameter("@AnioDeclaracion", SqlDbType.Int)
                 {
-                    Value = parametro.FechaEmision.Date
+                    Value = parametro.AnioDeclaracion
                 };
 
                 var parametroValor = new SqlParameter("@Valor", SqlDbType.Decimal)

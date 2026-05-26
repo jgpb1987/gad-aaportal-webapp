@@ -14,5 +14,11 @@ namespace gad.aaportal.services.Services.Interfaces
         Task<InsertPagoPorTituloDtoResult> InsertPagoPorTitulo(BddGmaaContext contexto, InsertPagoPorTituloDtoParam parametro);
         Task<ActualizarCodigoIngresoDtoResult> ActualizarCodigoIngreso(BddGmaaContext contexto, ActualizarCodigoIngresoDtoParam parametro);
         Task<ConsultarValoresPagarDtoResult> ConsultarValoresPagar(BddGmaaContext contexto, ConsultarValoresPagarDtoParam parametro);
+        Task<ValidadorPermisosDtoResult> ValidadorPermisos(BddGmaaContext contexto, ValidadorPermisosDtoParam parametro);
+        Task<ConsultarValorBomberosDtoResult> ConsultarValorBomberos( BddGmaaContext contexto, ConsultarValorBomberosDtoParam parametro);
+        Task<ConsultarRucExoneracionesDtoResult> ConsultarRucExoneraciones(BddGmaaContext contexto, ConsultarRucExoneracionesDtoParam parametro);
+        Task<InsertarTranferenciaIatDtoResult> InsertarTranferenciaIat(BddGmaaContext contexto,InsertarTranferenciaIatDtoParam parametro);
+        Task<ConsultarAnioAdeudaDtoResult> ConsultarAnioAdeuda(BddGmaaContext contexto,
+    ConsultarAnioAdeudaDtoParam parametro);
     }
 }

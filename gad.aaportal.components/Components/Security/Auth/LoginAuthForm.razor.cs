@@ -207,7 +207,7 @@ namespace gad.aaportal.components.Components.Security.Auth
                             await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Nombres, loginResponse.Data.Nombres);
                             await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Identificacion, loginResponse.Data.Identificacion);
                             LoadingBorder!.Close();
-                            //await ConsultaDinardap();
+                            await ConsultaDinardap();
                             UriHelper.NavigateTo("/index");
                             await Toast!.ShowMessage("success", loginResponse.Message.Code, loginResponse.Message.Description);
                         }

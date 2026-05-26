@@ -65,7 +65,12 @@ namespace gad.aaportal.apis.Controllers
             ConsultaIngresosEgresosResponse result = new ConsultaIngresosEgresosResponse();
             try
             {
-                return await services.ConsultaIngresosEgresos(contexto, parametros);
+                var data = await services.ConsultaIngresosEgresos(contexto, parametros);
+
+                if (data == null)
+                    return NotFound();
+
+                return Ok(data);
             }
             catch (Exception ex)
             {

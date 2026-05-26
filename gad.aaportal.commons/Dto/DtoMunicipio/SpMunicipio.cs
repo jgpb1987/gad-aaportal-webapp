@@ -37,8 +37,8 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
 
     public class CalcularMultaDtoParam
     {
-        public DateTime PeriodoFin { get; set; }
-        public DateTime FechaEmision { get; set; }
+        public string Ruc { get; set; }
+        public int AnioDeclaracion { get; set; }
         public decimal Valor { get; set; }
     }
 
@@ -218,5 +218,86 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     public class ConsultarValoresPagarDtoResult : BaseResult
     {
         public ConsultarValoresPagarDtoDataResult Data { get; set; } = new();
+    }
+
+    public class ValidadorPermisosDtoParam
+    {
+        public string Ruc { get; set; } = null!;
+    }
+
+    public class ValidadorPermisosDtoDataResult
+    {
+        public bool Estado { get; set; }
+        public string Mensaje { get; set; } = string.Empty;
+    }
+
+    public class ValidadorPermisosDtoResult : BaseResult
+    {
+        public ValidadorPermisosDtoDataResult Data { get; set; } = new();
+    }
+
+    public class ConsultarValorBomberosDtoParam
+    {
+        public string Ruc { get; set; } = null!;
+    }
+
+    public class ConsultarValorBomberosDtoDataResult
+    {
+        public string Ruc { get; set; } = string.Empty;
+        public double ValorBomberos { get; set; }
+    }
+
+    public class ConsultarValorBomberosDtoResult : BaseResult
+    {
+        public ConsultarValorBomberosDtoDataResult Data { get; set; } = new();
+    }
+    public class ConsultarRucExoneracionesDtoParam
+    {
+        public string Ruc { get; set; } = null!;
+    }
+
+    public class ConsultarRucExoneracionesDtoDataResult
+    {
+        public string ExoneracionPatente { get; set; } = string.Empty;
+        public string ExoneracionIat { get; set; } = string.Empty;
+    }
+
+    public class ConsultarRucExoneracionesDtoResult : BaseResult
+    {
+        public ConsultarRucExoneracionesDtoDataResult Data { get; set; } = new();
+    }
+    public class InsertarTranferenciaIatDtoParam
+    {
+        public string Canton { get; set; } = null!;
+        public DateTime FechaPago { get; set; }
+        public string FormaPago { get; set; } = null!;
+        public string NroDocumento { get; set; } = null!;
+        public double Valor { get; set; }
+        public string UsuarioIngreso { get; set; } = null!;
+        public string Banco { get; set; } = null!;
+    }
+
+    public class InsertarTranferenciaIatDtoDataResult
+    {
+        public bool Insertado { get; set; }
+    }
+
+    public class InsertarTranferenciaIatDtoResult : BaseResult
+    {
+        public InsertarTranferenciaIatDtoDataResult Data { get; set; } = new();
+    }
+    public class ConsultarAnioAdeudaDtoParam
+    {
+        public string Ruc { get; set; } = null!;
+    }
+
+    public class ConsultarAnioAdeudaDtoDataResult
+    {
+        public int Anio { get; set; }
+    }
+
+    public class ConsultarAnioAdeudaDtoResult : BaseResult
+    {
+        public ConsultarAnioAdeudaDtoDataResult Data { get; set; } = new();
     }
 }

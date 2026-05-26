@@ -1,6 +1,7 @@
 using gad.aaportal.commons.Base;
 using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.dataaccess.Configuration;
+using gad.aaportal.models.Entity.Declaracion;
 using gad.aaportal.models.Entity.Seguridad;
 using gad.aaportal.services.Config;
 using gad.aaportal.services.MessageException;
@@ -119,6 +120,10 @@ public class SeguridadServices : ISeguridadServices
             if (appJwt == null)
                 throw SystemExceptionCustomized.CreateException("LGIOO5", "Error al obtener configuracion de token.");
 
+            var userContribuyente = await contexto.ContribuyenteUsuarios.Where(p => p.Usuario == user.User && p.Estado).FirstOrDefaultAsync();
+            if (userContribuyente == null)
+                throw SystemExceptionCustomized.CreateException("LGIOO6", "Error no existen usuarios activos");
+
             var usuarioSesion = await contexto.UsuarioSesions.Where(us => us.CodigoUser == user.User).OrderByDescending(us => us.FechaHora).FirstOrDefaultAsync();
 
             var expiration = DateTime.Now.AddSeconds(appJwt.JwtTime);
@@ -154,7 +159,8 @@ public class SeguridadServices : ISeguridadServices
                 Token = token,
                 Expiration = expiration,
                 UltimoAcceso = usuarioSesion != null ? usuarioSesion.FechaHora : fechaHora,
-                Nombres = user.Nombres
+                Nombres = user.Nombres,
+                Identificacion=userContribuyente.Identificacion
             };
         }
         catch (SystemExceptionCustomized sex)
@@ -192,6 +198,10 @@ public class SeguridadServices : ISeguridadServices
             if (configMail == null)
                 throw SystemExceptionCustomized.CreateException("UREOO4", "No existe configuración para envío de credenciales");
 
+
+            if (!parametro.Identificacion.All(char.IsDigit))
+                throw SystemExceptionCustomized.CreateException("UREOO5", "La identificación (RUC) es inavlido.");
+
             /********************************/
             /*SECCION PARA LLAMAR API QUE VALIDA USUARIO EN LA BDD GAD AA*/
             /********************************/
@@ -215,6 +225,47 @@ public class SeguridadServices : ISeguridadServices
                 Estado = true,
             };
             contexto.Usuarios.Add(userNew);
+
+            var contribuyenteNew = new Contribuyente()
+            {
+                Identificacion = parametro.Identificacion,
+                RazonSocial = parametro.RazonSocial,
+                EstadoContribuyenteRuc = parametro.EstadoContribuyenteRuc,
+                ActividadEconomicaPrincipal = parametro.ActividadEconomicaPrincipal,
+                TipoContribuyente = parametro.TipoContribuyente,
+                Regimen = parametro.Regimen,
+                ObligadoLlevarContabilidad = parametro.ObligadoLlevarContabilidad,
+                AgenteRetencion = parametro.AgenteRetencion,
+                ContribuyenteEspecial = parametro.ContribuyenteEspecial,
+                FechaInicioActividades = parametro.FechaInicioActividades,
+                FechaReinicioActividades = parametro.FechaReinicioActividades,
+                FechaActualizacion = parametro.FechaActualizacion,
+                ContribuyenteFantasma = parametro.ContribuyenteFantasma,
+                TransaccionesInexistente= parametro.TransaccionesInexistente,
+                CallePrincipal = string.Empty,
+                NumeroCasa = string.Empty,
+                CalleSecundaria = string.Empty,
+                Parroquia = string.Empty,
+                Barrio = string.Empty,
+                ReferenciaUbicacion = string.Empty,
+                Via = string.Empty,
+                Kilometro = string.Empty,
+                Manzana = string.Empty,
+                Edificio = string.Empty,
+                Piso = string.Empty,
+                NumeroPredio = string.Empty,
+                FechaRegistro = DateTime.Now
+            };
+            contexto.Contribuyentes.Add(contribuyenteNew);
+
+            var contrinuyenteUsuarioNew = new ContribuyenteUsuario()
+            {
+                Identificacion = parametro.Identificacion,
+                Usuario = parametro.User,
+                FechaRegistro = DateTime.Now,
+                Estado = true
+            };
+            contexto.ContribuyenteUsuarios.Add(contrinuyenteUsuarioNew);
 
             var expiration = DateTime.Now.AddSeconds(appJwt.JwtTime);
             var jtiSession = System.Guid.NewGuid().ToString();
@@ -245,7 +296,7 @@ public class SeguridadServices : ISeguridadServices
             await contexto.SaveChangesAsync();
 
             //**************************************//
-            var templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", "Template_email.html");
+            var templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", "template_email.html");
             var templateHtml = await File.ReadAllTextAsync(templatePath);
 
             var values = new Dictionary<string, string>
@@ -286,7 +337,6 @@ public class SeguridadServices : ISeguridadServices
         }
         return result;
     }
-
     public async Task<BaseResult> GetForgotPassword(AaportalContext contexto, ForgotPasswordDtoParam parametro)
     {
         BaseResult result = new();
@@ -389,6 +439,73 @@ public class SeguridadServices : ISeguridadServices
         }
         return result;
     }
+    public async Task<CambiarClaveDataResult> CambiarClave(AaportalContext contexto, CambiarClaveDtoParam parametro)
+    {
+        CambiarClaveDataResult result = new();
 
+        try
+        {
+            var rsa = await contexto.Rsas.FirstOrDefaultAsync(r => r.Estado);
+            if (rsa == null)
+                throw SystemExceptionCustomized.CreateException("CCOO1", "Error al obtener llaves");
 
+            if (string.IsNullOrWhiteSpace(parametro.User))
+                throw SystemExceptionCustomized.CreateException("CC002", "No se recibió el usuario para realizar el cambio de contraseña");
+
+            if (string.IsNullOrWhiteSpace(parametro.PasswordActual))
+                throw SystemExceptionCustomized.CreateException("CC003", "Debe ingresar la contraseña actual");
+
+            if (string.IsNullOrWhiteSpace(parametro.PasswordNueva))
+                throw SystemExceptionCustomized.CreateException("CC004", "Debe ingresar la nueva contraseña.");
+
+            var decryptPwdActual = await securityAlgorithmServices.GetDecryptRsa(new EncryptDecryptDtoParam() { Key = rsa.PrivateKey, Data = parametro.PasswordActual });
+            var decryptPwdNueva = await securityAlgorithmServices.GetDecryptRsa(new EncryptDecryptDtoParam() { Key = rsa.PrivateKey, Data = parametro.PasswordNueva });
+            var decryptPwdNuevaConfirmacion = await securityAlgorithmServices.GetDecryptRsa(new EncryptDecryptDtoParam() { Key = rsa.PrivateKey, Data = parametro.PasswordNuevaConfirmacion });
+
+            if (decryptPwdNueva.Data.EncryptDecrypt != decryptPwdNuevaConfirmacion.Data.EncryptDecrypt)
+                throw SystemExceptionCustomized.CreateException("CC005", "La confirmación no coincide con la nueva contraseña.");
+
+            if (parametro.PasswordNueva.Length < servicesConfig.DigitosMinPassword)
+                throw SystemExceptionCustomized.CreateException("CC006", "La nueva contraseña debe tener al menos" + servicesConfig.DigitosMinPassword + "  caracteres.");
+
+            if (decryptPwdActual.Data.EncryptDecrypt == decryptPwdNueva.Data.EncryptDecrypt)
+                throw SystemExceptionCustomized.CreateException("CC007", "La nueva contraseña no puede ser igual a la contraseña actual.");
+
+            var usuario = await contexto.Usuarios.FirstOrDefaultAsync(u => u.User == parametro.User);
+
+            if (usuario == null)
+                throw SystemExceptionCustomized.CreateException("CC007", "No se encontró información del usuario.");
+
+            if (!usuario.Estado)
+                throw SystemExceptionCustomized.CreateException("CC008", "El usuario se encuentra inactivo.");
+
+            var pwdActual = await securityAlgorithmServices.GetGenerateComputeHashSha(new ComputeHashSha1DtoParam() { Usuario = usuario.User, Password = decryptPwdActual.Data.EncryptDecrypt });
+            if (usuario.Password != pwdActual.Data.Hash)
+                throw SystemExceptionCustomized.CreateException("CC009", "La contraseña actual ingresada no es correcta.");
+
+            var pwdNew = await securityAlgorithmServices.GetGenerateComputeHashSha(new ComputeHashSha1DtoParam() { Usuario = usuario.User, Password = decryptPwdNueva.Data.EncryptDecrypt });
+            usuario.Password = pwdNew.Data.Hash;
+            usuario.FechaUltimoCambioClave = DateTime.Now;
+            usuario.CambiaClave = false;
+
+            await contexto.SaveChangesAsync();
+
+            result.Data = new CambiarClaveDtoResult
+            {
+                CambioCorrecto = true
+            };
+        }
+        catch (SystemExceptionCustomized sex)
+        {
+            logger.LogError(sex, sex.Description, sex.Code);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, ex.Message, nameof(CodeMessage.SERVER_ERROR));
+            throw;
+        }
+
+        return result;
+    }
 }

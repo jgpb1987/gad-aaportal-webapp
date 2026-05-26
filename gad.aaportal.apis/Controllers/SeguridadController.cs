@@ -79,6 +79,20 @@ namespace gad.aaportal.apis.Controllers
             }
             return result;
         }
+        [HttpPost("cambiarClave")]
+        public async Task<ActionResult<CambiarClaveDataResult>> GetCambiarClave([FromBody] CambiarClaveDtoParam parametro)
+        {
+            CambiarClaveDataResult result = new();
+            try
+            {
+                result = await services.CambiarClave(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+            return Ok(result);
+        }
     }
 }
 

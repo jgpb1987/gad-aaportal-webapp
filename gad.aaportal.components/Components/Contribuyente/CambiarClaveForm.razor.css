@@ -1,0 +1,199 @@
+﻿.cambiar-clave-container {
+    width: 100%;
+    max-width: 620px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.cambiar-clave-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 1.2rem;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.14);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    overflow: hidden;
+}
+
+    .cambiar-clave-card::before {
+        content: "";
+        display: block;
+        height: 6px;
+        width: 100%;
+        background: linear-gradient( 90deg, var(--pro-button-background-color), var(--pro-button-background-color-hover) );
+    }
+
+.cambiar-clave-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 28px 34px 22px 34px;
+}
+
+.cambiar-clave-icon {
+    width: 76px;
+    height: 76px;
+    min-width: 76px;
+    border-radius: 50%;
+    background: linear-gradient( 135deg, var(--pro-button-background-color), var(--pro-button-background-color-hover) );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 22px rgba(0, 94, 184, 0.22);
+}
+
+    .cambiar-clave-icon span {
+        color: #ffffff;
+        font-size: 34px;
+        line-height: 1;
+    }
+
+.cambiar-clave-title-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.cambiar-clave-title {
+    color: #1f2937;
+    font-size: clamp(21px, 2vw, 28px);
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    line-height: 1.2;
+}
+
+.cambiar-clave-subtitle {
+    margin-top: 6px;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.cambiar-clave-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 0 34px;
+}
+
+.cambiar-clave-body {
+    padding: 26px 34px 34px 34px;
+}
+
+.form-group-clave {
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.lbl-cambiar-clave {
+    display: block;
+    margin-bottom: 7px;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+::deep .txt-cambiar-clave {
+    width: 100% !important;
+    height: 46px;
+    padding: 0 14px;
+    border-radius: 0.65rem;
+    border: 1px solid #d1d5db;
+    background-color: #f9fafb;
+    color: #111827;
+    font-size: 14px;
+    font-weight: 400;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+    ::deep .txt-cambiar-clave:focus {
+        border-color: var(--pro-button-background-color);
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(26, 117, 204, 0.12);
+    }
+
+    ::deep .txt-cambiar-clave::placeholder {
+        color: #9ca3af;
+    }
+
+.clave-recomendacion {
+    margin-top: 4px;
+    margin-bottom: 22px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-left: 5px solid var(--pro-button-background-color);
+    border-radius: 0.75rem;
+    padding: 11px 14px;
+    color: #1e3a8a;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+    .clave-recomendacion strong {
+        font-weight: 800;
+    }
+
+.btn-color-per {
+    color: var(--pro-button-text-color);
+    background: linear-gradient( 135deg, var(--pro-button-background-color), var(--pro-button-background-color-hover) );
+    border: none;
+    transition: all 0.25s ease-in-out;
+}
+
+    .btn-color-per:hover {
+        color: var(--pro-button-text-color);
+        background: linear-gradient( 135deg, var(--pro-button-background-color-hover), var(--pro-button-background-color) );
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(0, 94, 184, 0.25);
+    }
+
+.btn-cambiar-clave {
+    height: 48px;
+    border-radius: 0.7rem;
+    width: 100%;
+    margin-top: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.validation-message {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+    font-weight: 500;
+}
+
+@media (max-width: 767px) {
+    .cambiar-clave-container {
+        margin: 1.2rem auto;
+        padding: 0 0.8rem;
+    }
+
+    .cambiar-clave-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px 22px 18px 22px;
+    }
+
+    .cambiar-clave-icon {
+        width: 72px;
+        height: 72px;
+        min-width: 72px;
+    }
+
+    .cambiar-clave-divider {
+        margin: 0 22px;
+    }
+
+    .cambiar-clave-body {
+        padding: 22px;
+    }
+
+    .cambiar-clave-title {
+        font-size: 22px;
+    }
+
+    .cambiar-clave-subtitle {
+        font-size: 13px;
+    }
+}

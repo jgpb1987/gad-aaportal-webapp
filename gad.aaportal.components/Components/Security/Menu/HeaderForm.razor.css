@@ -110,3 +110,8 @@
         display: block;
     }
 }
+
+.img-tamanio {
+    margin-top: 30px;
+    width: 35%;
+}

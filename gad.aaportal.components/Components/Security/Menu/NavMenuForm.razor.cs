@@ -11,40 +11,16 @@ namespace gad.aaportal.components.Components.Security.Menu
         [Parameter] public EventCallback OnNavigate { get; set; }
         [Parameter] public UsuarioDataDtoResult DatosUsuarioResult { get; set; } = null!;
         public UsuarioDataDtoResult DatosUsuario { get; set; } = null!;
-        private string SearchTerm { get; set; } = string.Empty;
         protected override async Task OnParametersSetAsync()
         {
             DatosUsuario = DatosUsuarioResult == null ? new UsuarioDataDtoResult() : DatosUsuarioResult;
         }
-        private void OnSearchInput(ChangeEventArgs e)
-        {
-            SearchTerm = e.Value!.ToString()!;
-            SearchMenu();
-        }
-        private void OnButtonSearchInput()
-        {
-            SearchMenu();
-        }
-        private void SearchMenu()
-        {
-            if (string.IsNullOrWhiteSpace(SearchTerm))
-            {
-                //expandir = false;
-                //FilteredMenu = ListaMenu;
-            }
-            else
-            {
-                //expandir = true;
-                var searchTermLower = SearchTerm.ToLower();
-                var uniqueTitles = new HashSet<string>();
-            }
-            StateHasChanged();
-        }
 
-        private async Task NotifyNavigate()
+        private string? menuAbierto;
+
+        private void ToggleMenu(string menu)
         {
-            if (OnNavigate.HasDelegate)
-                await OnNavigate.InvokeAsync();
+            menuAbierto = menuAbierto == menu ? null : menu;
         }
     }
 }

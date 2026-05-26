@@ -1,6 +1,7 @@
 ﻿using gad.aaportal.commons.Dto.Dinardap;
 using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.consumers.Config;
+using gad.aaportal.consumers.consumers.Interface;
 using gad.aaportal.consumers.Consumers.Interface;
 using gad.aaportal.consumers.Js;
 using gad.generic.components.Components.Several;
@@ -19,6 +20,7 @@ namespace gad.aaportal.components.Components.Security.Auth
         private UserRegistrationDtoParam _userRegistrationParam = new();
         [Inject] private NavigationManager UriHelper { get; set; } = null!;
         [Inject] private ISeguridadConsumers SeguridadConsumers { get; set; } = null!;
+        [Inject] private IServicesExternsConsumers ServicesExterns { get; set; } = null!;
         [Inject] private ISessionStorageServices JSSessionStorageServices { get; set; } = null!;
         [Inject] private ConfiguracionesApp Configuraciones { get; set; } = null!;
         [Inject] private ISecurityAlgorithmConsumers SecurityAlgorithm { get; set; } = null!;
@@ -27,6 +29,7 @@ namespace gad.aaportal.components.Components.Security.Auth
         private LoadingBorderModalServices? LoadingBorder { get; set; }
         private UsuarioDtoParam LoginParam = new();
         private void ShowLogin() => _view = LoginView.Login;
+        public bool IsValidButton = true;
         protected override async Task OnInitializedAsync()
         {
             try
@@ -53,6 +56,7 @@ namespace gad.aaportal.components.Components.Security.Auth
         private void ShowUserRegistration()
         {
             _userRegistrationParam = new UserRegistrationDtoParam();
+            IsValidButton = true;
             _view = LoginView.UserRegistration;
         }
 
@@ -102,7 +106,6 @@ namespace gad.aaportal.components.Components.Security.Auth
                 await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
             }
         }
-
         private async Task SubmitUserRegistration()
         {
             try
@@ -121,7 +124,21 @@ namespace gad.aaportal.components.Components.Security.Auth
                     UserAgent = dataDispositivo.UserAgent == null ? string.Empty : dataDispositivo.UserAgent,
                     User = _userRegistrationParam.User,
                     Email = _userRegistrationParam.Email,
-                    Nombres = _userRegistrationParam.Nombres
+                    Nombres = _userRegistrationParam.Nombres,
+                    Identificacion= _userRegistrationParam.Identificacion,
+                    RazonSocial= _userRegistrationParam.RazonSocial,
+                    EstadoContribuyenteRuc= _userRegistrationParam.EstadoContribuyenteRuc,
+                    ActividadEconomicaPrincipal= _userRegistrationParam.ActividadEconomicaPrincipal,
+                    TipoContribuyente = _userRegistrationParam.TipoContribuyente,
+                    Regimen = _userRegistrationParam.Regimen,
+                    ObligadoLlevarContabilidad = _userRegistrationParam.ObligadoLlevarContabilidad,
+                    AgenteRetencion = _userRegistrationParam.AgenteRetencion,
+                    ContribuyenteEspecial = _userRegistrationParam.ContribuyenteEspecial,
+                    FechaInicioActividades = _userRegistrationParam.FechaInicioActividades,
+                    FechaReinicioActividades = _userRegistrationParam.FechaReinicioActividades,
+                    FechaActualizacion = _userRegistrationParam.FechaActualizacion,
+                    TransaccionesInexistente = _userRegistrationParam.TransaccionesInexistente,
+                    ContribuyenteFantasma = _userRegistrationParam.ContribuyenteFantasma
                 };
                 var urResponse = await SeguridadConsumers.UserRegistration(userRegistrationRequest);
                 if (urResponse != null)
@@ -155,7 +172,6 @@ namespace gad.aaportal.components.Components.Security.Auth
                 await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
             }
         }
-
         private async Task LoginUser()
         {
             try
@@ -189,6 +205,7 @@ namespace gad.aaportal.components.Components.Security.Auth
                             await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Token, loginResponse.Data.Token);
                             await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.UltimoAcceso, loginResponse.Data.UltimoAcceso.ToString());
                             await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Nombres, loginResponse.Data.Nombres);
+                            await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Identificacion, loginResponse.Data.Identificacion);
                             LoadingBorder!.Close();
                             //await ConsultaDinardap();
                             UriHelper.NavigateTo("/index");
@@ -200,10 +217,15 @@ namespace gad.aaportal.components.Components.Security.Auth
                             await Toast!.ShowMessage("error", loginResponse.Message.Code, loginResponse.Message.Description);
                         }
                     }
-                    else
+                    else if (loginResponse.Message == null)
                     {
                         LoadingBorder!.Close();
                         await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                    }
+                    else 
+                    {
+                        LoadingBorder!.Close();
+                        await Toast!.ShowMessage("error", loginResponse.Message.Code, loginResponse.Message.Description);
                     }
                 }
                 else
@@ -218,7 +240,80 @@ namespace gad.aaportal.components.Components.Security.Auth
                 await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
             }
         }
+        private async Task ValidarIdentificacion(string identificacion)
+        {
+            EncerarValores();
+            try
+            {
+                LoadingBorder!.Open();
+                var result = await ServicesExterns.SearchInfoRucSri(identificacion);
+                if (result != null)
+                {
+                    var resultFirst = result.FirstOrDefault(p => p.EstadoContribuyenteRuc.Equals("ACTIVO"));
+                    if (resultFirst != null)
+                    {
+                                _userRegistrationParam.Identificacion = identificacion;
+                                _userRegistrationParam.User = identificacion;
+                                _userRegistrationParam.Nombres = resultFirst!.RazonSocial;
+                                _userRegistrationParam.RazonSocial = resultFirst!.RazonSocial;
+                                _userRegistrationParam.EstadoContribuyenteRuc = resultFirst!.EstadoContribuyenteRuc;
+                                _userRegistrationParam.ActividadEconomicaPrincipal = resultFirst!.ActividadEconomicaPrincipal;
+                                _userRegistrationParam.TipoContribuyente = resultFirst!.TipoContribuyente;
+                                _userRegistrationParam.Regimen = resultFirst!.Regimen;
+                                _userRegistrationParam.ObligadoLlevarContabilidad = resultFirst!.ObligadoLlevarContabilidad;
+                                _userRegistrationParam.AgenteRetencion = resultFirst!.AgenteRetencion;
+                                _userRegistrationParam.ContribuyenteEspecial = resultFirst!.ContribuyenteEspecial;
+                                _userRegistrationParam.FechaInicioActividades = DateTime.Parse( resultFirst!.InformacionFechasContribuyente.FechaInicioActividades);
+                                _userRegistrationParam.FechaReinicioActividades = DateTime.Parse(resultFirst!.InformacionFechasContribuyente.FechaReinicioActividades);
+                                _userRegistrationParam.FechaActualizacion = DateTime.Parse(resultFirst!.InformacionFechasContribuyente.FechaActualizacion);
+                                _userRegistrationParam.TransaccionesInexistente = resultFirst!.TransaccionesInexistente;
+                        _userRegistrationParam.ContribuyenteFantasma = resultFirst!.ContribuyenteFantasma;
+                        IsValidButton = false;
+                        LoadingBorder!.Close();
+                    }
+                    else
+                    {
+                        IsValidButton = true;
+                        LoadingBorder!.Close();
+                        await Toast!.ShowMessage("warning", "SRI001", "El Ruc no se encuentra activo en el SRI");
+                    }
+                }
+                else
+                {
+                    IsValidButton = true;
+                    LoadingBorder!.Close();
+                    await Toast!.ShowMessage("warning", "SRI002", "El Ruc no existe en el SRI");
+                }
 
+            }
+            catch (Exception ex)
+            {
+                IsValidButton = true;
+                LoadingBorder!.Close();
+                await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+            }
+        }
+        private void EncerarValores()
+        {
+            _userRegistrationParam.Identificacion = string.Empty;
+            _userRegistrationParam.User = string.Empty;
+            _userRegistrationParam.Nombres = string.Empty;
+            _userRegistrationParam.RazonSocial = string.Empty;
+            _userRegistrationParam.EstadoContribuyenteRuc = string.Empty;
+            _userRegistrationParam.ActividadEconomicaPrincipal = string.Empty;
+            _userRegistrationParam.TipoContribuyente = string.Empty;
+            _userRegistrationParam.Regimen = string.Empty;
+            _userRegistrationParam.ObligadoLlevarContabilidad = string.Empty;
+            _userRegistrationParam.AgenteRetencion = string.Empty;
+            _userRegistrationParam.ContribuyenteEspecial = string.Empty;
+            _userRegistrationParam.FechaInicioActividades = DateTime.Parse("01/01/1900");
+            _userRegistrationParam.FechaReinicioActividades = DateTime.Parse("01/01/1900");
+            _userRegistrationParam.FechaActualizacion = DateTime.Parse("01/01/1900");
+            _userRegistrationParam.TransaccionesInexistente = string.Empty;
+            _userRegistrationParam.Email = string.Empty;
+            _userRegistrationParam.ContribuyenteFantasma = string.Empty;
+            IsValidButton = true;
+        }
         private async Task ConsultaDinardap()
         {
             using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };

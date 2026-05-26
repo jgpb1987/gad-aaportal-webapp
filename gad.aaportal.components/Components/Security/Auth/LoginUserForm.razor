@@ -7,13 +7,13 @@
 
     <div class="row card-body justify-content-center">
         <div class="text-center title-card-login">Inicio de Sesión</div>
-        <label class="lbl-card-login-usuario">Usuario</label>
-        <InputText class="txtbox-login" placeholder="Usuario" @bind-Value="Model.User" />
+        <label class="lbl-card-login-usuario">Identificación (Ruc):</label>
+        <InputText class="txtbox-login" placeholder="Ruc" @bind-Value="Model.User" />
         <div class="validation-message">
             <ValidationMessage For="@(() => Model.User)" />
         </div>
 
-        <label class="lbl-card-login-contrasenia">Contraseña</label>
+        <label class="lbl-card-login-contrasenia">Clave:</label>
         <InputText class="txtbox-login" type="password" placeholder="Contraseña" @bind-Value="Model.Password" />
         <div class="validation-message">
             <ValidationMessage For="@(() => Model.Password)" />

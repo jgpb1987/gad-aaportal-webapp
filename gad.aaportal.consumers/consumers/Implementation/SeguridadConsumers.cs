@@ -70,5 +70,22 @@ namespace gad.aaportal.consumers.Consumers.Implementation
             }
             return result;
         }
+        public async Task<CambiarClaveDataResult> CambiarClave(CambiarClaveDtoParam parametro)
+        {
+            CambiarClaveDataResult result = new();
+
+            try
+            {
+                result = await _httpClient.Post<CambiarClaveDtoParam, CambiarClaveDataResult>(
+                    parametro,
+                    configuraciones.EndPointsConfig.GetCambiarClave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+        }
     }
 }

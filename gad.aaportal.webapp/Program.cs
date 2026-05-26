@@ -1,4 +1,6 @@
 ﻿using gad.aaportal.consumers.Config;
+using gad.aaportal.consumers.consumers.Implementation;
+using gad.aaportal.consumers.consumers.Interface;
 using gad.aaportal.consumers.Consumers.Implementation;
 using gad.aaportal.consumers.Consumers.Interface;
 using gad.aaportal.consumers.Js;
@@ -30,6 +32,8 @@ builder.Services.AddScoped<ISessionStorageServices, WebSessionStorageService>();
 //Inicio Consumers
 builder.Services.AddScoped<ISeguridadConsumers, SeguridadConsumers>();
 builder.Services.AddScoped<ISecurityAlgorithmConsumers, SecurityAlgorithmConsumers>();
+builder.Services.AddScoped<IServicesExternsConsumers, ServicesExternsConsumers>();
+builder.Services.AddScoped<IContribuyenteConsumers, ContribuyenteConsumers>();
 //Fin Consumers
 //Inicio config
 builder.Services.AddSingleton(provider =>
@@ -39,6 +43,7 @@ builder.Services.AddSingleton(provider =>
     configuracion.GetSection("AppConfig").Bind(configuraciones.AppConfig);
     configuracion.GetSection("ServerApisConfig").Bind(configuraciones.ServerApisConfig);
     configuracion.GetSection("EndPointsConfig").Bind(configuraciones.EndPointsConfig);
+    configuracion.GetSection("UriExternosConfig").Bind(configuraciones.UriExternosConfig);
     return configuraciones;
 });
 

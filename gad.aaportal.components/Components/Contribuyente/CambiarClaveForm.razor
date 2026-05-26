@@ -1,0 +1,66 @@
+﻿<ToastsServices @ref="Toast" Time="5000" />
+<LoadingBorderModalServices @ref="LoadingBorder" />
+
+<div class="cambiar-clave-container">
+    <div class="cambiar-clave-card">
+
+        <div class="cambiar-clave-header">
+            <div class="cambiar-clave-icon">
+                <span>🔐</span>
+            </div>
+
+            <div class="cambiar-clave-title-content">
+                <div class="cambiar-clave-title">Cambiar contraseña</div>
+                <div class="cambiar-clave-subtitle">
+                    Actualiza tu contraseña de acceso al sistema.
+                </div>
+            </div>
+        </div>
+
+        <div class="cambiar-clave-divider"></div>
+
+        <EditForm Model="Model" OnValidSubmit="OnSubmit">
+            <DataAnnotationsValidator />
+
+            <div class="cambiar-clave-body">
+
+                <div class="form-group-clave">
+                    <label class="lbl-cambiar-clave">Contraseña actual:</label>
+                    <InputText type="password"
+                               class="txt-cambiar-clave"
+                               placeholder="Ingrese su contraseña actual"
+                               @bind-Value="Model.PasswordActual" />
+                    <ValidationMessage For="@(() => Model.PasswordActual)" />
+                </div>
+
+                <div class="form-group-clave">
+                    <label class="lbl-cambiar-clave">Nueva contraseña:</label>
+                    <InputText type="password"
+                               class="txt-cambiar-clave"
+                               placeholder="Ingrese su nueva contraseña"
+                               @bind-Value="Model.PasswordNueva" />
+                    <ValidationMessage For="@(() => Model.PasswordNueva)" />
+                </div>
+
+                <div class="form-group-clave">
+                    <label class="lbl-cambiar-clave">Repetir nueva contraseña:</label>
+                    <InputText type="password"
+                               class="txt-cambiar-clave"
+                               placeholder="Repita su nueva contraseña"
+                               @bind-Value="Model.PasswordNuevaConfirmacion" />
+                    <ValidationMessage For="@(() => Model.PasswordNuevaConfirmacion)" />
+                </div>
+
+                <div class="clave-recomendacion">
+                    <strong>Recomendación:</strong>
+                    use una contraseña de al menos 8 caracteres, combinando letras, números y símbolos.
+                </div>
+
+                <button type="submit" class="btn btn-lg btn-color-per btn-cambiar-clave">
+                    Actualizar contraseña
+                </button>
+
+            </div>
+        </EditForm>
+    </div>
+</div>

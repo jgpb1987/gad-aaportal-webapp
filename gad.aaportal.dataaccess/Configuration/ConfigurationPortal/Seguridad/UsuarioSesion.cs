@@ -58,7 +58,7 @@ public class UsuarioSesionConfiguracion : IEntityTypeConfiguration<UsuarioSesion
             .HasMaxLength(200)
             .HasColumnName("userAgent");
 
-        entity.HasOne(d => d.CodigoUserNavigation).WithMany(p => p.UsuarioSesion)
+        entity.HasOne(d => d.CodigoUserNavigation).WithMany(p => p.UsuarioSesions)
             .HasForeignKey(d => d.CodigoUser)
             .OnDelete(DeleteBehavior.ClientSetNull)
             .HasConstraintName("FK_Seguridad_Usuario_Sesion_Usuario");

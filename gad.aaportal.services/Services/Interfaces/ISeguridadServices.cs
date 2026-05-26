@@ -11,4 +11,5 @@ public interface ISeguridadServices
     Task<RsaDtoResult> GetRsaPublicKey(AaportalContext contexto);
     Task<BaseResult> GetUserRegistration(AaportalContext contexto, UserRegistrationDtoParam parametro);
     Task<BaseResult> GetForgotPassword(AaportalContext contexto, ForgotPasswordDtoParam parametro);
+    Task<CambiarClaveDataResult> CambiarClave(AaportalContext contexto, CambiarClaveDtoParam parametro);
 }

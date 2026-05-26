@@ -6,6 +6,8 @@ namespace gad.aaportal.consumers.Config
         public string GetLogin { get; set; } = null!;
         public string GetUserRegistration { get; set; } = null!;
         public string GetForgotPassword { get; set; } = null!;
+        public string GetResumenContribuyente { get; set; } = null!;
+        public string GetCambiarClave { get; set; } = null!;
     }
 }
 

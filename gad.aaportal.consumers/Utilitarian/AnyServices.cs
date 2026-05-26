@@ -121,5 +121,23 @@ namespace gad.aaportal.consumers.Utilitarian
             }
             return result!;
         }
+        public static async Task<TResult?> GetSinBr<TResult>(
+    this HttpClient httpClient,
+    string method)
+        {
+            try
+            {
+                var response = await httpClient.GetAsync(method);
+
+                if (!response.IsSuccessStatusCode)
+                    return default;
+
+                return await response.Content.ReadFromJsonAsync<TResult>();
+            }
+            catch (Exception ex)
+            {
+                return default;
+            }
+        }
     }
 }

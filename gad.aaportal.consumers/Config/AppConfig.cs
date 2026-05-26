@@ -12,6 +12,7 @@ namespace gad.aaportal.consumers.Config
         public string Token { get; set; } = null!;
         public string UltimoAcceso { get; set; } = null!;
         public string Nombres { get; set; } = null!;
+        public string Identificacion { get; set; } = null!;
     }
 }
 

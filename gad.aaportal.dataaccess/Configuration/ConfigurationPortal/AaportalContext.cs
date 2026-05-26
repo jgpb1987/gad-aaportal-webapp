@@ -3,6 +3,7 @@ using gad.aaportal.dataaccess.Configuration.Aplicacion;
 using gad.aaportal.dataaccess.Configuration.Dinardap;
 using gad.aaportal.models.Configuration.Seguridad;
 using gad.aaportal.models.Entity.Aplicacion;
+using gad.aaportal.models.Entity.Declaracion;
 using gad.aaportal.models.Entity.Dinardap;
 using gad.aaportal.models.Entity.Log;
 using gad.aaportal.models.Entity.Seguridad;
@@ -55,6 +56,12 @@ public partial class AaportalContext : DbContext
     public virtual DbSet<SolicitudRespuesta> SolicitudRespuestas { get; set; } = null!;
     #endregion
 
+    #region Declaracion
+    public virtual DbSet<Contribuyente> Contribuyentes { get; set; } = null!;
+    public virtual DbSet<ContribuyenteMedioContacto> ContribuyenteMedioContactos { get; set; } = null!;
+    public virtual DbSet<ContribuyenteUsuario> ContribuyenteUsuarios { get; set; } = null!;
+    public virtual DbSet<TipoMedioContacto> TipoMedioContactos { get; set; } = null!;
+    #endregion
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UsuarioConfiguracion());
@@ -84,5 +91,9 @@ public partial class AaportalContext : DbContext
         modelBuilder.ApplyConfiguration(new RsaConfiguracion());
         modelBuilder.ApplyConfiguration(new ConfiguracionEmailConfiguracion());
         modelBuilder.ApplyConfiguration(new SolicitudRespuestaConfiguration());
+        modelBuilder.ApplyConfiguration(new ContribuyenteConfiguracion());
+        modelBuilder.ApplyConfiguration(new ContribuyenteMedioContactoConfiguracion());
+        modelBuilder.ApplyConfiguration(new ContribuyenteUsuarioConfiguracion());
+        modelBuilder.ApplyConfiguration(new TipoMedioContactoConfiguracion());
     }
 }

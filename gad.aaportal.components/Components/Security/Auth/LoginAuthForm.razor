@@ -19,9 +19,11 @@
                             break;
 
                         case LoginView.UserRegistration:
-                            <UserRegistrationForm Model="_userRegistrationParam"
-                                                  OnSubmit="SubmitUserRegistration"
-                                                OnBack="ShowLogin" />
+                             <UserRegistrationForm Model="_userRegistrationParam"
+                                          OnSubmit="SubmitUserRegistration"
+                                          OnBack="ShowLogin"
+                                          IsValidButton="IsValidButton"
+                                          OnValidarIdentificacion="ValidarIdentificacion" />
                             break;
                     }
         </div>

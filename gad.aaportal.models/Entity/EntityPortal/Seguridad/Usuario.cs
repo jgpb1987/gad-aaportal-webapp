@@ -1,7 +1,14 @@
+using gad.aaportal.models.Entity.Declaracion;
+
 namespace gad.aaportal.models.Entity.Seguridad;
 
 public partial class Usuario
 {
+    public Usuario()
+    {
+        ContribuyenteUsuarios = new HashSet<ContribuyenteUsuario>();
+        UsuarioSesions = new HashSet<UsuarioSesion>();
+    }
     public string User { get; set; } = null!;
 
     public string Nombres { get; set; } = null!;
@@ -22,6 +29,7 @@ public partial class Usuario
 
     public bool Estado { get; set; }
 
-    public virtual ICollection<UsuarioSesion> UsuarioSesion { get; set; } = new List<UsuarioSesion>();
+    public virtual ICollection<ContribuyenteUsuario> ContribuyenteUsuarios { get; set; }
+    public virtual ICollection<UsuarioSesion> UsuarioSesions { get; set; }
 }
 

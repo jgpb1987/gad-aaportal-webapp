@@ -38,6 +38,23 @@ builder.Services.AddScoped<IConsultaServices, ConsultaService>();
 builder.Services.AddScoped<IDeclaracionServices, DeclaracionServices>();
 builder.Services.AddScoped<ISolicitudRespuestaServices, SolicitudRespuestaServices>();
 builder.Services.AddScoped<ISpMunicipioServices, SpMunicipioServices>();
+builder.Services.AddScoped<IContribuyenteServices, ContribuyenteServices>();
+builder.Services.AddHttpClient("SRI", (sp, client) =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    var sriSection = configuration.GetSection("ExternalServices:SRI");
+
+    var baseUrl = sriSection.GetValue<string>("BaseUrl");
+    var timeout = sriSection.GetValue<int>("TimeoutSeconds");
+
+    if (string.IsNullOrWhiteSpace(baseUrl))
+        throw new InvalidOperationException("ExternalServices:SRI:BaseUrl no está configurado");
+
+    client.BaseAddress = new Uri(baseUrl);
+    client.Timeout = TimeSpan.FromSeconds(timeout);
+
+    client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+});
 //Fin Services
 //Inicio Politicas de Cors
 builder.Services.AddCors(

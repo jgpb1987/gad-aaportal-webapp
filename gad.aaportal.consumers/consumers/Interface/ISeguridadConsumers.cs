@@ -9,5 +9,6 @@ namespace gad.aaportal.consumers.Consumers.Interface
         public Task<UsuarioDtoResult> Login(UsuarioDtoParam parametro);
         public Task<BaseResult> UserRegistration(UserRegistrationDtoParam parametro);
         public Task<BaseResult> ForgotPassword(ForgotPasswordDtoParam parametro);
+        public Task<CambiarClaveDataResult> CambiarClave(CambiarClaveDtoParam parametro);
     }
 }

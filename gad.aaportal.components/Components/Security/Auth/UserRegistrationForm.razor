@@ -6,18 +6,27 @@
     <DataAnnotationsValidator />
 
     <div class="row card-body justify-content-center">
-        <div class="text-center title-card-login">Registro de Usuario</div>
+        <div class="text-center title-card-login">Registro de Contribuyente</div>
 
-        <label class="lbl-card-login-usuario">Identificación (RUC/CI):</label>
-        <InputText class="txtbox-login" placeholder="Identificación" @bind-Value="Model.User" />
+        <label class="lbl-card-login-usuario">Identificación (RUC):</label>
+            <InputText class="txtbox-login" placeholder="Identificación" @bind-Value="Model.Identificacion" @onblur="OnIdentificacionBlur" />
 
-            <label class="lbl-card-login-usuario">Nombres:</label>
-        <InputText class="txtbox-login" placeholder="Nombres" @bind-Value="Model.Nombres" />
+            <label class="lbl-card-login-usuario">Nombres (Razón Social):</label>
+        <InputText class="txtbox-login" placeholder="Razón Social" @bind-Value="Model.Nombres" disabled="true" />
+
+            <label class="lbl-card-login-usuario">Actividad Económica Principal:</label>
+            <InputText class="txtbox-login" placeholder="Fecha Inicio Actividades" @bind-Value="Model.ActividadEconomicaPrincipal" disabled="true" />
+
+            <label class="lbl-card-login-usuario">Tipo Contribuyente:</label>
+            <InputText class="txtbox-login" placeholder="Tipo Contribuyente" @bind-Value="Model.TipoContribuyente" disabled="true" />
+
+            <label class="lbl-card-login-usuario">Fecha Inicio Actividades:</label>
+            <InputDate class="txtbox-login" placeholder="Fecha Inicio Actividades" @bind-Value="Model.FechaInicioActividades" format="dd/MM/yyyy" disabled="true" />
 
             <label class="lbl-card-login-usuario">Email:</label>
         <InputText class="txtbox-login" placeholder="usuario@correo.com" @bind-Value="Model.Email" />
 
-        <button type="submit" class="btn btn-lg btn-color-per btn-card-login">Regístrate</button>
+            <button type="submit" class="btn btn-lg btn-color-per btn-card-login" disabled="@IsValidButton">Regístrate</button>
 
         <button type="button" class="btn btn-link" @onclick="OnBack">Volver al login</button>
     </div>

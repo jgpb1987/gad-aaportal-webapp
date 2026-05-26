@@ -64,13 +64,12 @@
 .lbl-card-login-usuario {
     display: flex;
     margin-left: 10%;
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 .lbl-card-login-contrasenia {
     display: flex;
-    margin-top: 10px;
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 .validation-message {

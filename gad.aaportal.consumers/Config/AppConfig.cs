@@ -13,6 +13,7 @@ namespace gad.aaportal.consumers.Config
         public string UltimoAcceso { get; set; } = null!;
         public string Nombres { get; set; } = null!;
         public string Identificacion { get; set; } = null!;
+        public string PorcentajeAT { get; set; } = null!;
     }
 }
 

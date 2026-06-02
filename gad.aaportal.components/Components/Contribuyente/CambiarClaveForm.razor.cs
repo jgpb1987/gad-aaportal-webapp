@@ -1,9 +1,11 @@
-﻿using gad.aaportal.commons.Dto.Seguridad;
+﻿using gad.aaportal.commons.Dto.Log;
+using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.Consumers.Interface;
 using gad.aaportal.consumers.Js;
 using gad.generic.components.Components.Several;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,8 @@ namespace gad.aaportal.components.Components.Contribuyente
         [Inject] private ISessionStorageServices JSSessionStorageServices { get; set; } = null!;
         [Inject] private ISeguridadConsumers ServicesUsuario { get; set; } = null!;
         [Inject] private ConfiguracionesApp Configuraciones { get; set; } = null!;
+        [Inject] private ISecurityAlgorithmConsumers SecurityAlgorithm { get; set; } = null!;
+        [Inject] private IJSRuntime Js { get; set; } = null!;
 
         public ToastsServices? Toast { get; set; }
         private LoadingBorderModalServices? LoadingBorder { get; set; }
@@ -36,6 +40,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             try
             {
                 LoadingBorder?.Open();
+                var publicKeyServer = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.SesionStoragePublicKeyServer);
 
                 if (string.IsNullOrWhiteSpace(Model.User))
                 {
@@ -67,6 +72,12 @@ namespace gad.aaportal.components.Components.Contribuyente
                     return;
                 }
 
+                var userRsaPA = await SecurityAlgorithm.EncryptRsa(Js, Model.PasswordActual, publicKeyServer!);
+                var userRsaNewPA = await SecurityAlgorithm.EncryptRsa(Js, Model.PasswordNueva, publicKeyServer!);
+                var userRsaNewCPA = await SecurityAlgorithm.EncryptRsa(Js, Model.PasswordNuevaConfirmacion, publicKeyServer!);
+                Model.PasswordActual = userRsaPA;
+                Model.PasswordNueva = userRsaNewPA;
+                Model.PasswordNuevaConfirmacion = userRsaNewCPA;
                 var result = await ServicesUsuario.CambiarClave(Model);
 
                 LoadingBorder?.Close();

@@ -1,0 +1,518 @@
+﻿
+@using gad.aaportal.commons.Dto.Declaracion
+
+<ToastsServices @ref="Toast" Time="5000" />
+<LoadingBorderModalServices @ref="LoadingBorder" />
+
+<ResumenEncabezadoContribuyenteForm />
+
+<div class="declaracion-container">
+    <div class="declaracion-action-card">
+        <div>
+            <div class="declaracion-action-title">Declaración de patente</div>
+            <div class="declaracion-action-subtitle">
+                Inicie una nueva declaración seleccionando el período correspondiente.
+            </div>
+        </div>
+
+        <button type="button" class="btn-nueva-declaracion" @onclick="AbrirModalPeriodo">
+            Nueva Declaración
+        </button>
+    </div>
+
+    @if (_declaracionIniciada is not null)
+    {
+        <div class="declaracion-wizard-card">
+            <div class="wizard-periodo">
+                <span>Período seleccionado:</span>
+                <strong>@_declaracionIniciada.DescripcionPeriodo</strong>
+            </div>
+
+            <div class="wizard-steps">
+                <div class="@ObtenerClaseStep(1)">
+                    <div class="step-circle">1</div>
+                    <div class="step-text">Declaración</div>
+                </div>
+
+                <div class="step-line"></div>
+
+                <div class="@ObtenerClaseStep(2)">
+                    <div class="step-circle">2</div>
+                    <div class="step-text">Resumen</div>
+                </div>
+
+@*                 <div class="step-line"></div>
+
+                <div class="@ObtenerClaseStep(3)">
+                    <div class="step-circle">3</div>
+                    <div class="step-text">Pago</div>
+                </div> *@
+
+                <div class="step-line"></div>
+
+                <div class="@ObtenerClaseStep(3)">
+                    <div class="step-circle">3</div>
+                    <div class="step-text">Finalización</div>
+                </div>
+            </div>
+
+            <div class="wizard-content">
+                @if (_stepActual == 1)
+                {
+                    <div class="step-panel">
+                        <div class="panel-title">Declaración</div>
+                        <div class="panel-subtitle">
+                            Complete y verifique la información financiera para calcular la declaración.
+                        </div>
+
+                        <div class="declaracion-form-section">
+                            <div class="section-title">Activos</div>
+
+                            <div class="valores-grid">
+                                <div class="valor-row">
+                                    <label>Activo Corriente <span>*</span></label>
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoCorriente"/>
+                                    <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.ActivoCorriente = _valoresSugeridos.ActivoCorriente">
+                                        @_valoresSugeridos.ActivoCorriente.ToString("N2")
+                                    </a>
+                                </div>
+
+                                <div class="valor-row">
+                                    <label>Activo No Corriente <span>*</span></label>
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoNoCorriente" />
+                                    <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.ActivoNoCorriente = _valoresSugeridos.ActivoNoCorriente">
+                                        @_valoresSugeridos.ActivoNoCorriente.ToString("N2")
+                                    </a>
+                                </div>
+
+                                <div class="valor-row total-row">
+                                    <label>Total de Activo</label>
+                                    <div class="valor-total">@TotalActivo.ToString("N2")</div>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="declaracion-form-section">
+                            <div class="section-title">Pasivos</div>
+
+                            <div class="valores-grid">
+                                <div class="valor-row">
+                                    <label>Pasivo Corriente <span>*</span></label>
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoCorriente" />
+                                    <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.PasivoCorriente = _valoresSugeridos.PasivoCorriente">
+                                        @_valoresSugeridos.PasivoCorriente.ToString("N2")
+                                    </a>
+                                </div>
+
+                                <div class="valor-row">
+                                    <label>Pasivo No Corriente <span>*</span></label>
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoNoCorriente" />
+                                    <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.PasivoNoCorriente = _valoresSugeridos.PasivoNoCorriente">
+                                        @_valoresSugeridos.PasivoNoCorriente.ToString("N2")
+                                    </a>
+                                </div>
+
+                                <div class="valor-row">
+                                    <label>Pasivo Contingente <span>*</span></label>
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoContingente" />
+                                    <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.PasivoContingente = _valoresSugeridos.PasivoContingente">
+                                        @_valoresSugeridos.PasivoContingente.ToString("N2")
+                                    </a>
+                                </div>
+
+                                <div class="valor-row total-row">
+                                    <label>Total de Pasivo</label>
+                                    <div class="valor-total">@TotalPasivo.ToString("N2")</div>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="declaracion-form-section">
+                            <div class="section-title">Patrimonio</div>
+
+                            <div class="valores-grid">
+                                <div class="valor-row total-row">
+                                    <label>Patrimonio</label>
+                                    <div class="valor-total">@Patrimonio.ToString("N2")</div>
+                                    <span></span>
+                                </div>
+
+                                <div class="valor-row total-row">
+                                    <label>Base Imponible 1.5 x 1000</label>
+                                    <div class="valor-total">@BaseImponible.ToString("N2")</div>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="declaracion-form-section">
+                            <div class="section-title">Pérdidas y Ganancias</div>
+
+                            <div class="valores-grid">
+                                <div class="valor-row">
+                                    <label>Ingresos <span>*</span></label>
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.Ingresos" />
+                                    <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.Ingresos = _valoresSugeridos.Ingresos">
+                                        @_valoresSugeridos.Ingresos.ToString("N2")
+                                    </a>
+                                </div>
+
+                                <div class="valor-row">
+                                    <label>Costos y Gastos <span>*</span></label>
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.CostosGastos" />
+                                    <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.CostosGastos = _valoresSugeridos.CostosGastos">
+                                        @_valoresSugeridos.CostosGastos.ToString("N2")
+                                    </a>
+                                </div>
+
+                                <div class="valor-row total-row">
+                                    <label>Utilidad del Ejercicio</label>
+                                    <div class="valor-total">@UtilidadEjercicio.ToString("N2")</div>
+                                    <span></span>
+                                </div>
+
+                                <div class="valor-row total-row">
+                                    <label>Pérdida del Ejercicio</label>
+                                    <div class="valor-total">@PerdidaEjercicio.ToString("N2")</div>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="declaracion-form-section">
+                            <div class="section-header">
+                                <div>
+                                    <div class="section-title">Distribución Cantonal</div>
+                                    <div class="section-subtitle">
+                                        Edite los porcentajes y marque si corresponde pagar el impuesto en el cantón.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="establecimientos-table-wrapper">
+                                <table class="establecimientos-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Cantón</th>
+                                            <th>Base Imponible</th>
+                                            <th>Porcentaje</th>
+                                            <th>Valor</th>
+                                            <th>Paga impuesto aquí</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in _establecimientos)
+                                        {
+                                            <tr class="@(item.EsMunicipioBase ? "municipio-base-row" : "")">
+                                                <td>
+                                                    <div class="cantonal-title">
+                                                        @item.Provincia
+
+                                                        @if (item.EsMunicipioBase)
+                                                        {
+                                                            <span class="municipio-base-badge">Municipio base</span>
+                                                        }
+                                                    </div>
+
+                                                    <div class="cantonal-subtitle">@item.Canton</div>
+                                                </td>
+
+                                                <td>
+                                                    <InputNumber class="input-form text-end input-disabled"
+                                                                 @bind-Value="item.BaseImponible"
+                                                                 disabled />
+                                                </td>
+
+                                                <td>
+                                                    <InputNumber class="input-form text-end" @bind-Value="item.Porcentaje" />
+                                                </td>
+
+                                                <td class="text-end table-money">
+                                                    @item.Valor.ToString("N2")
+                                                </td>
+
+                                                <td class="text-center">
+                                                    <InputCheckbox @bind-Value="item.AplicaPago" />
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2"><strong>Suma Desglose</strong></td>
+                                            <td class="text-end"><strong>@SumaPorcentaje.ToString("N2") %</strong></td>
+                                            <td class="text-end"><strong>@TotalPatentePorEstablecimientos.ToString("N2")</strong></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="calculo-impuestos-card">
+                                <div class="calculo-impuesto-item patente-card">
+                                    <div class="calculo-impuesto-header">
+                                        <span>Impuesto Patente</span>
+                                    </div>
+
+                                    <div class="calculo-impuesto-row">
+                                        <span>Base Imponible Patente</span>
+                                        <strong>@Patrimonio.ToString("N2")</strong>
+                                    </div>
+
+                                    <div class="calculo-impuesto-row total">
+                                        <span>Valor Patente</span>
+                                        <strong>@TotalPatentePorEstablecimientos.ToString("N2")</strong>
+                                    </div>
+                                </div>
+
+                                <div class="calculo-impuesto-item uno-cinco-card">
+                                    <div class="calculo-impuesto-header">
+                                        <span>Impuesto 1.5 x 1000</span>
+                                    </div>
+
+                                    <div class="calculo-impuesto-row">
+                                        <span>Base Imponible 1.5 x 1000</span>
+                                        <strong>@BaseImponible.ToString("N2")</strong>
+                                    </div>
+
+                                    <div class="calculo-impuesto-row total">
+                                        <span>Valor 1.5 x 1000</span>
+                                        <strong>@ValorUnoCincoPorMil.ToString("N2")</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wizard-actions">
+                            <button type="button" class="btn btn-lg btn-color-per btn-wizard" @onclick="CalcularDeclaracion">
+                                Calcular
+                            </button>
+
+                            <button type="button" class="btn btn-lg btn-color-per btn-wizard" disabled="@(!_declaracionCalculada)" @onclick="SiguienteStep">
+                                Continuar
+                            </button>
+                        </div>
+                    </div>
+                }
+
+                @if (_stepActual == 2)
+                {
+                    <div class="step-panel">
+                        <div class="panel-title">Resumen</div>
+                        <div class="panel-subtitle">
+                            Revise los valores generados antes de continuar con el pago.
+                        </div>
+
+                        <div class="resumen-impuestos-grid">
+                            <div class="impuesto-card">
+                                <div class="impuesto-card-title">Patente</div>
+
+                                <div class="impuesto-row">
+                                    <span>Derecho de patente anual</span>
+                                    <strong>@_resumen.DerechoPatenteAnual.ToString("C2")</strong>
+                                </div>
+
+                                <div class="impuesto-row">
+                                    <span>Valores Bomberos Patente</span>
+                                    <strong>+ @_resumen.ValoresBomberosPatente.ToString("C2")</strong>
+                                </div>
+
+                                <div class="impuesto-row">
+                                    <span>Descuento anticipo pagado SRI</span>
+                                    <strong>- @_resumen.DescuentoAnticipoPagadoSri.ToString("C2")</strong>
+                                </div>
+
+                                <div class="impuesto-row">
+                                    <span>Descuento patente tercera edad</span>
+                                    <strong>- @_resumen.DescuentoPatenteTerceraEdad.ToString("C2")</strong>
+                                </div>
+
+                                <div class="impuesto-row">
+                                    <span>Reducción descenso de utilidad</span>
+                                    <strong>- @_resumen.ReduccionDescensoUtilidad.ToString("C2")</strong>
+                                </div>
+
+                                <div class="impuesto-row impuesto-total">
+                                    <span>Total patente a pagar</span>
+                                    <strong>@_resumen.TotalPatentePagar.ToString("C2")</strong>
+                                </div>
+
+                                <div class="impuesto-row">
+                                    <span>Multa por presentación tardía</span>
+                                    <strong>+ @_resumen.MultaPatente.ToString("C2")</strong>
+                                </div>
+                            </div>
+
+                            <div class="impuesto-card">
+                                <div class="impuesto-card-title">1.5 por mil</div>
+
+                                <div class="impuesto-row">
+                                    <span>1.5 x mil activos</span>
+                                    <strong>@_resumen.ImpuestoActivos.ToString("C2")</strong>
+                                </div>
+
+                                <div class="impuesto-row">
+                                    <span>Valores Bomberos</span>
+                                    <strong>- @_resumen.ValoresBomberos1_1000.ToString("C2")</strong>
+                                </div>
+
+                                <div class="impuesto-row">
+                                    <span>Descuento tercera edad</span>
+                                    <strong>- @_resumen.DescuentoTerceraEdad15.ToString("C2")</strong>
+                                </div>
+
+                                <div class="impuesto-row impuesto-total">
+                                    <span>Total 1.5 a pagar</span>
+                                    <strong>@_resumen.Total15Pagar.ToString("C2")</strong>
+                                </div>
+
+                                <div class="impuesto-row">
+                                    <span>Multa por presentación tardía</span>
+                                    <strong>+ @_resumen.Multa15.ToString("C2")</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="total-pagar-card">
+                            <span>Total a Pagar</span>
+                            <strong>@_resumen.TotalPagar.ToString("C2")</strong>
+                        </div>
+
+                        <div class="declaracion-form-section">
+                            <div class="section-title">Desglose de otros cantones</div>
+
+                            <div class="establecimientos-table-wrapper">
+                                <table class="establecimientos-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Cantón</th>
+                                            <th>Base Imponible</th>
+                                            <th>Porcentaje</th>
+                                            <th>Valor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in _establecimientos)
+                                        {
+                                            <tr>
+                                                <td>@item.Provincia - @item.Canton</td>
+                                                <td class="text-end">@item.BaseImponible.ToString("C2")</td>
+                                                <td class="text-end">@item.Porcentaje.ToString("N2") %</td>
+                                                <td class="text-end">@item.Valor.ToString("C2")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="wizard-actions">
+                            <button type="button" class="btn-wizard-secondary" @onclick="AnteriorStep">
+                                Regresar
+                            </button>
+
+                            <button type="button" class="btn btn-lg btn-color-per btn-wizard" @onclick="SiguienteStep">
+                                @* Continuar a Pago *@
+                                Confirmar Valores
+                            </button>
+                        </div>
+                    </div>
+                }
+
+@*                 @if (_stepActual == 3)
+                {
+                    <div class="step-panel">
+                        <div class="panel-title">Pago</div>
+                        <div class="panel-subtitle">
+                            Seleccione o confirme la forma de pago de la declaración.
+                        </div>
+
+                        <div class="empty-step">
+                            Aquí irá el flujo de pago.
+                        </div>
+
+                        <div class="wizard-actions">
+                            <button type="button" class="btn-wizard-secondary" @onclick="AnteriorStep">
+                                Regresar
+                            </button>
+                            <button type="button" class="btn btn-lg btn-color-per btn-wizard" @onclick="SiguienteStep">
+                                Finalizar
+                            </button>
+                        </div>
+                    </div>
+                } *@
+
+                @if (_stepActual == 3)
+                {
+                    <div class="step-panel">
+                        <div class="panel-title">Finalización</div>
+                        <div class="panel-subtitle">
+                            La declaración ha sido procesada.
+                        </div>
+
+                        <div class="success-step">
+                            Declaración finalizada correctamente.
+                        </div>
+
+                        <div class="wizard-actions">
+                            <button type="button" class="btn-wizard-secondary" @onclick="AnteriorStep">
+                                Regresar
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@if (_mostrarModalPeriodo)
+{
+    <div class="modal-backdrop-custom">
+        <div class="modal-periodo-card">
+            <div class="modal-periodo-header">
+                <div>
+                    <div class="modal-title-custom">Nueva Declaración</div>
+                    <div class="modal-subtitle-custom">
+                        Seleccione el año de declaración para continuar.
+                    </div>
+                </div>
+
+                <button type="button" class="btn-close-modal" @onclick="CerrarModalPeriodo">×</button>
+            </div>
+
+            <EditForm Model="_periodoSeleccionado" OnValidSubmit="ConfirmarPeriodo">
+                <DataAnnotationsValidator />
+
+                <div class="modal-periodo-body">
+                    <div class="form-field">
+                        <label>Año de Declaración <span>*</span></label>
+
+                        <InputSelect class="input-form" @bind-Value="_periodoSeleccionado.AnioDeclaracion">
+                            <option value="0">Seleccione el año de declaración</option>
+                            @foreach (var periodo in _periodosDeclaracion.PeriodosDeclaracion)
+                            {
+                                <option value="@periodo.AnioEjercicioFiscal">
+                                    @periodo.Descripcion
+                                </option>
+                            }
+                        </InputSelect>
+
+                        <ValidationMessage For="@(() => _periodoSeleccionado.AnioDeclaracion)" />
+                    </div>
+                </div>
+
+                <div class="modal-periodo-actions">
+                    <button type="button" class="btn-modal-secondary" @onclick="CerrarModalPeriodo">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="btn-modal-primary">
+                        Continuar
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}

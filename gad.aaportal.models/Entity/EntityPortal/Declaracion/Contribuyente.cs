@@ -10,6 +10,8 @@ namespace gad.aaportal.models.Entity.Declaracion
     {
         public Contribuyente()
         {
+            ContribuyenteDeclaracions = new HashSet<ContribuyenteDeclaracion>();
+            ContribuyenteEstablecimientos = new HashSet<ContribuyenteEstablecimiento>();
             ContribuyenteMedioContactos = new HashSet<ContribuyenteMedioContacto>();
             ContribuyenteUsuarios = new HashSet<ContribuyenteUsuario>();
         }
@@ -42,6 +44,8 @@ namespace gad.aaportal.models.Entity.Declaracion
         public string NumeroPredio { get; set; } = null!;
         public DateTime FechaRegistro { get; set; }
 
+        public virtual ICollection<ContribuyenteDeclaracion> ContribuyenteDeclaracions { get; set; }
+        public virtual ICollection<ContribuyenteEstablecimiento> ContribuyenteEstablecimientos { get; set; }
         public virtual ICollection<ContribuyenteMedioContacto> ContribuyenteMedioContactos { get; set; }
         public virtual ICollection<ContribuyenteUsuario> ContribuyenteUsuarios { get; set; }
     }

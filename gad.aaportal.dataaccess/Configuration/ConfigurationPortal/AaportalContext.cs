@@ -61,6 +61,9 @@ public partial class AaportalContext : DbContext
     public virtual DbSet<ContribuyenteMedioContacto> ContribuyenteMedioContactos { get; set; } = null!;
     public virtual DbSet<ContribuyenteUsuario> ContribuyenteUsuarios { get; set; } = null!;
     public virtual DbSet<TipoMedioContacto> TipoMedioContactos { get; set; } = null!;
+    public virtual DbSet<ContribuyenteEstablecimiento> ContribuyenteEstablecimientos { get; set; } = null!;
+    public virtual DbSet<ContribuyenteDeclaracion> ContribuyenteDeclaracions { get; set; } = null!;
+    public virtual DbSet<ContribuyenteDeclaracionPagoEstablecimiento> ContribuyenteDeclaracionPagoEstablecimientos { get; set; } = null!;
     #endregion
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -95,5 +98,8 @@ public partial class AaportalContext : DbContext
         modelBuilder.ApplyConfiguration(new ContribuyenteMedioContactoConfiguracion());
         modelBuilder.ApplyConfiguration(new ContribuyenteUsuarioConfiguracion());
         modelBuilder.ApplyConfiguration(new TipoMedioContactoConfiguracion());
+        modelBuilder.ApplyConfiguration(new ContribuyenteEstablecimientoConfiguracion());
+        modelBuilder.ApplyConfiguration(new ContribuyenteDeclaracionConfiguracion());
+        modelBuilder.ApplyConfiguration(new ContribuyenteDeclaracionPagoEstablecimientoConfiguracion());
     }
 }

@@ -55,6 +55,18 @@ namespace gad.aaportal.commons.Dto.Seguridad
         [Required(ErrorMessage = "{0} es obligatorio")]
         public string Email { get; set; } = null!;
     }
+    public class ContribuyenteEstablecimientoDtoParam
+    {
+        public string NombreFantasiaComercial { get; set; } = null!;
+        public string Provincia { get; set; } = null!;
+        public string Canton { get; set; } = null!;
+        public string Parroquia { get; set; } = null!;
+        public string Calles { get; set; } = null!;
+        public string DireccionCompleta { get; set; } = null!;
+        public string Estado { get; set; } = null!;
+        public string NumeroEstablecimiento { get; set; } = null!;
+        public string Matriz { get; set; } = null!;
+    }
     public class UserRegistrationDtoParam : InfoBrowserUsuario
     {
         public string User { get; set; } = null!;
@@ -83,6 +95,7 @@ namespace gad.aaportal.commons.Dto.Seguridad
         public DateTime FechaActualizacion { get; set; }
         public string ContribuyenteFantasma { get; set; } = null!;
         public string TransaccionesInexistente { get; set; } = null!;
+        public List<ContribuyenteEstablecimientoDtoParam> Establecimientos { get; set; } = null!;
 
     }
     public class CambiarClaveDtoParam
@@ -93,11 +106,9 @@ namespace gad.aaportal.commons.Dto.Seguridad
         public string PasswordActual { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "La nueva contraseña es obligatoria.")]
-        [MinLength(8, ErrorMessage = "La nueva contraseña debe tener al menos 8 caracteres.")]
         public string PasswordNueva { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Debe repetir la nueva contraseña.")]
-        [Compare(nameof(PasswordNueva), ErrorMessage = "La confirmación no coincide con la nueva contraseña.")]
         public string PasswordNuevaConfirmacion { get; set; } = string.Empty;
     }
     public class CambiarClaveDtoResult

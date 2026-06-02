@@ -5,6 +5,6 @@ namespace gad.aaportal.services.Services.Interfaces
 {
     public interface ISolicitudRespuestaServices
     {
-        public Task<LogResult> GenerarLogApis(AaportalContext contexto, LogParam parametro);
+        public Task<LogResult> GenerarLogApis(LogParam parametro);
     }
 }

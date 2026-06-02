@@ -213,7 +213,7 @@ public class SeguridadServices : ISeguridadServices
             DateTime fechaHora = DateTime.Now;
             var userNew = new Usuario()
             {
-                User = parametro.User,
+                User = parametro.User.Length > 100 ? parametro.User.Substring(0, 100) : parametro.User,
                 Password = pwd.Data.Hash,
                 Fecha = fechaHora,
                 FechaUltimoCambioClave = fechaHora,
@@ -266,6 +266,24 @@ public class SeguridadServices : ISeguridadServices
                 Estado = true
             };
             contexto.ContribuyenteUsuarios.Add(contrinuyenteUsuarioNew);
+
+            foreach (var item in parametro.Establecimientos)
+            {
+                var contribuyenteEstablecimiento = new ContribuyenteEstablecimiento()
+                {
+                    Calles=item.Calles,
+                    Canton=item.Canton,
+                    DireccionCompleta=item.DireccionCompleta,
+                    Estado=item.Estado,
+                    Identificacion= parametro.Identificacion,
+                    Matriz=item.Matriz,
+                    NombreFantasiaComercial=item.NombreFantasiaComercial,
+                    NumeroEstablecimiento=item.NumeroEstablecimiento,
+                    Parroquia=item.Parroquia,
+                    Provincia=item.Provincia
+                };
+                contexto.ContribuyenteEstablecimientos.Add(contribuyenteEstablecimiento);
+            }
 
             var expiration = DateTime.Now.AddSeconds(appJwt.JwtTime);
             var jtiSession = System.Guid.NewGuid().ToString();

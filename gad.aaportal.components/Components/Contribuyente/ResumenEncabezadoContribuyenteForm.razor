@@ -1,0 +1,50 @@
+﻿<ToastsServices @ref="Toast" Time="5000" />
+<LoadingBorderModalServices @ref="LoadingBorder" />
+
+@if (_contribuyenteResumen?.Data is not null)
+{
+    var contribuyente = _contribuyenteResumen.Data;
+
+    <div class="resumen-contribuyente-container">
+        <div class="resumen-contribuyente-card">
+
+            <div class="resumen-contribuyente-header">
+                <div class="resumen-header-info">
+                    <div class="resumen-title">@contribuyente.RazonSocial</div>
+                    <div class="resumen-subtitle">
+                        Información general del contribuyente
+                    </div>
+                </div>
+            </div>
+
+            <div class="resumen-info-grid">
+
+                <div class="resumen-info-item">
+                    <span class="resumen-label">RUC / Identificación</span>
+                    <span class="resumen-value">@contribuyente.Identificacion</span>
+                </div>
+
+                <div class="resumen-info-item">
+                    <span class="resumen-label">Tipo</span>
+                    <span class="resumen-value">@contribuyente.TipoContribuyente</span>
+                </div>
+
+                <div class="resumen-info-item">
+                    <span class="resumen-label">Inicio Actividades</span>
+                    <span class="resumen-value">@contribuyente.InicioActividadEconomica</span>
+                </div>
+
+                <div class="resumen-info-item">
+                    <span class="resumen-label">C. Especial</span>
+                    <span class="resumen-value">@contribuyente.ContribuyenteEspecial</span>
+                </div>
+
+                <div class="resumen-info-item">
+                    <span class="resumen-label">O. Llevar Contabilidad</span>
+                    <span class="resumen-value">@contribuyente.ObligadoLlevarContabilidad</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

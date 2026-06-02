@@ -12,5 +12,7 @@
         public string DinardapUser { get; set; } = null!;
         public string DinardapPwd { get; set; } = null!;
         public int DigitosMinPassword { get; set; }
+        public int AniosDeclaracionMostrar { get; set; }
+        public string MunicipioBase { get; set; } = null!;
     }
 }

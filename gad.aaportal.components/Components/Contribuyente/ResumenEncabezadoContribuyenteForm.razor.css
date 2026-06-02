@@ -1,0 +1,133 @@
+﻿.resumen-contribuyente-container {
+    width: 100%;
+    max-width: 980px;
+    margin: 0.75rem auto 1rem auto;
+    padding: 0 0.75rem;
+}
+
+.resumen-contribuyente-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 0.95rem;
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.10);
+    overflow: hidden;
+}
+
+    .resumen-contribuyente-card::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient( 90deg, var(--pro-button-background-color), var(--pro-button-background-color-hover) );
+    }
+
+.resumen-contribuyente-header {
+    padding: 14px 20px 8px 20px;
+}
+
+.resumen-header-info {
+    width: 100%;
+    min-width: 0;
+}
+
+.resumen-title {
+    color: #1f2937;
+    font-size: clamp(16px, 1.5vw, 21px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.2px;
+    word-break: break-word;
+}
+
+.resumen-subtitle {
+    margin-top: 3px;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.resumen-info-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 0.75fr 0.9fr;
+    gap: 8px;
+    padding: 8px 20px 16px 20px;
+}
+
+.resumen-info-item {
+    background: #f9fafb;
+    border: 1px solid #edf2f7;
+    border-radius: 0.65rem;
+    padding: 9px 11px;
+    min-width: 0;
+    transition: all 0.2s ease-in-out;
+}
+
+    .resumen-info-item:hover {
+        background: #ffffff;
+        border-color: rgba(26, 117, 204, 0.35);
+        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.07);
+    }
+
+.resumen-label {
+    display: block;
+    color: var(--pro-button-background-color);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+    white-space: nowrap;
+}
+
+.resumen-value {
+    display: block;
+    color: #111827;
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height: 1.25;
+    word-break: break-word;
+}
+
+@media (max-width: 992px) {
+    .resumen-info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .resumen-contribuyente-container {
+        margin: 0.5rem auto 0.8rem auto;
+        padding: 0 0.6rem;
+    }
+
+    .resumen-contribuyente-header {
+        padding: 13px 15px 6px 15px;
+    }
+
+    .resumen-info-grid {
+        grid-template-columns: 1fr;
+        gap: 7px;
+        padding: 7px 15px 14px 15px;
+    }
+
+    .resumen-title {
+        font-size: 16px;
+    }
+
+    .resumen-subtitle {
+        font-size: 11.5px;
+    }
+
+    .resumen-info-item {
+        padding: 8px 10px;
+    }
+
+    .resumen-label {
+        font-size: 9.5px;
+    }
+
+    .resumen-value {
+        font-size: 12px;
+    }
+}

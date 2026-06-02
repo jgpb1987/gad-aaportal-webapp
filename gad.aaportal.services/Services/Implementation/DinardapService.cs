@@ -524,7 +524,7 @@ namespace gad.aaportal.services.Services.Implementation
             ConsumoDinardapResult result = new();
             try
             {
-                var response= await ConsultPackageDinardap(contexto, request);
+                var response= await ConsultPackageDinardap(request);
                 switch (request.Paquete)
                 {
                     case "6281":
@@ -575,6 +575,40 @@ namespace gad.aaportal.services.Services.Implementation
             }
             return result;
         }
+        public async Task<T> ConsultPackage<T>(PaqueteDinardapRequest request)
+        {
+            try
+            {
+                var response = await ConsultPackageDinardap(request);
+
+                object result = request.Paquete switch
+                {
+                    "6281" => Utilitarios.MapearAForm101Lista(response),
+                    "6282" => Utilitarios.MapearAForm102Lista(response),
+                    "7728" => Utilitarios.MapearA7728Lista(response),
+                    "7730" => Utilitarios.MapearA7730Lista(response),
+                    "7731" => Utilitarios.MapearA7731Lista(response),
+                    "7732" => Utilitarios.MapearA7732Lista(response),
+                    "6279" => Utilitarios.MapearA6279Lista(response),
+                    "7736" => Utilitarios.MapearA7736Lista(response),
+                    "7742" => Utilitarios.MapearA7742Lista(response),
+
+                    _ => throw new InvalidOperationException(
+                        $"No existe mapeo configurado para el paquete DINARDAP {request.Paquete}")
+                };
+
+                if (result is T typedResult)
+                    return typedResult;
+
+                throw new InvalidCastException(
+                    $"El paquete {request.Paquete} devuelve un tipo {result.GetType().Name}, pero se esperaba {typeof(T).Name}");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error al consultar paquete DINARDAP {Paquete}", request.Paquete);
+                throw;
+            }
+        }
         public async Task<ConsumoDinardapResult> SearchRucListPackage(AaportalContext contexto, PaqueteDinardapListRequest request)
         {
             ConsumoDinardapResult result = new();
@@ -591,7 +625,7 @@ namespace gad.aaportal.services.Services.Implementation
             }
             return result;
         }
-        public async Task<consultarResponse> ConsultPackageDinardap(AaportalContext contexto, PaqueteDinardapRequest request)
+        public async Task<consultarResponse> ConsultPackageDinardap(PaqueteDinardapRequest request)
         {
             DateTime fechaInicioConsulta = DateTime.Now;
             consultarResponse response = new();
@@ -599,15 +633,15 @@ namespace gad.aaportal.services.Services.Implementation
             {
                 var options = new SoapClientOptions
                 {
-                     //Endpoint = apiServerConfig.Dinardap + endPointsConfig.InteroperadorConsultPackge, //http
-                    Endpoint = "http://localhost:8088/mockinteroperadorSoapBinding", //QA
+                     Endpoint = apiServerConfig.Dinardap + endPointsConfig.InteroperadorConsultPackge, //http
+                    //Endpoint = "http://localhost:8088/mockinteroperadorSoapBinding", //QA
 
                     Security = new SoapSecurityOptions
                     {
                         Type = SoapSecurityType.None,
                         //Type = SoapSecurityType.Basic,
-                        //Username=servicesConfig.DinardapUser,
-                        //Password=servicesConfig.DinardapPwd
+                        Username=servicesConfig.DinardapUser,
+                        Password=servicesConfig.DinardapPwd
                     }
                 };
 
@@ -621,12 +655,12 @@ namespace gad.aaportal.services.Services.Implementation
                 };
 
                 response = await service.ConsultarAsync(parametros);
-                await solicitudRespuestaServices.GenerarLogApis(contexto, GeneraLog(request.Usuario, fechaInicioConsulta, request.Identificacion, "Dinardap", 1, JsonSerializer.Serialize(request), JsonSerializer.Serialize(response.paquete), request.Paquete, "Proceso Ejecutado exitosamente", "OK", true));
+                await solicitudRespuestaServices.GenerarLogApis(GeneraLog(request.Usuario, fechaInicioConsulta, request.Identificacion, "Dinardap", 1, JsonSerializer.Serialize(request), JsonSerializer.Serialize(response.paquete), request.Paquete, "Proceso Ejecutado exitosamente", "OK", true));
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, ex.StackTrace, ex.Message);
-                await solicitudRespuestaServices.GenerarLogApis(contexto, GeneraLog(request.Usuario, fechaInicioConsulta, request.Identificacion, "Dinardap", 1, JsonSerializer.Serialize(request), JsonSerializer.Serialize(response), request.Paquete, ex.Message, "ERROR", false));
+                await solicitudRespuestaServices.GenerarLogApis(GeneraLog(request.Usuario, fechaInicioConsulta, request.Identificacion, "Dinardap", 1, JsonSerializer.Serialize(request), JsonSerializer.Serialize(response), request.Paquete, ex.Message, "ERROR", false));
 
             }
             return response;

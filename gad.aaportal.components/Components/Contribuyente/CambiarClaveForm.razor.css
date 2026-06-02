@@ -1,17 +1,25 @@
-﻿.cambiar-clave-container {
-    width: 100%;
-    max-width: 620px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+﻿.cambiar-clave-page {
+    width: min(100%, 1280px);
+    margin: 0 auto;
+    padding: 1.5rem;
 }
 
 .cambiar-clave-card {
+    width: min(100%, 980px);
+    margin: 1.5rem auto 0 auto;
     position: relative;
     background: #ffffff;
     border-radius: 1.2rem;
-    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.14);
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
     border: 1px solid rgba(226, 232, 240, 0.95);
     overflow: hidden;
+}
+
+.cambiar-clave-form-wrapper {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0;
 }
 
     .cambiar-clave-card::before {
@@ -164,9 +172,17 @@
 }
 
 @media (max-width: 767px) {
-    .cambiar-clave-container {
-        margin: 1.2rem auto;
-        padding: 0 0.8rem;
+    .cambiar-clave-page {
+        padding: 1rem 0.75rem;
+    }
+
+    .cambiar-clave-card {
+        margin-top: 1rem;
+        border-radius: 1rem;
+    }
+
+    .cambiar-clave-form-wrapper {
+        max-width: 100%;
     }
 
     .cambiar-clave-header {

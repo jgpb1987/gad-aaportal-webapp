@@ -1,5 +1,6 @@
 ﻿using gad.aaportal.commons.Base;
 using gad.aaportal.commons.Dto.Declaracion;
+using gad.aaportal.commons.Dto.DtoPortal.Declaracion;
 using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.consumers.Interface;
@@ -34,5 +35,97 @@ namespace gad.aaportal.consumers.consumers.Implementation
             }
             return result;
         }
+        public async Task<ConsultarDatosContribuyenteDataResult> ConsultarDatosContribuyente(
+           ConsultarDatosContribuyenteDtoParam parametro)
+        {
+            ConsultarDatosContribuyenteDataResult result = new();
+
+            try
+            {
+                result = await _httpClient.Post<ConsultarDatosContribuyenteDtoParam, ConsultarDatosContribuyenteDataResult>(
+                    parametro,
+                    configuraciones.EndPointsConfig.ConsultarDatosContribuyente);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+        }
+
+        public async Task<ActualizarDatosContribuyenteDataResult> ActualizarDatosContribuyente(
+            ActualizarDatosContribuyenteDtoParam parametro)
+        {
+            ActualizarDatosContribuyenteDataResult result = new();
+
+            try
+            {
+                result = await _httpClient.Post<ActualizarDatosContribuyenteDtoParam, ActualizarDatosContribuyenteDataResult>(
+                    parametro,
+                    configuraciones.EndPointsConfig.ActualizarDatosContribuyente);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+        }
+
+        public async Task<TipoMedioContactoDataResult> ConsultarTiposMedioContacto()
+        {
+            TipoMedioContactoDataResult result = new();
+
+            try
+            {
+                result = await _httpClient.Post<object, TipoMedioContactoDataResult>(
+                    new { },
+                    configuraciones.EndPointsConfig.ConsultarTiposMedioContacto);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+        }
+        public async Task<PeriodoDeclaracionDataResult> ConsultarPeriodosDeclaracion(ContribuyenteDtoParam parametro)
+        {
+            PeriodoDeclaracionDataResult result = new();
+
+            try
+            {
+                result = await _httpClient.Post<ContribuyenteDtoParam, PeriodoDeclaracionDataResult>(
+                    parametro,
+                    configuraciones.EndPointsConfig.ConsultarPeriodosDeclaracion);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+        }
+
+        public async Task<IniciarDeclaracionDataResult> IniciarDeclaracion(
+            IniciarDeclaracionDtoParam parametro)
+        {
+            IniciarDeclaracionDataResult result = new();
+
+            try
+            {
+                result = await _httpClient.Post<IniciarDeclaracionDtoParam, IniciarDeclaracionDataResult>(
+                    parametro,
+                    configuraciones.EndPointsConfig.IniciarDeclaracion);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+        }
+
     }
 }

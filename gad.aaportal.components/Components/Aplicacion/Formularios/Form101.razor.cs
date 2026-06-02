@@ -10,7 +10,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 {
     public partial class Form101 : ComponentBase
     {
-        private string ruc = "0190003299001";//SE DEBE TOMAR EL VALOR DE SESION
+        private string ruc = "1091730940001";//SE DEBE TOMAR EL VALOR DE SESION
         private string tipoPersona = "PJ";//SE DEBE TOMAR EL VALOR DE SESION
         //private string ruc = "1002346649001";//SE DEBE TOMAR EL VALOR DE SESION
         //private string tipoPersona = "PN";//SE DEBE TOMAR EL VALOR DE SESION
@@ -50,7 +50,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 
         private async Task ConsultaAnios(object parametros)
         {
-            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:44369/") };
             var resp = await http.PostAsJsonAsync("api/Consultas/ConsultaAnios", parametros);
             resp.EnsureSuccessStatusCode();
             var result = await resp.Content.ReadFromJsonAsync<ConsultaAniosResponse>();
@@ -61,7 +61,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
         private async Task ConsultaDeclaracion()
         {
             var parametros = new { RUC = ruc, anioFiscal = anio, tipoPersona = tipoPersona };
-            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:44369/") };
             var resp = await http.PostAsJsonAsync("api/Consultas/ConsultaDeclaracion", parametros);
             resp.EnsureSuccessStatusCode();
             var result = await resp.Content.ReadFromJsonAsync<DeclaracionResponse>();
@@ -95,7 +95,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 
         private async Task ConsultaRazSocial(object parametros)
         {
-            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:44369/") };
             var resp = await http.PostAsJsonAsync("api/Consultas/ConsultaRazSocial", parametros);
             resp.EnsureSuccessStatusCode();
             var result = await resp.Content.ReadFromJsonAsync<ConsultaRazSocialResponse>();
@@ -121,7 +121,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 
                 btnMains = false;
                 var parametros = new { identificacion = ruc, anio = anio, tipoPersona = tipoPersona };
-                using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+                using var http = new HttpClient { BaseAddress = new Uri("https://localhost:44369/") };
                 var resp = await http.PostAsJsonAsync("api/Consultas/ConsultaIngresosEgresos", parametros);
                 resp.EnsureSuccessStatusCode();
                 ingresosEgresos = await resp.Content.ReadFromJsonAsync<ConsultaIngresosEgresosResponse>();
@@ -142,7 +142,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
         private async Task ConsultaCantones()
         {
             cantones = new();
-            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:44369/") };
             var resp = await http.GetAsync("api/Consultas/ConsultaCantones");
             resp.EnsureSuccessStatusCode();
             cantones = await resp.Content.ReadFromJsonAsync<CantonesResponse>();
@@ -151,7 +151,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 
         private async Task ConsultaTarifas()
         {
-            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:44369/") };
             var resp = await http.GetAsync("api/Consultas/ConsultaTarifas");
             resp.EnsureSuccessStatusCode();
             tarifas = await resp.Content.ReadFromJsonAsync<ListaTarifas>();
@@ -160,7 +160,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 
         private async Task ConsultarTasasAdministrativas()
         {
-            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:44369/") };
             var resp = await http.GetAsync("api/Consultas/ConsultaTasasAdministrativas");
             resp.EnsureSuccessStatusCode();
             tasas = await resp.Content.ReadFromJsonAsync<TasasAdministrativas>();
@@ -242,7 +242,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
 
             if (confirm)
             {
-                using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+                using var http = new HttpClient { BaseAddress = new Uri("https://localhost:44369/") };
                 var resp = await http.PostAsJsonAsync("api/Declaracion/DeclaracionPJ", parametros);
                 resp.EnsureSuccessStatusCode();
 
@@ -339,7 +339,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
         string pdfBase64 = string.Empty;
         private async Task GeneraPdf(DeclaracionRequest request)
         {
-            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
+            using var http = new HttpClient { BaseAddress = new Uri("https://localhost:44369/") };
             var resp = await http.PostAsJsonAsync("api/Declaracion/OrdenPagoPdf", request);
             resp.EnsureSuccessStatusCode();
             var pdfBytes = await resp.Content.ReadAsByteArrayAsync();

@@ -23,9 +23,7 @@ namespace gad.aaportal.services.Services.Implementation
             this.logger = logger;
         }
 
-        public async Task<CalcularImpuestoPatenteDtoResult> CalcularImpuestoPatente(
-    BddGmaaContext contexto,
-    CalcularImpuestoPatenteDtoParam parametro)
+        public async Task<CalcularImpuestoPatenteDtoResult> CalcularImpuestoPatente(BddGmaaContext contexto, CalcularImpuestoPatenteDtoParam parametro)
         {
             CalcularImpuestoPatenteDtoResult result = new();
 

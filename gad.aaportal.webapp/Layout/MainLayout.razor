@@ -1,18 +1,22 @@
 @inherits LayoutComponentBase
-<HeaderForm OnButtonClick="ShowMenu" DatosUsuarioResult="@DatosUsuarioResult" />
-<div class="page layout-root">
-    <div class="sidebar @(collapseNavMenu ? "show" : "")">
-        <NavMenuForm OnNavigate="OnMenuNavigate" DatosUsuarioResult="@DatosUsuarioResult" />
+
+<div class="app-shell">
+    <HeaderForm OnButtonClick="ShowMenu" DatosUsuarioResult="@DatosUsuarioResult" />
+
+    <div class="page layout-root">
+        <div class="sidebar @(collapseNavMenu ? "show" : "")">
+            <NavMenuForm OnNavigate="OnMenuNavigate" DatosUsuarioResult="@DatosUsuarioResult" />
+        </div>
+
+        @if (IsMobile && collapseNavMenu)
+        {
+            <div class="sidebar-overlay show" @onclick="CloseMenu"></div>
+        }
+
+        <main class="main-content">
+            <article class="content px-4 @(collapseNavMenu && !IsMobile ? "contenido-abierto" : "contenido-cerrado")">
+                @Body
+            </article>
+        </main>
     </div>
-
-    @if (IsMobile && collapseNavMenu)
-    {
-        <div class="sidebar-overlay show" @onclick="CloseMenu"></div>
-    }
-
-    <main>
-        <article class="content px-4 @(collapseNavMenu && !IsMobile ? "contenido-abierto" : "contenido-cerrado")">
-            @Body
-        </article>
-    </main>
 </div>

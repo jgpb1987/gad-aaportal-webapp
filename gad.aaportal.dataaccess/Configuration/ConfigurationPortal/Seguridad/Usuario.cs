@@ -29,7 +29,7 @@ public class UsuarioConfiguracion : IEntityTypeConfiguration<Usuario>
             .HasColumnType("datetime")
             .HasColumnName("fechaUltimoCambioClave");
         entity.Property(e => e.Nombres)
-            .HasMaxLength(50)
+            .HasMaxLength(100)
             .HasColumnName("nombres");
         entity.Property(e => e.Password)
             .HasMaxLength(50)

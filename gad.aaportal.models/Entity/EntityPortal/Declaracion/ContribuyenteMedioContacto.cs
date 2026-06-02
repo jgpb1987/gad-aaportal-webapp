@@ -14,7 +14,7 @@ namespace gad.aaportal.models.Entity.Declaracion
         public string Valor { get; set; } = null!;
         public bool EsPrincipal { get; set; }
         public DateTime FechaRegistro { get; set; }
-        public bool? Estado { get; set; }
+        public bool Estado { get; set; }
 
         public virtual TipoMedioContacto CodigoTipoMedioContactoNavigation { get; set; } = null!;
         public virtual Contribuyente IdentificacionNavigation { get; set; } = null!;

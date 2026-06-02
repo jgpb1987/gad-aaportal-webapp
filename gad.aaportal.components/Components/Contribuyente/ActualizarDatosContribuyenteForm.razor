@@ -1,0 +1,267 @@
+﻿@using gad.aaportal.commons.Dto.Declaracion
+
+<ToastsServices @ref="Toast" Time="5000" />
+<LoadingBorderModalServices @ref="LoadingBorder" />
+
+<ResumenEncabezadoContribuyenteForm />
+
+@if (Model is not null)
+{
+    <div class="actualizar-datos-container">
+        <div class="actualizar-datos-card">
+
+            <div class="actualizar-datos-header">
+                <div>
+                    <div class="actualizar-datos-title">Actualizar datos del contribuyente</div>
+                    <div class="actualizar-datos-subtitle">
+                        Registre la dirección del establecimiento y los medios de contacto.
+                    </div>
+                </div>
+            </div>
+
+            <EditForm Model="Model" OnValidSubmit="OnSubmit">
+                <DataAnnotationsValidator />
+
+                <div class="actualizar-section">
+                    <div class="section-title">Dirección contribuyente</div>
+
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label>Calle Principal <span>*</span></label>
+                            <InputText class="input-form" @bind-Value="Model.CallePrincipal" />
+                            <ValidationMessage For="@(() => Model.CallePrincipal)" />
+                        </div>
+
+                        <div class="form-field">
+                            <label>Número de casa <span>*</span></label>
+                            <InputText class="input-form" @bind-Value="Model.NumeroCasa" />
+                            <ValidationMessage For="@(() => Model.NumeroCasa)" />
+                        </div>
+
+                        <div class="form-field">
+                            <label>Calle Secundaria <span>*</span></label>
+                            <InputText class="input-form" @bind-Value="Model.CalleSecundaria" />
+                            <ValidationMessage For="@(() => Model.CalleSecundaria)" />
+                        </div>
+
+                        <div class="form-field">
+                            <label>Parroquia <span>*</span></label>
+                            <InputText class="input-form" @bind-Value="Model.Parroquia" />
+                            <ValidationMessage For="@(() => Model.Parroquia)" />
+                        </div>
+
+                        <div class="form-field">
+                            <label>Barrio</label>
+                            <InputText class="input-form" @bind-Value="Model.Barrio" />
+                        </div>
+
+                        <div class="form-field">
+                            <label>Número de predio</label>
+                            <InputText class="input-form" @bind-Value="Model.NumeroPredio" />
+                        </div>
+
+                        <div class="form-field form-field-full">
+                            <label>Referencia de ubicación <span>*</span></label>
+                            <InputTextArea class="input-form textarea-form" @bind-Value="Model.ReferenciaUbicacion" />
+                            <ValidationMessage For="@(() => Model.ReferenciaUbicacion)" />
+                        </div>
+
+                        <div class="form-field">
+                            <label>Vía</label>
+                            <InputText class="input-form" @bind-Value="Model.Via" />
+                        </div>
+
+                        <div class="form-field">
+                            <label>Kilómetro</label>
+                            <InputText class="input-form" @bind-Value="Model.Kilometro" />
+                        </div>
+
+                        <div class="form-field">
+                            <label>Manzana</label>
+                            <InputText class="input-form" @bind-Value="Model.Manzana" />
+                        </div>
+
+                        <div class="form-field">
+                            <label>Edificio</label>
+                            <InputText class="input-form" @bind-Value="Model.Edificio" />
+                        </div>
+
+                        <div class="form-field">
+                            <label>Piso</label>
+                            <InputText class="input-form" @bind-Value="Model.Piso" />
+                        </div>
+                    </div>
+                </div>
+                <div class="actualizar-section">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">Establecimientos</div>
+                        </div>
+                    </div>
+
+                    <div class="contactos-table-wrapper">
+                        <table class="contactos-table">
+                            <thead>
+                                <tr>
+                                    <th>Número Establecimiento</th>
+                                    <th>Provincia</th>
+                                    <th>Cantón</th>
+                                    <th>Parroquia</th>
+                                    <th>Calles</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Establecimientos.Any())
+                                {
+                                    @foreach (var item in Model.Establecimientos)
+                                    {
+                                        <tr>
+                                            <td>@item.NumeroEstablecimiento</td>
+                                            <td>@item.Provincia</td>
+                                            <td>@item.Canton</td>
+                                            <td>@item.Parroquia</td>
+                                            <td>@item.Calles</td>
+                                            <td>@item.Estado</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="empty-table">
+                                            No existen medios de contacto registrados.
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="actualizar-section">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">Medios de contacto</div>
+                            <div class="section-subtitle">
+                                Agregue correos, teléfonos o celulares asociados al contribuyente.
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-add-contacto" @onclick="AbrirModalContacto">
+                            + Agregar contacto
+                        </button>
+                    </div>
+
+                    <div class="contactos-table-wrapper">
+                        <table class="contactos-table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Valor</th>
+                                    <th>Principal</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.MediosContacto.Any())
+                                {
+                                    @foreach (var item in Model.MediosContacto)
+                                    {
+                                        <tr>
+                                            <td>@item.NombreTipoMedioContacto</td>
+                                            <td>@item.Valor</td>
+                                            <td>
+                                                @if (item.EsPrincipal)
+                                                {
+                                                    <span class="badge-principal">Sí</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge-secundario">No</span>
+                                                }
+                                            </td>
+                                            <td class="table-actions">
+                                                <button type="button" class="btn-table-edit" @onclick="() => EditarContacto(item)">
+                                                    Editar
+                                                </button>
+                                                <button type="button" class="btn-table-delete" @onclick="() => EliminarContacto(item)">
+                                                    Eliminar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="empty-table">
+                                            No existen medios de contacto registrados.
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="actions-form">
+                    <button type="submit" class="btn btn-lg btn-color-per btn-guardar">
+                        Guardar información
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@if (_mostrarModalContacto)
+{
+    <div class="modal-backdrop-custom">
+        <div class="modal-contacto-card">
+
+            <div class="modal-contacto-header">
+                <div>
+                    <div class="modal-title-custom">@_tituloModalContacto</div>
+                    <div class="modal-subtitle-custom">Ingrese el medio de contacto del contribuyente.</div>
+                </div>
+
+                <button type="button" class="btn-close-modal" @onclick="CerrarModalContacto">×</button>
+            </div>
+
+            <div class="modal-contacto-body">
+
+                <div class="form-field">
+                    <label>Tipo de contacto <span>*</span></label>
+                    <InputSelect class="input-form" @bind-Value="_contactoModal.CodigoTipoMedioContacto">
+                        <option value="">Seleccione...</option>
+                        @foreach (var tipo in _tiposMedioContacto)
+                        {
+                            <option value="@tipo.Codigo">@tipo.Nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="form-field">
+                    <label>Valor <span>*</span></label>
+                    <InputText class="input-form" @bind-Value="_contactoModal.Valor" />
+                </div>
+
+                <div class="check-field">
+                    <InputCheckbox @bind-Value="_contactoModal.EsPrincipal" />
+                    <span>Marcar como principal</span>
+                </div>
+
+            </div>
+
+            <div class="modal-contacto-actions">
+                <button type="button" class="btn-modal-secondary" @onclick="CerrarModalContacto">
+                    Cancelar
+                </button>
+
+                <button type="button" class="btn-modal-primary" @onclick="GuardarContactoModal">
+                    Guardar contacto
+                </button>
+            </div>
+        </div>
+    </div>
+}

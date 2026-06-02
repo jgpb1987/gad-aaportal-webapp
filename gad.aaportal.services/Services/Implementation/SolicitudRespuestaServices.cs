@@ -11,15 +11,16 @@ namespace gad.aaportal.services.Services.Implementation
     public class SolicitudRespuestaServices : ISolicitudRespuestaServices
     {
         private readonly ILogger<SolicitudRespuestaServices> logger;
+        private readonly AaportalContext contexto;
 
-        public SolicitudRespuestaServices(ILogger<SolicitudRespuestaServices> logger)
+        public SolicitudRespuestaServices(ILogger<SolicitudRespuestaServices> logger, AaportalContext contexto)
         {
             this.logger = logger;
+            this.contexto = contexto;
         }
-        public async Task<LogResult> GenerarLogApis(AaportalContext contexto, LogParam parametro)
+        public async Task<LogResult> GenerarLogApis(LogParam parametro)
         {
             LogResult result = new();
-            var transaction = await contexto.Database.BeginTransactionAsync();
             try
             {
                 var newLog = new SolicitudRespuesta()
@@ -40,7 +41,6 @@ namespace gad.aaportal.services.Services.Implementation
                 };
                 contexto.SolicitudRespuestas.Add(newLog);
                 contexto.SaveChanges();
-                await transaction.CommitAsync();
                 result = new LogResult() { IdInsercion = newLog.Id };
             }
             catch (SystemExceptionCustomized sex)
@@ -50,7 +50,6 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 logger.LogError(ex, ex.Message, nameof(CodeMessage.SERVER_ERROR));
                 throw;
             }

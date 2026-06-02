@@ -34,6 +34,8 @@ builder.Services.AddScoped<ISeguridadConsumers, SeguridadConsumers>();
 builder.Services.AddScoped<ISecurityAlgorithmConsumers, SecurityAlgorithmConsumers>();
 builder.Services.AddScoped<IServicesExternsConsumers, ServicesExternsConsumers>();
 builder.Services.AddScoped<IContribuyenteConsumers, ContribuyenteConsumers>();
+builder.Services.AddScoped<ISpMunicipioConsumers, SpMunicipioConsumers>();
+
 //Fin Consumers
 //Inicio config
 builder.Services.AddSingleton(provider =>

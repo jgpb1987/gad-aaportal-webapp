@@ -59,7 +59,6 @@ namespace gad.aaportal.components.Components.Security.Auth
             IsValidButton = true;
             _view = LoginView.UserRegistration;
         }
-
         private async Task SubmitForgotPassword()
         {
             try
@@ -138,7 +137,8 @@ namespace gad.aaportal.components.Components.Security.Auth
                     FechaReinicioActividades = _userRegistrationParam.FechaReinicioActividades,
                     FechaActualizacion = _userRegistrationParam.FechaActualizacion,
                     TransaccionesInexistente = _userRegistrationParam.TransaccionesInexistente,
-                    ContribuyenteFantasma = _userRegistrationParam.ContribuyenteFantasma
+                    ContribuyenteFantasma = _userRegistrationParam.ContribuyenteFantasma,
+                    Establecimientos = _userRegistrationParam.Establecimientos
                 };
                 var urResponse = await SeguridadConsumers.UserRegistration(userRegistrationRequest);
                 if (urResponse != null)
@@ -148,11 +148,6 @@ namespace gad.aaportal.components.Components.Security.Auth
                         LoadingBorder!.Close();
                         _view = LoginView.Login;
                         await Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
-                        //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Expiration, urResponse.Data.Expiration.ToString());
-                        //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Token, urResponse.Data.Token);
-                        //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.UltimoAcceso, urResponse.Data.UltimoAcceso.ToString());
-                        //await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Nombres, urResponse.Data.Nombres);
-                        //UriHelper.NavigateTo("/index");
                     }
                     else
                     {
@@ -207,7 +202,7 @@ namespace gad.aaportal.components.Components.Security.Auth
                             await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Nombres, loginResponse.Data.Nombres);
                             await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Identificacion, loginResponse.Data.Identificacion);
                             LoadingBorder!.Close();
-                            await ConsultaDinardap();
+                            //await ConsultaDinardap();
                             UriHelper.NavigateTo("/index");
                             await Toast!.ShowMessage("success", loginResponse.Message.Code, loginResponse.Message.Description);
                         }
@@ -252,6 +247,12 @@ namespace gad.aaportal.components.Components.Security.Auth
                     var resultFirst = result.FirstOrDefault(p => p.EstadoContribuyenteRuc.Equals("ACTIVO"));
                     if (resultFirst != null)
                     {
+                        var resultEstablecimientos = await ServicesExterns.SearchInfoEstablecimientoSri(identificacion);
+                        if (resultEstablecimientos != null)
+                        {
+                            var resultEstablecimientosFirst = resultEstablecimientos.FirstOrDefault(p => p.Estado.Equals("ABIERTO"));
+                            if (resultEstablecimientosFirst != null)
+                            {
                                 _userRegistrationParam.Identificacion = identificacion;
                                 _userRegistrationParam.User = identificacion;
                                 _userRegistrationParam.Nombres = resultFirst!.RazonSocial;
@@ -263,13 +264,44 @@ namespace gad.aaportal.components.Components.Security.Auth
                                 _userRegistrationParam.ObligadoLlevarContabilidad = resultFirst!.ObligadoLlevarContabilidad;
                                 _userRegistrationParam.AgenteRetencion = resultFirst!.AgenteRetencion;
                                 _userRegistrationParam.ContribuyenteEspecial = resultFirst!.ContribuyenteEspecial;
-                                _userRegistrationParam.FechaInicioActividades = DateTime.Parse( resultFirst!.InformacionFechasContribuyente.FechaInicioActividades);
-                                _userRegistrationParam.FechaReinicioActividades = DateTime.Parse(resultFirst!.InformacionFechasContribuyente.FechaReinicioActividades);
-                                _userRegistrationParam.FechaActualizacion = DateTime.Parse(resultFirst!.InformacionFechasContribuyente.FechaActualizacion);
+                                _userRegistrationParam.FechaInicioActividades = !string.IsNullOrEmpty(resultFirst!.InformacionFechasContribuyente.FechaInicioActividades) ? DateTime.Parse(resultFirst!.InformacionFechasContribuyente.FechaInicioActividades) : DateTime.Parse("01/01/1900");
+                                _userRegistrationParam.FechaReinicioActividades = !string.IsNullOrEmpty(resultFirst!.InformacionFechasContribuyente.FechaReinicioActividades) ? DateTime.Parse(resultFirst!.InformacionFechasContribuyente.FechaReinicioActividades) : DateTime.Parse("01/01/1900");
+                                _userRegistrationParam.FechaActualizacion = !string.IsNullOrEmpty(resultFirst!.InformacionFechasContribuyente.FechaActualizacion) ? DateTime.Parse(resultFirst!.InformacionFechasContribuyente.FechaActualizacion) : DateTime.Parse("01/01/1900");
                                 _userRegistrationParam.TransaccionesInexistente = resultFirst!.TransaccionesInexistente;
-                        _userRegistrationParam.ContribuyenteFantasma = resultFirst!.ContribuyenteFantasma;
-                        IsValidButton = false;
-                        LoadingBorder!.Close();
+                                _userRegistrationParam.ContribuyenteFantasma = resultFirst!.ContribuyenteFantasma;
+                                _userRegistrationParam.Establecimientos = new();
+                                foreach (var establecimiento in resultEstablecimientos)
+                                {
+                                    var direccionParts = establecimiento.DireccionCompleta.Split('/');
+                                    _userRegistrationParam.Establecimientos.Add(new ContribuyenteEstablecimientoDtoParam()
+                                    {
+                                        NombreFantasiaComercial = string.IsNullOrEmpty(establecimiento.NombreFantasiaComercial) ? string.Empty : establecimiento.NombreFantasiaComercial,
+                                        DireccionCompleta = establecimiento.DireccionCompleta,
+                                        Estado = establecimiento.Estado,
+                                        NumeroEstablecimiento = establecimiento.NumeroEstablecimiento,
+                                        Matriz = establecimiento.Matriz,
+                                        Calles= direccionParts[3].ToString().Trim(),
+                                        Canton= direccionParts[1].ToString().Trim(),
+                                        Parroquia= direccionParts[2].ToString().Trim(),
+                                        Provincia = direccionParts[0].ToString().Trim()
+                                    });
+                                }
+                                IsValidButton = false;
+                                LoadingBorder!.Close();
+                            }
+                            else
+                            {
+                                IsValidButton = false;
+                                LoadingBorder!.Close();
+                                await Toast!.ShowMessage("warning", "SRI004", "El Ruc no posee establecimientos activos");
+                            }
+                        }
+                        else
+                        {
+                            IsValidButton = false;
+                            LoadingBorder!.Close();
+                            await Toast!.ShowMessage("warning", "SRI003", "El Ruc no posee establecimientos");
+                        }
                     }
                     else
                     {

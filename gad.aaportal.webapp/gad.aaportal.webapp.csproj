@@ -20,6 +20,32 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Content Remove="wwwroot\css\fonts.css" />
+	  <Content Remove="wwwroot\css\fonts\Montserrat-Italic-VariableFont_wght.ttf" />
+	  <Content Remove="wwwroot\css\fonts\Montserrat-Regular.otf" />
+	  <Content Remove="wwwroot\css\fonts\open-iconic.eot" />
+	  <Content Remove="wwwroot\css\fonts\open-iconic.otf" />
+	  <Content Remove="wwwroot\css\fonts\open-iconic.svg" />
+	  <Content Remove="wwwroot\css\fonts\open-iconic.ttf" />
+	  <Content Remove="wwwroot\css\fonts\open-iconic.woff" />
+	  <Content Remove="wwwroot\css\sidebar.css" />
+	  <Content Remove="wwwroot\css\theme.css" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="wwwroot\css\fonts.css" />
+	  <EmbeddedResource Include="wwwroot\css\fonts\Montserrat-Italic-VariableFont_wght.ttf" />
+	  <EmbeddedResource Include="wwwroot\css\fonts\Montserrat-Regular.otf" />
+	  <EmbeddedResource Include="wwwroot\css\fonts\open-iconic.eot" />
+	  <EmbeddedResource Include="wwwroot\css\fonts\open-iconic.otf" />
+	  <EmbeddedResource Include="wwwroot\css\fonts\open-iconic.svg" />
+	  <EmbeddedResource Include="wwwroot\css\fonts\open-iconic.ttf" />
+	  <EmbeddedResource Include="wwwroot\css\fonts\open-iconic.woff" />
+	  <EmbeddedResource Include="wwwroot\css\sidebar.css" />
+	  <EmbeddedResource Include="wwwroot\css\theme.css" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.8" PrivateAssets="all" />
 	</ItemGroup>

@@ -2,7 +2,7 @@
                     <a class="a-img-login" href="https://www.antonioante.gob.ec" target="_blank">
                         <img class="img-login" src="img\logoAA4.png" />
                     </a>
-<EditForm Model="Model" OnValidSubmit="OnSubmit">
+    <EditForm Model="Model" OnValidSubmit="OnSubmitValidado">
     <DataAnnotationsValidator />
 
     <div class="row card-body justify-content-center">
@@ -25,10 +25,81 @@
 
             <label class="lbl-card-login-usuario">Email:</label>
         <InputText class="txtbox-login" placeholder="usuario@correo.com" @bind-Value="Model.Email" />
+            <div class="politica-datos-container">
+                <label class="politica-datos-check">
+                    <input type="checkbox"
+                           checked="@AceptaPoliticaDatos"
+                           @onchange="OnAceptaPoliticaDatosChanged" />
 
-            <button type="submit" class="btn btn-lg btn-color-per btn-card-login" disabled="@IsValidButton">Regístrate</button>
+                    <span>
+                        Acepto la
+                        <button type="button"
+                                class="politica-datos-link"
+                                @onclick="AbrirModalPolitica">
+                            política de tratamiento y protección de datos personales
+                        </button>
+                    </span>
+                </label>
+
+                @if (!string.IsNullOrWhiteSpace(MensajePoliticaDatos))
+                {
+                    <div class="validation-message politica-datos-error">
+                        @MensajePoliticaDatos
+                    </div>
+                }
+            </div>
+
+            <button type="submit"
+                    class="btn btn-lg btn-color-per btn-card-login"
+                    disabled="@(IsValidButton || !AceptaPoliticaDatos)">
+                Regístrate
+            </button>
 
         <button type="button" class="btn btn-link" @onclick="OnBack">Volver al login</button>
     </div>
 </EditForm>
 </div>
+@if (MostrarModalPoliticaDatos)
+{
+    <div class="politica-modal-backdrop">
+        <div class="politica-modal">
+            <div class="politica-modal-header">
+                <h5>Política de tratamiento y protección de datos personales</h5>
+
+                <button type="button"
+                        class="politica-modal-close"
+                        @onclick="CerrarModalPolitica">
+                    ×
+                </button>
+            </div>
+
+            <div class="politica-modal-body">
+                <p>
+                    @parte1Politica
+                </p>
+
+                <p>
+                    @parte2Politica
+                </p>
+
+                <p>
+                    @parte3Politica
+                </p>
+            </div>
+
+            <div class="politica-modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        @onclick="CerrarModalPolitica">
+                    Cerrar
+                </button>
+
+                <button type="button"
+                        class="btn btn-color-per"
+                        @onclick="AceptarPoliticaDesdeModal">
+                    Acepto
+                </button>
+            </div>
+        </div>
+    </div>
+}

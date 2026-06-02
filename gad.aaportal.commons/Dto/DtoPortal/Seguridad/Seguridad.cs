@@ -96,6 +96,8 @@ namespace gad.aaportal.commons.Dto.Seguridad
         public string ContribuyenteFantasma { get; set; } = null!;
         public string TransaccionesInexistente { get; set; } = null!;
         public List<ContribuyenteEstablecimientoDtoParam> Establecimientos { get; set; } = null!;
+        public string PoliticasTratamientoDatos { get; set; } = null!;
+        public bool AceptaPoliticasTratamientoDatos { get; set; }
 
     }
     public class CambiarClaveDtoParam

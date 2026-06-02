@@ -328,6 +328,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             {
                 if (!_establecimientos.Any())
                 {
+                    _declaracionCalculada = false;
                     await MostrarMensaje(
                         "error",
                         "DEC006",
@@ -338,6 +339,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 if (SumaPorcentaje != 100)
                 {
+                    _declaracionCalculada = false;
                     await MostrarMensaje(
                         "error",
                         "DEC007",

@@ -1,4 +1,5 @@
 ﻿using gad.aaportal.commons.Dto.Dinardap;
+using gad.aaportal.commons.Dto.DtoMunicipio;
 using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.consumers.Interface;
@@ -25,6 +26,7 @@ namespace gad.aaportal.components.Components.Security.Auth
         [Inject] private ConfiguracionesApp Configuraciones { get; set; } = null!;
         [Inject] private ISecurityAlgorithmConsumers SecurityAlgorithm { get; set; } = null!;
         [Inject] private IJSRuntime Js { get; set; } = null!;
+        [Inject] private ISpMunicipioConsumers SpMunicipioConsumers { get; set; } = null!;
         public ToastsServices? Toast { get; set; }
         private LoadingBorderModalServices? LoadingBorder { get; set; }
         private UsuarioDtoParam LoginParam = new();
@@ -110,49 +112,77 @@ namespace gad.aaportal.components.Components.Security.Auth
             try
             {
                 LoadingBorder!.Open();
-                var dataDispositivo = await JSSessionStorageServices.GetInfoDispositivoUsuario();
-                var userRegistrationRequest = new UserRegistrationDtoParam()
+                //var tieneRestricciones = await SpMunicipioConsumers.ValidadorPermisos(new ValidadorPermisosDtoParam() { Ruc = _userRegistrationParam.User });
+                var tieneRestricciones = new ValidadorPermisosDtoResult() { Data=new() { Estado=true, Mensaje="OK"}, Message=new() { Code="OK", Description="Proceso Ejecutado exitosamente"} };
+                if (tieneRestricciones != null)
                 {
-                    Browser = dataDispositivo.Browser == null ? string.Empty : dataDispositivo.Browser,
-                    Geolocation = dataDispositivo.Geolocation == null ? string.Empty : dataDispositivo.Geolocation,
-                    Ip = dataDispositivo.Ip == null ? string.Empty : dataDispositivo.Ip,
-                    Language = dataDispositivo.Language == null ? string.Empty : dataDispositivo.Language,
-                    OperatingSystem = dataDispositivo.OperatingSystem == null ? string.Empty : dataDispositivo.OperatingSystem,
-                    Plugins = dataDispositivo.Plugins == null ? string.Empty : dataDispositivo.Plugins,
-                    TimeZone = dataDispositivo.TimeZone == null ? string.Empty : dataDispositivo.TimeZone,
-                    UserAgent = dataDispositivo.UserAgent == null ? string.Empty : dataDispositivo.UserAgent,
-                    User = _userRegistrationParam.User,
-                    Email = _userRegistrationParam.Email,
-                    Nombres = _userRegistrationParam.Nombres,
-                    Identificacion= _userRegistrationParam.Identificacion,
-                    RazonSocial= _userRegistrationParam.RazonSocial,
-                    EstadoContribuyenteRuc= _userRegistrationParam.EstadoContribuyenteRuc,
-                    ActividadEconomicaPrincipal= _userRegistrationParam.ActividadEconomicaPrincipal,
-                    TipoContribuyente = _userRegistrationParam.TipoContribuyente,
-                    Regimen = _userRegistrationParam.Regimen,
-                    ObligadoLlevarContabilidad = _userRegistrationParam.ObligadoLlevarContabilidad,
-                    AgenteRetencion = _userRegistrationParam.AgenteRetencion,
-                    ContribuyenteEspecial = _userRegistrationParam.ContribuyenteEspecial,
-                    FechaInicioActividades = _userRegistrationParam.FechaInicioActividades,
-                    FechaReinicioActividades = _userRegistrationParam.FechaReinicioActividades,
-                    FechaActualizacion = _userRegistrationParam.FechaActualizacion,
-                    TransaccionesInexistente = _userRegistrationParam.TransaccionesInexistente,
-                    ContribuyenteFantasma = _userRegistrationParam.ContribuyenteFantasma,
-                    Establecimientos = _userRegistrationParam.Establecimientos
-                };
-                var urResponse = await SeguridadConsumers.UserRegistration(userRegistrationRequest);
-                if (urResponse != null)
-                {
-                    if (urResponse.Message.Code.Equals("OK"))
+                    if (tieneRestricciones.Data != null)
                     {
-                        LoadingBorder!.Close();
-                        _view = LoginView.Login;
-                        await Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
+                        if (tieneRestricciones.Data.Estado)
+                        {
+                            var dataDispositivo = await JSSessionStorageServices.GetInfoDispositivoUsuario();
+                            var userRegistrationRequest = new UserRegistrationDtoParam()
+                            {
+                                Browser = dataDispositivo.Browser == null ? string.Empty : dataDispositivo.Browser,
+                                Geolocation = dataDispositivo.Geolocation == null ? string.Empty : dataDispositivo.Geolocation,
+                                Ip = dataDispositivo.Ip == null ? string.Empty : dataDispositivo.Ip,
+                                Language = dataDispositivo.Language == null ? string.Empty : dataDispositivo.Language,
+                                OperatingSystem = dataDispositivo.OperatingSystem == null ? string.Empty : dataDispositivo.OperatingSystem,
+                                Plugins = dataDispositivo.Plugins == null ? string.Empty : dataDispositivo.Plugins,
+                                TimeZone = dataDispositivo.TimeZone == null ? string.Empty : dataDispositivo.TimeZone,
+                                UserAgent = dataDispositivo.UserAgent == null ? string.Empty : dataDispositivo.UserAgent,
+                                User = _userRegistrationParam.User,
+                                Email = _userRegistrationParam.Email,
+                                Nombres = _userRegistrationParam.Nombres,
+                                Identificacion = _userRegistrationParam.Identificacion,
+                                RazonSocial = _userRegistrationParam.RazonSocial,
+                                EstadoContribuyenteRuc = _userRegistrationParam.EstadoContribuyenteRuc,
+                                ActividadEconomicaPrincipal = _userRegistrationParam.ActividadEconomicaPrincipal,
+                                TipoContribuyente = _userRegistrationParam.TipoContribuyente,
+                                Regimen = _userRegistrationParam.Regimen,
+                                ObligadoLlevarContabilidad = _userRegistrationParam.ObligadoLlevarContabilidad,
+                                AgenteRetencion = _userRegistrationParam.AgenteRetencion,
+                                ContribuyenteEspecial = _userRegistrationParam.ContribuyenteEspecial,
+                                FechaInicioActividades = _userRegistrationParam.FechaInicioActividades,
+                                FechaReinicioActividades = _userRegistrationParam.FechaReinicioActividades,
+                                FechaActualizacion = _userRegistrationParam.FechaActualizacion,
+                                TransaccionesInexistente = _userRegistrationParam.TransaccionesInexistente,
+                                ContribuyenteFantasma = _userRegistrationParam.ContribuyenteFantasma,
+                                Establecimientos = _userRegistrationParam.Establecimientos,
+                                AceptaPoliticasTratamientoDatos=_userRegistrationParam.AceptaPoliticasTratamientoDatos,
+                                PoliticasTratamientoDatos=_userRegistrationParam.PoliticasTratamientoDatos 
+                            };
+                            var urResponse = await SeguridadConsumers.UserRegistration(userRegistrationRequest);
+                            if (urResponse != null)
+                            {
+                                if (urResponse.Message.Code.Equals("OK"))
+                                {
+                                    LoadingBorder!.Close();
+                                    _view = LoginView.Login;
+                                    await Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
+                                }
+                                else
+                                {
+                                    LoadingBorder!.Close();
+                                    await Toast!.ShowMessage("error", urResponse.Message.Code, urResponse.Message.Description);
+                                }
+                            }
+                            else
+                            {
+                                LoadingBorder!.Close();
+                                await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                            }
+                        }
+                        else
+                        {
+                            LoadingBorder!.Close();
+                            await Toast!.ShowMessage("error", tieneRestricciones.Message.Code, tieneRestricciones.Data.Mensaje);
+                        }
                     }
                     else
                     {
                         LoadingBorder!.Close();
-                        await Toast!.ShowMessage("error", urResponse.Message.Code, urResponse.Message.Description);
+                        await Toast!.ShowMessage("error", tieneRestricciones.Message.Code, tieneRestricciones.Message.Description);
                     }
                 }
                 else
@@ -160,6 +190,7 @@ namespace gad.aaportal.components.Components.Security.Auth
                     LoadingBorder!.Close();
                     await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
                 }
+
             }
             catch (Exception ex)
             {

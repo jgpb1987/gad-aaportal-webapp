@@ -306,7 +306,8 @@ namespace gad.aaportal.services.Services.Implementation
 
                 if (contribuyente.TipoContribuyente.Equals("PERSONA NATURAL"))
                 {
-                    var listForm102=await dinardapService.ConsultPackage<ListForm102>(new PaqueteDinardapRequest() { Identificacion = "1091730940001", Paquete = "6282", Usuario =servicesConfig.DinardapUser });
+                    //var listForm102=await dinardapService.ConsultPackage<ListForm102>(new PaqueteDinardapRequest() { Identificacion = "1091730940001", Paquete = "6282", Usuario =servicesConfig.DinardapUser });
+                    var listForm102 = await dinardapService.ConsultPackage<ListForm102>(new PaqueteDinardapRequest() { Identificacion = parametro.Identificacion, Paquete = "6282", Usuario = servicesConfig.DinardapUser });
 
                     listForm102.Form102s = listForm102.Form102s.Where(f => f.AnioFiscal >= DateTime.Now.Year - servicesConfig.AniosDeclaracionMostrar && !aniosDeclarados.Contains(f.AnioFiscal)).ToList();
 

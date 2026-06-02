@@ -84,3 +84,135 @@
         box-shadow: 0 .5rem 8px 1rem rgba(0, 0, 0, .0) !important;
     }
 }
+.politica-datos-container {
+    width: 85%;
+    margin-top: 18px;
+    font-size: 13px;
+    color: #333333;
+}
+
+.politica-datos-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 20px;
+}
+
+    .politica-datos-check input[type="checkbox"] {
+        margin-top: 4px;
+        min-width: 16px;
+        min-height: 16px;
+        cursor: pointer;
+    }
+
+.politica-datos-link {
+    border: none;
+    background: transparent;
+    padding: 0;
+    color: var(--pro-button-background-color);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+    .politica-datos-link:hover {
+        color: var(--pro-button-background-color-hover);
+    }
+
+.politica-datos-error {
+    margin-left: 24px;
+    margin-top: 4px;
+}
+
+.politica-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1050;
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
+
+.politica-modal {
+    width: 650px;
+    max-width: 100%;
+    max-height: 90vh;
+    background-color: #ffffff;
+    border-radius: 0.8rem;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.politica-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+    .politica-modal-header h5 {
+        margin: 0;
+        font-size: 17px;
+        font-weight: bold;
+        color: #333333;
+    }
+
+.politica-modal-close {
+    border: none;
+    background-color: transparent;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    color: #555555;
+}
+
+    .politica-modal-close:hover {
+        color: #000000;
+    }
+
+.politica-modal-body {
+    padding: 18px 20px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 22px;
+    color: #333333;
+}
+
+.politica-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+@media (max-width: 767px) {
+    .politica-datos-container {
+        width: 85%;
+    }
+
+    .politica-modal {
+        width: 95%;
+        max-height: 85vh;
+    }
+
+    .politica-modal-header h5 {
+        font-size: 15px;
+    }
+
+    .politica-modal-footer {
+        flex-direction: column-reverse;
+    }
+
+        .politica-modal-footer .btn {
+            width: 100%;
+        }
+}

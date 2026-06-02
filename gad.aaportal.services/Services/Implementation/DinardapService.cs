@@ -638,8 +638,8 @@ namespace gad.aaportal.services.Services.Implementation
 
                     Security = new SoapSecurityOptions
                     {
-                        Type = SoapSecurityType.None,
-                        //Type = SoapSecurityType.Basic,
+                        //Type = SoapSecurityType.None,
+                        Type = SoapSecurityType.Basic,
                         Username=servicesConfig.DinardapUser,
                         Password=servicesConfig.DinardapPwd
                     }

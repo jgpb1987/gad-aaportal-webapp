@@ -1,11 +1,9 @@
 ﻿
 html, body {
     font-family: 'Montserrat', sans-serif;
-    border: 20px solid red !important;
-    background-color: yellow !important;
 }
-
-/*:root {
+/*
+:root {
     --pro-background-color: #1a75cc;
     --pro-button-background-color: #1a75cc;
     --pro-button-background-color-hover: #005eb8;

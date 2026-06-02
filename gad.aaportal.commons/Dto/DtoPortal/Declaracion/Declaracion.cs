@@ -83,4 +83,86 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
 
         public decimal TotalPagar { get; set; }
     }
+    public class RegistrarDeclaracionDtoParam
+    {
+        public string Identificacion { get; set; } = string.Empty;
+        public int Anio { get; set; }
+
+        public decimal ActivoCorriente { get; set; }
+        public decimal ActivoNoCorriente { get; set; }
+        public decimal PasivoCorriente { get; set; }
+        public decimal PasivoNoCorriente { get; set; }
+        public decimal PasivoContingente { get; set; }
+        public decimal Ingresos { get; set; }
+        public decimal CostosGastos { get; set; }
+
+        public decimal UnoCincoXMil { get; set; }
+        public decimal Patente { get; set; }
+    }
+
+    public class RegistrarDeclaracionDtoResult
+    {
+        public long Id { get; set; }
+        public string Identificacion { get; set; } = string.Empty;
+        public DateTime FechaRegistro { get; set; }
+        public DateTime Fecha { get; set; }
+        public int Anio { get; set; }
+        public string CodigoUnicoPago { get; set; } = string.Empty;
+
+        public decimal ActivoCorriente { get; set; }
+        public decimal ActivoNoCorriente { get; set; }
+        public decimal PasivoCorriente { get; set; }
+        public decimal PasivoNoCorriente { get; set; }
+        public decimal PasivoContingente { get; set; }
+        public decimal Ingresos { get; set; }
+        public decimal CostosGastos { get; set; }
+
+        public decimal UnoCincoXMil { get; set; }
+        public decimal Patente { get; set; }
+        public decimal TotalPagar => UnoCincoXMil + Patente;
+    }
+
+    public class RegistrarDeclaracionDataResult : BaseResult
+    {
+        public RegistrarDeclaracionDtoResult? Data { get; set; }
+    }
+
+    public class ConsultarDeclaracionContribuyenteDtoParam
+    {
+        public string Identificacion { get; set; } = string.Empty;
+    }
+
+    public class ConsultarDeclaracionContribuyenteDtoResult
+    {
+        public long Id { get; set; }
+        public string Identificacion { get; set; } = string.Empty;
+        public DateTime FechaRegistro { get; set; }
+        public DateTime Fecha { get; set; }
+        public int Anio { get; set; }
+        public string CodigoUnicoPago { get; set; } = string.Empty;
+
+        public decimal ActivoCorriente { get; set; }
+        public decimal ActivoNoCorriente { get; set; }
+        public decimal PasivoCorriente { get; set; }
+        public decimal PasivoNoCorriente { get; set; }
+        public decimal PasivoContingente { get; set; }
+        public decimal Ingresos { get; set; }
+        public decimal CostosGastos { get; set; }
+
+        public decimal UnoCincoXMil { get; set; }
+        public decimal Patente { get; set; }
+        public decimal TotalPagar => UnoCincoXMil + Patente;
+
+        public bool Estado { get; set; }
+    }
+
+    public class ConsultarDeclaracionContribuyenteListResult
+    {
+        public List<ConsultarDeclaracionContribuyenteDtoResult> Declaraciones { get; set; } = new();
+    }
+
+    public class ConsultarDeclaracionContribuyenteDataResult : BaseResult
+    {
+        public ConsultarDeclaracionContribuyenteListResult? Data { get; set; }
+    }
 }

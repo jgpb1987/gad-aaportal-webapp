@@ -16,5 +16,7 @@ namespace gad.aaportal.consumers.consumers.Interface
         Task<TipoMedioContactoDataResult> ConsultarTiposMedioContacto();
         Task<PeriodoDeclaracionDataResult> ConsultarPeriodosDeclaracion(ContribuyenteDtoParam parametro);
         Task<IniciarDeclaracionDataResult> IniciarDeclaracion(IniciarDeclaracionDtoParam parametro);
+        Task<RegistrarDeclaracionDataResult> RegistrarDeclaracion( RegistrarDeclaracionDtoParam parametro);
+        Task<ConsultarDeclaracionContribuyenteDataResult> ConsultarDeclaracionesContribuyente(ConsultarDeclaracionContribuyenteDtoParam parametro);
     }
 }

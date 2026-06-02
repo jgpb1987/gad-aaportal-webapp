@@ -117,5 +117,29 @@ namespace gad.aaportal.apis.Controllers
 
             return Ok(result);
         }
+        [HttpPost]
+        [Route("registrarDeclaracion")]
+        public async Task<ActionResult<RegistrarDeclaracionDataResult>> RegistrarDeclaracion([FromBody] RegistrarDeclaracionDtoParam parametro)
+        {
+            RegistrarDeclaracionDataResult result = new();
+            try
+            {
+                result = await services.RegistrarDeclaracion(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("ConsultarDeclaracionesContribuyente")]
+        public async Task<ActionResult<ConsultarDeclaracionContribuyenteDataResult>> ConsultarDeclaracionesContribuyente([FromBody] ConsultarDeclaracionContribuyenteDtoParam parametro)
+        {
+            var result = await services.ConsultarDeclaracionesContribuyente(contexto, parametro);
+            return Ok(result);
+        }
     }
 }

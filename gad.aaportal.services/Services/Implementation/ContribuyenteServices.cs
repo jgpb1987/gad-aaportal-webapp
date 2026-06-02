@@ -111,11 +111,11 @@ namespace gad.aaportal.services.Services.Implementation
                         DireccionCompleta = e.DireccionCompleta,
                         Estado = e.Estado,
                         Canton = e.Canton,
-                        Matriz=e.Matriz,
-                        NombreFantasiaComercial= e.NombreFantasiaComercial,
-                        NumeroEstablecimiento= e.NumeroEstablecimiento,
+                        Matriz = e.Matriz,
+                        NombreFantasiaComercial = e.NombreFantasiaComercial,
+                        NumeroEstablecimiento = e.NumeroEstablecimiento,
                         Parroquia = e.Parroquia,
-                        Provincia= e.Provincia,
+                        Provincia = e.Provincia,
                     })
                     .ToListAsync();
 
@@ -326,7 +326,8 @@ namespace gad.aaportal.services.Services.Implementation
                             PasivoNoCorriente = Math.Round(form102.TotPatrimonioNeto1330 ?? 0, 2, MidpointRounding.AwayFromZero)
                         });
                     }
-                } else
+                }
+                else
                 {
                     var listForm101 = await dinardapService.ConsultPackage<ListForm101>(new PaqueteDinardapRequest() { Identificacion = parametro.Identificacion, Paquete = "6281", Usuario = servicesConfig.DinardapUser });
                     listForm101.Form101s = listForm101.Form101s
@@ -350,7 +351,7 @@ namespace gad.aaportal.services.Services.Implementation
                     }
                 }
 
-                result.Data = new() {Establecimientos=establecimientos, PeriodosDeclaracion=periodosDeclaracion.OrderBy(pd => pd.AnioEjercicioFiscal).ToList() };
+                result.Data = new() { Establecimientos = establecimientos, PeriodosDeclaracion = periodosDeclaracion.OrderBy(pd => pd.AnioEjercicioFiscal).ToList() };
 
             }
             catch (SystemExceptionCustomized sex)
@@ -412,5 +413,184 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-    }
+        private async Task<string> GenerarCodigoUnicoPago(AaportalContext contexto, DateTime fechaActual)
+        {
+            for (var intento = 1; intento <= 5; intento++)
+            {
+                var random = Random.Shared.Next(100000, 999999);
+                var codigo = $"{fechaActual:yyyyMMddHHmmss}{random}";
+
+                var existe = await contexto.ContribuyenteDeclaracions
+                    .AsNoTracking().AnyAsync(d => d.CodigoUnicoPago == codigo);
+
+                if (!existe)
+                    return codigo;
+            }
+
+            throw SystemExceptionCustomized.CreateException(
+                "DEC006",
+                "No fue posible generar el código único de pago");
+        }
+        public async Task<RegistrarDeclaracionDataResult> RegistrarDeclaracion(AaportalContext contexto, RegistrarDeclaracionDtoParam parametro)
+        {
+            try
+            {
+                if (parametro == null)
+                    throw SystemExceptionCustomized.CreateException("DEC001", "Los datos de la declaración son requeridos");
+
+                if (string.IsNullOrWhiteSpace(parametro.Identificacion))
+                    throw SystemExceptionCustomized.CreateException("DEC002", "La identificación del contribuyente es requerida");
+
+                if (parametro.Anio <= 0)
+                    throw SystemExceptionCustomized.CreateException("DEC003", "El año de declaración no es válido");
+
+                var existeContribuyente = await contexto.Contribuyentes
+                    .AsNoTracking()
+                    .AnyAsync(c => c.Identificacion == parametro.Identificacion);
+
+                if (!existeContribuyente)
+                    throw SystemExceptionCustomized.CreateException("DEC004", "No existe el contribuyente registrado");
+
+                var existeDeclaracion = await contexto.ContribuyenteDeclaracions
+                    .AsNoTracking()
+                    .AnyAsync(d =>
+                        d.Identificacion == parametro.Identificacion &&
+                        d.Anio == parametro.Anio &&
+                        d.Estado);
+
+                if (existeDeclaracion)
+                    throw SystemExceptionCustomized.CreateException(
+                        "DEC005",
+                        $"Ya existe una declaración registrada para el año {parametro.Anio}");
+
+                var fechaActual = DateTime.Now;
+                var codigoUnicoPago = await GenerarCodigoUnicoPago(contexto, fechaActual);
+
+                var entity = new ContribuyenteDeclaracion
+                {
+                    Identificacion = parametro.Identificacion,
+                    FechaRegistro = fechaActual,
+                    Fecha = fechaActual.Date,
+                    Anio = parametro.Anio,
+                    CodigoUnicoPago = codigoUnicoPago,
+
+                    ActivoCorriente = parametro.ActivoCorriente,
+                    ActivoNoCorriente = parametro.ActivoNoCorriente,
+                    PasivoCorriente = parametro.PasivoCorriente,
+                    PasivoNoCorriente = parametro.PasivoNoCorriente,
+                    PasivoContingente = parametro.PasivoContingente,
+                    Ingresos = parametro.Ingresos,
+                    CostosGastos = parametro.CostosGastos,
+
+                    _15XMil = parametro.UnoCincoXMil,
+                    Patente = parametro.Patente,
+                    Estado = true
+                };
+
+                await contexto.ContribuyenteDeclaracions.AddAsync(entity);
+                await contexto.SaveChangesAsync();
+
+                return new RegistrarDeclaracionDataResult
+                {
+                    Data = new RegistrarDeclaracionDtoResult
+                    {
+                        Id = entity.Id,
+                        Identificacion = entity.Identificacion,
+                        FechaRegistro = entity.FechaRegistro,
+                        Fecha = entity.Fecha,
+                        Anio = entity.Anio,
+                        CodigoUnicoPago = entity.CodigoUnicoPago,
+
+                        ActivoCorriente = entity.ActivoCorriente,
+                        ActivoNoCorriente = entity.ActivoNoCorriente,
+                        PasivoCorriente = entity.PasivoCorriente,
+                        PasivoNoCorriente = entity.PasivoNoCorriente,
+                        PasivoContingente = entity.PasivoContingente,
+                        Ingresos = entity.Ingresos,
+                        CostosGastos = entity.CostosGastos,
+
+                        UnoCincoXMil = entity._15XMil,
+                        Patente = entity.Patente
+                    },
+                    Message = new MessageResult
+                    {
+                        Code = "DEC000",
+                        Description = "Declaración registrada correctamente"
+                    }
+                };
+            }
+            catch (SystemExceptionCustomized sex)
+            {
+                logger.LogError(sex, sex.Description, sex.Code);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, nameof(CodeMessage.SERVER_ERROR));
+                throw;
+            }
+        }
+        public async Task<ConsultarDeclaracionContribuyenteDataResult> ConsultarDeclaracionesContribuyente(
+    AaportalContext contexto, ConsultarDeclaracionContribuyenteDtoParam parametro)
+        {
+            try
+            {
+                if (parametro is null)
+                    throw SystemExceptionCustomized.CreateException("CDC001", "Los datos de consulta son requeridos");
+
+                if (string.IsNullOrWhiteSpace(parametro.Identificacion))
+                    throw SystemExceptionCustomized.CreateException("CDC002", "La identificación del contribuyente es requerida");
+
+                var declaraciones = await contexto.ContribuyenteDeclaracions
+                    .AsNoTracking() .Where(d =>
+                        d.Identificacion == parametro.Identificacion &&
+                        d.Estado)
+                    .OrderByDescending(d => d.FechaRegistro)
+                    .Select(d => new ConsultarDeclaracionContribuyenteDtoResult
+                    {
+                        Id = d.Id,
+                        Identificacion = d.Identificacion,
+                        FechaRegistro = d.FechaRegistro,
+                        Fecha = d.Fecha,
+                        Anio = d.Anio,
+                        CodigoUnicoPago = d.CodigoUnicoPago,
+
+                        ActivoCorriente = d.ActivoCorriente,
+                        ActivoNoCorriente = d.ActivoNoCorriente,
+                        PasivoCorriente = d.PasivoCorriente,
+                        PasivoNoCorriente = d.PasivoNoCorriente,
+                        PasivoContingente = d.PasivoContingente,
+                        Ingresos = d.Ingresos,
+                        CostosGastos = d.CostosGastos,
+
+                        UnoCincoXMil = d._15XMil,
+                        Patente = d.Patente,
+                        Estado = d.Estado
+                    })
+                    .ToListAsync();
+
+                return new ConsultarDeclaracionContribuyenteDataResult
+                {
+                    Data = new ConsultarDeclaracionContribuyenteListResult
+                    {
+                        Declaraciones = declaraciones
+                    },
+                    Message = new MessageResult
+                    {
+                        Code = "CDC000",
+                        Description = "Declaraciones consultadas correctamente"
+                    }
+                };
+            }
+            catch (SystemExceptionCustomized sex)
+            {
+                logger.LogError(sex, sex.Description, sex.Code);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, nameof(CodeMessage.SERVER_ERROR));
+                throw;
+            }
+    }   }
 }

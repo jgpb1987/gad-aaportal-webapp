@@ -15,8 +15,8 @@
             </div>
         </div>
 
-        <button type="button" class="btn-nueva-declaracion" @onclick="AbrirModalPeriodo">
-            Nueva Declaración
+        <button type="button" class="btn-nueva-declaracion"  disabled="@_procesoFinalizado"  @onclick="AbrirModalPeriodo">
+            Nueva declaración
         </button>
     </div>
 
@@ -412,8 +412,7 @@
                                 Regresar
                             </button>
 
-                            <button type="button" class="btn btn-lg btn-color-per btn-wizard" @onclick="SiguienteStep">
-                                @* Continuar a Pago *@
+                            <button type="button" class="btn btn-color-per btn-wizard" disabled="@(!_declaracionCalculada)" @onclick="AbrirModalConfirmarValores">
                                 Confirmar Valores
                             </button>
                         </div>
@@ -448,18 +447,82 @@
                     <div class="step-panel">
                         <div class="panel-title">Finalización</div>
                         <div class="panel-subtitle">
-                            La declaración ha sido procesada.
+                            La declaración fue registrada correctamente.
                         </div>
 
-                        <div class="success-step">
-                            Declaración finalizada correctamente.
-                        </div>
+                        @if (_declaracionRegistrada is not null)
+                        {
+                            <div class="finalizacion-card">
+                                <div class="finalizacion-icon">✓</div>
 
-                        <div class="wizard-actions">
-                            <button type="button" class="btn-wizard-secondary" @onclick="AnteriorStep">
-                                Regresar
-                            </button>
-                        </div>
+                                <div class="finalizacion-title">
+                                    Declaración registrada
+                                </div>
+
+                                <div class="finalizacion-subtitle">
+                                    Código único de pago:
+                                    <strong>@_declaracionRegistrada.CodigoUnicoPago</strong>
+                                </div>
+
+                                <div class="comprobante-resumen-grid">
+                                    <div class="comprobante-item">
+                                        <span>Identificación</span>
+                                        <strong>@_declaracionRegistrada.Identificacion</strong>
+                                    </div>
+
+                                    <div class="comprobante-item">
+                                        <span>Fecha</span>
+                                        <strong>@_declaracionRegistrada.Fecha.ToString("dd/MM/yyyy")</strong>
+                                    </div>
+
+                                    <div class="comprobante-item">
+                                        <span>Año</span>
+                                        <strong>@_declaracionRegistrada.Anio</strong>
+                                    </div>
+
+                                    <div class="comprobante-item">
+                                        <span>Patente</span>
+                                        <strong>@_declaracionRegistrada.Patente.ToString("N2")</strong>
+                                    </div>
+
+                                    <div class="comprobante-item">
+                                        <span>1.5 x Mil</span>
+                                        <strong>@_declaracionRegistrada.UnoCincoXMil.ToString("N2")</strong>
+                                    </div>
+
+                                    <div class="comprobante-item total">
+                                        <span>Total a pagar</span>
+                                        <strong>@_declaracionRegistrada.TotalPagar.ToString("N2")</strong>
+                                    </div>
+                                </div>
+
+                                <div class="wizard-actions">
+                                    <button type="button"
+                                            class="btn btn-color-per btn-wizard"
+                                            @onclick="AbrirModalComprobante">
+                                        Imprimir comprobante
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn-wizard-secondary"
+                                            @onclick="IrConsultaDeclaraciones">
+                                        Consultar
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn-wizard-secondary"
+                                            @onclick="VolverInicioDeclaracion">
+                                        Nueva declaración
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="empty-step">
+                                No existe información registrada de la declaración.
+                            </div>
+                        }
                     </div>
                 }
             </div>
@@ -513,6 +576,192 @@
                     </button>
                 </div>
             </EditForm>
+        </div>
+    </div>
+}
+@if (_mostrarModalConfirmarValores)
+{
+    <div class="modal-backdrop-custom">
+        <div class="modal-periodo-card">
+            <div class="modal-periodo-header">
+                <div>
+                    <div class="modal-title-custom">Confirmar valores</div>
+                    <div class="modal-subtitle-custom">
+                        Revise los valores calculados antes de registrar la declaración.
+                    </div>
+                </div>
+
+                <button type="button"
+                        class="btn-close-modal"
+                        @onclick="CerrarModalConfirmarValores">
+                    ×
+                </button>
+            </div>
+
+            <div class="modal-periodo-body">
+                <div class="confirmacion-valores-grid">
+                    <div class="confirmacion-item">
+                        <span>Ejercicio fiscal</span>
+                        <strong>@_declaracionIniciada?.EjercicioFiscal</strong>
+                    </div>
+
+                    <div class="confirmacion-item">
+                        <span>Base imponible</span>
+                        <strong>@BaseImponible.ToString("N2")</strong>
+                    </div>
+
+                    <div class="confirmacion-item">
+                        <span>Patente</span>
+                        <strong>@TotalPatentePorEstablecimientos.ToString("N2")</strong>
+                    </div>
+
+                    <div class="confirmacion-item">
+                        <span>1.5 x Mil</span>
+                        <strong>@ValorUnoCincoPorMil.ToString("N2")</strong>
+                    </div>
+
+                    <div class="confirmacion-item total">
+                        <span>Total a pagar</span>
+                        <strong>@_resumen.TotalPagar.ToString("N2")</strong>
+                    </div>
+                </div>
+
+                <div class="confirmacion-alerta">
+                    Al aceptar, la declaración será registrada y no podrá continuar modificando estos valores desde este formulario.
+                </div>
+            </div>
+
+            <div class="modal-periodo-actions">
+                <button type="button"
+                        class="btn-modal-secondary"
+                        @onclick="CerrarModalConfirmarValores">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn-modal-primary"
+                        @onclick="AceptarConfirmacionValores">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+}
+@if (_mostrarModalComprobante && _declaracionRegistrada is not null)
+{
+    <div class="modal-backdrop-custom">
+        <div class="modal-comprobante-card">
+            <div class="modal-periodo-header">
+                <div>
+                    <div class="modal-title-custom">Comprobante de declaración</div>
+                    <div class="modal-subtitle-custom">
+                        Código único de pago: @_declaracionRegistrada.CodigoUnicoPago
+                    </div>
+                </div>
+
+                <button type="button"
+                        class="btn-close-modal"
+                        @onclick="CerrarModalComprobante">
+                    ×
+                </button>
+            </div>
+
+            <div class="modal-periodo-body">
+                <div class="comprobante-box">
+                    <div class="comprobante-header">
+                        <div class="comprobante-title">GAD Municipal Antonio Ante</div>
+                        <div class="comprobante-subtitle">Comprobante de declaración de patente</div>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Código único de pago</span>
+                        <strong>@_declaracionRegistrada.CodigoUnicoPago</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Identificación</span>
+                        <strong>@_declaracionRegistrada.Identificacion</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Fecha de emisión</span>
+                        <strong>@_declaracionRegistrada.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Año declarado</span>
+                        <strong>@_declaracionRegistrada.Anio</strong>
+                    </div>
+
+                    <div class="comprobante-divider"></div>
+
+                    <div class="comprobante-line">
+                        <span>Activo corriente</span>
+                        <strong>@_declaracionRegistrada.ActivoCorriente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Activo no corriente</span>
+                        <strong>@_declaracionRegistrada.ActivoNoCorriente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Pasivo corriente</span>
+                        <strong>@_declaracionRegistrada.PasivoCorriente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Pasivo no corriente</span>
+                        <strong>@_declaracionRegistrada.PasivoNoCorriente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Pasivo contingente</span>
+                        <strong>@_declaracionRegistrada.PasivoContingente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Ingresos</span>
+                        <strong>@_declaracionRegistrada.Ingresos.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Costos y gastos</span>
+                        <strong>@_declaracionRegistrada.CostosGastos.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-divider"></div>
+
+                    <div class="comprobante-line">
+                        <span>Patente</span>
+                        <strong>@_declaracionRegistrada.Patente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>1.5 x Mil</span>
+                        <strong>@_declaracionRegistrada.UnoCincoXMil.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line comprobante-total">
+                        <span>Total a pagar</span>
+                        <strong>@_declaracionRegistrada.TotalPagar.ToString("N2")</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-periodo-actions">
+                <button type="button"
+                        class="btn-modal-secondary"
+                        @onclick="CerrarModalComprobante">
+                    Cerrar
+                </button>
+
+                <button type="button"
+                        class="btn-modal-primary"
+                        onclick="window.print()">
+                    Imprimir
+                </button>
+            </div>
         </div>
     </div>
 }

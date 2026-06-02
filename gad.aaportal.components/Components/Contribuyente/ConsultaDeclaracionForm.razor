@@ -1,1 +1,208 @@
-﻿<ResumenEncabezadoContribuyenteForm/>
+﻿@using gad.aaportal.commons.Dto.DtoPortal.Declaracion
+
+<ToastsServices @ref="Toast" Time="5000" />
+<LoadingBorderModalServices @ref="LoadingBorder" />
+<ResumenEncabezadoContribuyenteForm />
+
+<div class="consulta-declaraciones-container">
+    <div class="consulta-declaraciones-card">
+        <div class="consulta-declaraciones-header">
+            <div>
+                <div class="consulta-declaraciones-title">
+                    Consulta de declaraciones
+                </div>
+                <div class="consulta-declaraciones-subtitle">
+                    Revise las declaraciones registradas y reimprima el comprobante cuando lo requiera.
+                </div>
+            </div>
+
+            <button type="button"
+                    class="btn-consulta-refresh"
+                    @onclick="RefrescarConsulta">
+                Actualizar
+            </button>
+        </div>
+
+        <div class="consulta-declaraciones-body">
+            @if (_declaraciones.Any())
+            {
+                <div class="declaraciones-grid">
+                    @foreach (var item in _declaraciones)
+                    {
+                        <div class="declaracion-consulta-card">
+                            <div class="declaracion-card-header">
+                                <div>
+                                    <div class="declaracion-card-title">
+                                        Declaración @item.Anio
+                                    </div>
+                                    <div class="declaracion-card-subtitle">
+                                        Código: @item.CodigoUnicoPago
+                                    </div>
+                                </div>
+
+                                <span class="declaracion-estado">
+                                    Registrada
+                                </span>
+                            </div>
+
+                            <div class="declaracion-card-info">
+                                <div class="declaracion-info-item">
+                                    <span>Fecha registro</span>
+                                    <strong>@item.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</strong>
+                                </div>
+
+                                <div class="declaracion-info-item">
+                                    <span>Patente</span>
+                                    <strong>@item.Patente.ToString("N2")</strong>
+                                </div>
+
+                                <div class="declaracion-info-item">
+                                    <span>1.5 x Mil</span>
+                                    <strong>@item.UnoCincoXMil.ToString("N2")</strong>
+                                </div>
+
+                                <div class="declaracion-info-item total">
+                                    <span>Total a pagar</span>
+                                    <strong>@item.TotalPagar.ToString("N2")</strong>
+                                </div>
+                            </div>
+
+                            <div class="declaracion-card-actions">
+                                <button type="button"
+                                        class="btn-ver-detalle"
+                                        @onclick="() => AbrirDetalleDeclaracion(item)">
+                                    Ver detalle
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-declaraciones">
+                    No existen declaraciones registradas.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@if (_mostrarModalDetalle && _declaracionSeleccionada is not null)
+{
+    <div class="modal-backdrop-custom">
+        <div class="modal-comprobante-card">
+            <div class="modal-detalle-header">
+                <div>
+                    <div class="modal-title-custom">Detalle de declaración</div>
+                    <div class="modal-subtitle-custom">
+                        Código único de pago: @_declaracionSeleccionada.CodigoUnicoPago
+                    </div>
+                </div>
+
+                <button type="button"
+                        class="btn-close-modal"
+                        @onclick="CerrarDetalleDeclaracion">
+                    ×
+                </button>
+            </div>
+
+            <div class="modal-detalle-body">
+                <div class="comprobante-box">
+                    <div class="comprobante-header">
+                        <div class="comprobante-title">GAD Municipal Antonio Ante</div>
+                        <div class="comprobante-subtitle">Comprobante de declaración de patente</div>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Código único de pago</span>
+                        <strong>@_declaracionSeleccionada.CodigoUnicoPago</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Identificación</span>
+                        <strong>@_declaracionSeleccionada.Identificacion</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Fecha de emisión</span>
+                        <strong>@_declaracionSeleccionada.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Año declarado</span>
+                        <strong>@_declaracionSeleccionada.Anio</strong>
+                    </div>
+
+                    <div class="comprobante-divider"></div>
+
+                    <div class="comprobante-line">
+                        <span>Activo corriente</span>
+                        <strong>@_declaracionSeleccionada.ActivoCorriente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Activo no corriente</span>
+                        <strong>@_declaracionSeleccionada.ActivoNoCorriente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Pasivo corriente</span>
+                        <strong>@_declaracionSeleccionada.PasivoCorriente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Pasivo no corriente</span>
+                        <strong>@_declaracionSeleccionada.PasivoNoCorriente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Pasivo contingente</span>
+                        <strong>@_declaracionSeleccionada.PasivoContingente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Ingresos</span>
+                        <strong>@_declaracionSeleccionada.Ingresos.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Costos y gastos</span>
+                        <strong>@_declaracionSeleccionada.CostosGastos.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-divider"></div>
+
+                    <div class="comprobante-line">
+                        <span>Patente</span>
+                        <strong>@_declaracionSeleccionada.Patente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>1.5 x Mil</span>
+                        <strong>@_declaracionSeleccionada.UnoCincoXMil.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line comprobante-total">
+                        <span>Total a pagar</span>
+                        <strong>@_declaracionSeleccionada.TotalPagar.ToString("N2")</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-detalle-actions">
+                <button type="button"
+                        class="btn-modal-secondary"
+                        @onclick="CerrarDetalleDeclaracion">
+                    Cerrar
+                </button>
+
+                <button type="button"
+                        class="btn-modal-primary"
+                        onclick="window.print()">
+                    Reimprimir comprobante
+                </button>
+            </div>
+        </div>
+    </div>
+}

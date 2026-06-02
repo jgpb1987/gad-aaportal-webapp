@@ -13,6 +13,8 @@ namespace gad.aaportal.consumers.Config
         public string ConsultarTiposMedioContacto { get; set; } = null!;
         public string ConsultarPeriodosDeclaracion { get; set; } = string.Empty;
         public string IniciarDeclaracion { get; set; } = string.Empty;
+        public string RegistrarDeclaracion { get; set; } = string.Empty;
+        public string ConsultarDeclaracionesContribuyente { get; set; } = string.Empty;
 
         /*Inicio Store Procedure Municipio*/
         public string CalcularImpuestoPatente { get; set; } = null!;

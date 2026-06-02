@@ -358,6 +358,7 @@
     font-weight: 600;
     outline: none;
     transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
 }
 
     ::deep .input-form:focus {
@@ -402,58 +403,6 @@
     margin-top: 4px;
     display: block;
     font-weight: 600;
-}
-
-@media (max-width: 767px) {
-    .declaracion-container {
-        padding: 0 0.6rem;
-    }
-
-    .declaracion-action-card {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .btn-nueva-declaracion {
-        width: 100%;
-    }
-
-    .wizard-steps {
-        overflow-x: auto;
-        padding-bottom: 16px;
-    }
-
-    .step-line {
-        min-width: 30px;
-        flex: none;
-    }
-
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .btn-secondary-action {
-        width: 100%;
-    }
-
-    .wizard-actions {
-        flex-direction: column;
-    }
-
-    .btn-wizard,
-    .btn-wizard-secondary {
-        width: 100%;
-    }
-
-    .modal-periodo-actions {
-        flex-direction: column;
-    }
-
-    .btn-modal-secondary,
-    .btn-modal-primary {
-        width: 100%;
-    }
 }
 
 .valores-grid {
@@ -514,30 +463,48 @@
     text-align: center;
 }
 
+/* ============================= */
+/* TABLA DE ESTABLECIMIENTOS     */
+/* ============================= */
+
 .establecimientos-table-wrapper {
     width: 100%;
-    overflow-x: auto;
+    max-height: 320px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.65rem;
+    background: #ffffff;
 }
 
 .establecimientos-table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0;
     font-size: 13px;
     background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.65rem;
-    overflow: hidden;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
 }
 
-    .establecimientos-table th {
-        text-align: left;
-        padding: 10px 12px;
+    .establecimientos-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
         background: #f3f4f6;
+        border-bottom: 1px solid #d1d5db;
+    }
+
+    .establecimientos-table th {
+        text-align: center;
+        padding: 10px 12px;
         color: #374151;
         font-size: 11px;
         font-weight: 900;
         text-transform: uppercase;
+        vertical-align: middle;
     }
 
     .establecimientos-table td {
@@ -548,10 +515,87 @@
         vertical-align: middle;
     }
 
+    .establecimientos-table th,
+    .establecimientos-table td {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+
     .establecimientos-table tfoot td {
         background: #f9fafb;
         border-top: 2px solid #d1d5db;
+        vertical-align: middle;
     }
+
+    .establecimientos-table th:nth-child(1),
+    .establecimientos-table td:nth-child(1) {
+        width: 28%;
+    }
+
+    .establecimientos-table th:nth-child(2),
+    .establecimientos-table td:nth-child(2) {
+        width: 22%;
+    }
+
+    .establecimientos-table th:nth-child(3),
+    .establecimientos-table td:nth-child(3) {
+        width: 18%;
+    }
+
+    .establecimientos-table th:nth-child(4),
+    .establecimientos-table td:nth-child(4) {
+        width: 20%;
+    }
+
+    .establecimientos-table th:nth-child(5),
+    .establecimientos-table td:nth-child(5) {
+        width: 12%;
+        text-align: center;
+    }
+
+    .establecimientos-table td .input-form,
+    .establecimientos-table td input,
+    .establecimientos-table td select {
+        width: 100% !important;
+        min-width: 0;
+        box-sizing: border-box;
+        text-align: right;
+    }
+
+    .establecimientos-table td:first-child,
+    .establecimientos-table td:first-child .input-form,
+    .establecimientos-table td:first-child input,
+    .establecimientos-table td:first-child select {
+        text-align: left;
+    }
+
+    .establecimientos-table td:last-child,
+    .establecimientos-table td:last-child .input-form,
+    .establecimientos-table td:last-child input,
+    .establecimientos-table td:last-child select {
+        text-align: center;
+    }
+
+    .establecimientos-table tbody tr.municipio-base-row {
+        background: #eff6ff;
+    }
+
+        .establecimientos-table tbody tr.municipio-base-row td {
+            border-top: 1px solid #bfdbfe;
+        }
+
+        .establecimientos-table tbody tr.municipio-base-row .cantonal-title {
+            color: var(--pro-button-background-color);
+        }
+
+        .establecimientos-table tbody tr.municipio-base-row .table-money {
+            color: var(--pro-button-background-color) !important;
+        }
+
+        .establecimientos-table tbody tr.municipio-base-row td:first-child {
+            border-left: 5px solid var(--pro-button-background-color);
+        }
 
 .cantonal-title {
     font-size: 13px;
@@ -569,6 +613,26 @@
 .table-money {
     font-weight: 900 !important;
     color: var(--pro-button-background-color) !important;
+}
+
+.municipio-base-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--pro-button-background-color);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.25px;
+}
+
+::deep .input-disabled {
+    background-color: #f3f4f6 !important;
+    color: #6b7280 !important;
+    cursor: not-allowed;
+    font-weight: 800;
 }
 
 .resumen-impuestos-grid {
@@ -635,62 +699,6 @@
     .total-pagar-card strong {
         color: #c2410c;
     }
-
-@media (max-width: 767px) {
-    .valor-row {
-        grid-template-columns: 1fr;
-        gap: 5px;
-    }
-
-    .resumen-impuestos-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .impuesto-row {
-        grid-template-columns: 1fr;
-    }
-
-        .impuesto-row strong {
-            text-align: left;
-        }
-}
-
-.establecimientos-table tbody tr.municipio-base-row {
-    background: #eff6ff;
-}
-
-    .establecimientos-table tbody tr.municipio-base-row td {
-        border-top: 1px solid #bfdbfe;
-    }
-
-    .establecimientos-table tbody tr.municipio-base-row .cantonal-title {
-        color: var(--pro-button-background-color);
-    }
-
-    .establecimientos-table tbody tr.municipio-base-row .table-money {
-        color: var(--pro-button-background-color) !important;
-    }
-    .establecimientos-table tbody tr.municipio-base-row td:first-child {
-        border-left: 5px solid var(--pro-button-background-color);
-    }
-.municipio-base-badge {
-    display: inline-block;
-    margin-left: 8px;
-    padding: 3px 8px;
-    border-radius: 999px;
-    background: var(--pro-button-background-color);
-    color: #ffffff;
-    font-size: 10px;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.25px;
-}
-::deep .input-disabled {
-    background-color: #f3f4f6 !important;
-    color: #6b7280 !important;
-    cursor: not-allowed;
-    font-weight: 800;
-}
 
 .calculo-impuestos-card {
     margin-top: 12px;
@@ -768,6 +776,73 @@
 }
 
 @media (max-width: 767px) {
+    .declaracion-container {
+        padding: 0 0.6rem;
+    }
+
+    .declaracion-action-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-nueva-declaracion {
+        width: 100%;
+    }
+
+    .wizard-steps {
+        overflow-x: auto;
+        padding-bottom: 16px;
+    }
+
+    .step-line {
+        min-width: 30px;
+        flex: none;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-secondary-action {
+        width: 100%;
+    }
+
+    .wizard-actions {
+        flex-direction: column;
+    }
+
+    .btn-wizard,
+    .btn-wizard-secondary {
+        width: 100%;
+    }
+
+    .modal-periodo-actions {
+        flex-direction: column;
+    }
+
+    .btn-modal-secondary,
+    .btn-modal-primary {
+        width: 100%;
+    }
+
+    .valor-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+
+    .resumen-impuestos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .impuesto-row {
+        grid-template-columns: 1fr;
+    }
+
+        .impuesto-row strong {
+            text-align: left;
+        }
+
     .calculo-impuestos-card {
         grid-template-columns: 1fr;
     }
@@ -780,4 +855,256 @@
         .calculo-impuesto-row strong {
             text-align: left;
         }
+
+    .establecimientos-table-wrapper {
+        max-height: 360px;
+    }
+
+    .establecimientos-table {
+        font-size: 12px;
+    }
+
+        .establecimientos-table th,
+        .establecimientos-table td {
+            padding: 8px 7px;
+        }
 }
+.confirmacion-valores-grid,
+.comprobante-resumen-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.confirmacion-item,
+.comprobante-item {
+    padding: 11px 13px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.65rem;
+}
+
+    .confirmacion-item span,
+    .comprobante-item span {
+        display: block;
+        color: #6b7280;
+        font-size: 12px;
+        font-weight: 800;
+        margin-bottom: 4px;
+    }
+
+    .confirmacion-item strong,
+    .comprobante-item strong {
+        color: #111827;
+        font-size: 15px;
+        font-weight: 900;
+    }
+
+    .confirmacion-item.total,
+    .comprobante-item.total {
+        grid-column: 1 / -1;
+        background: #fff7ed;
+        border-color: #fed7aa;
+        border-left: 5px solid #f97316;
+    }
+
+        .confirmacion-item.total strong,
+        .comprobante-item.total strong {
+            color: #c2410c;
+            font-size: 18px;
+        }
+
+.confirmacion-alerta {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 0.65rem;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.finalizacion-card {
+    margin-top: 14px;
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.85rem;
+    text-align: center;
+}
+
+.finalizacion-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 10px auto;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #166534;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 900;
+}
+
+.finalizacion-title {
+    color: #111827;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.finalizacion-subtitle {
+    margin-top: 5px;
+    margin-bottom: 16px;
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+    .finalizacion-subtitle strong {
+        color: var(--pro-button-background-color);
+        font-weight: 900;
+    }
+
+.modal-comprobante-card {
+    position: relative;
+    width: min(96%, 680px);
+    max-height: 92vh;
+    background: #ffffff;
+    border-radius: 0.95rem;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+    overflow: auto;
+    padding-top: 5px;
+}
+
+    .modal-comprobante-card::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient( 90deg, var(--pro-button-background-color), var(--pro-button-background-color-hover) );
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+.comprobante-box {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.comprobante-header {
+    padding: 16px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.comprobante-title {
+    color: #111827;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.comprobante-subtitle {
+    margin-top: 3px;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.comprobante-line {
+    display: grid;
+    grid-template-columns: 1fr 180px;
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #111827;
+    font-size: 13px;
+}
+
+    .comprobante-line span {
+        color: #6b7280;
+        font-weight: 800;
+    }
+
+    .comprobante-line strong {
+        text-align: right;
+        font-weight: 900;
+    }
+
+.comprobante-divider {
+    height: 8px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.comprobante-total {
+    background: #fff7ed;
+    color: #7c2d12;
+}
+
+    .comprobante-total span,
+    .comprobante-total strong {
+        color: #c2410c;
+        font-size: 15px;
+    }
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .modal-comprobante-card,
+    .modal-comprobante-card * {
+        visibility: visible;
+    }
+
+    .modal-comprobante-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-height: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .modal-periodo-header button,
+    .modal-periodo-actions {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .confirmacion-valores-grid,
+    .comprobante-resumen-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .comprobante-line {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+        .comprobante-line strong {
+            text-align: left;
+        }
+}
+
+.btn-nueva-declaracion:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.75;
+}
+
+    .btn-nueva-declaracion:disabled:hover {
+        background: #9ca3af;
+        transform: none;
+        box-shadow: none;
+    }

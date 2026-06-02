@@ -126,6 +126,26 @@ namespace gad.aaportal.consumers.consumers.Implementation
 
             return result;
         }
+        public async Task<RegistrarDeclaracionDataResult> RegistrarDeclaracion(RegistrarDeclaracionDtoParam parametro)
+        {
+            RegistrarDeclaracionDataResult result = new();
 
+            try
+            {
+                result = await _httpClient.Post<RegistrarDeclaracionDtoParam, RegistrarDeclaracionDataResult>(parametro, configuraciones.EndPointsConfig.RegistrarDeclaracion);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+        }
+        public async Task<ConsultarDeclaracionContribuyenteDataResult> ConsultarDeclaracionesContribuyente(
+            ConsultarDeclaracionContribuyenteDtoParam parametro)
+        {
+            return await _httpClient.Post<ConsultarDeclaracionContribuyenteDtoParam, ConsultarDeclaracionContribuyenteDataResult>(parametro,
+                configuraciones.EndPointsConfig.ConsultarDeclaracionesContribuyente);
+        }
     }
 }

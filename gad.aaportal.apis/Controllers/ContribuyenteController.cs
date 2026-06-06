@@ -100,6 +100,23 @@ namespace gad.aaportal.apis.Controllers
             return Ok(result);
         }
 
+        [HttpPost("consultarPeriodosDeclaracionMunicipio")]
+        public async Task<ActionResult<PeriodoDeclaracionDataResult>> ConsultarPeriodosDeclaracionMunicipio([FromBody] ContribuyenteDtoParam parametro)
+        {
+            PeriodoDeclaracionDataResult result = new();
+
+            try
+            {
+                result = await services.ConsultarPeriodosDeclaracionMunicipio(contexto, parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return Ok(result);
+        }
+
         [HttpPost("iniciarDeclaracion")]
         public async Task<ActionResult<IniciarDeclaracionDataResult>> IniciarDeclaracion(
             [FromBody] IniciarDeclaracionDtoParam parametro)

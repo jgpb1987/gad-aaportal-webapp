@@ -38,6 +38,7 @@ namespace gad.aaportal.dataaccess.Configuration
             entity.Property(e => e.PasivoNoCorriente).HasColumnType("decimal(18, 6)");
 
             entity.Property(e => e.Patente).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.ValorBomberos).HasColumnType("decimal(18, 6)");
 
             entity.Property(e => e._15XMil)
                 .HasColumnType("decimal(18, 6)")

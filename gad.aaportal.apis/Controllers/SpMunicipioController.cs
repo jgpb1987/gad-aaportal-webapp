@@ -10,11 +10,9 @@ namespace gad.aaportal.apis.Controllers
     [ApiController]
     public class SpMunicipioController : ControllerBase
     {
-        private readonly BddGmaaContext contexto;
         private readonly ISpMunicipioServices services;
-        public SpMunicipioController(BddGmaaContext contexto, ISpMunicipioServices services)
+        public SpMunicipioController(ISpMunicipioServices services)
         {
-            this.contexto = contexto;
             this.services = services;
         }
 
@@ -25,7 +23,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.CalcularImpuestoPatente(contexto, parametro);
+                result = await services.CalcularImpuestoPatente(parametro);
             }
             catch (Exception ex)
             {
@@ -41,7 +39,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.CalcularImpuestoIat(contexto, parametro);
+                result = await services.CalcularImpuestoIat(parametro);
             }
             catch (Exception ex)
             {
@@ -57,7 +55,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.CalcularMulta(contexto, parametro);
+                result = await services.CalcularMulta(parametro);
             }
             catch (Exception ex)
             {
@@ -73,7 +71,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.CalcularTerceraEdad(contexto, parametro);
+                result = await services.CalcularTerceraEdad(parametro);
             }
             catch (Exception ex)
             {
@@ -89,7 +87,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.InsertActividadAnual(contexto, parametro);
+                result = await services.InsertActividadAnual(parametro);
             }
             catch (Exception ex)
             {
@@ -105,7 +103,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.InsertTerceraEdad(contexto, parametro);
+                result = await services.InsertTerceraEdad(parametro);
             }
             catch (Exception ex)
             {
@@ -121,7 +119,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.InsertPagoPorTitulo(contexto, parametro);
+                result = await services.InsertPagoPorTitulo(parametro);
             }
             catch (Exception ex)
             {
@@ -137,7 +135,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.ActualizarCodigoIngreso(contexto, parametro);
+                result = await services.ActualizarCodigoIngreso(parametro);
             }
             catch (Exception ex)
             {
@@ -153,7 +151,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.ConsultarValoresPagar(contexto, parametro);
+                result = await services.ConsultarValoresPagar(parametro);
             }
             catch (Exception ex)
             {
@@ -169,7 +167,9 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.ValidadorPermisos(contexto, parametro);
+                //result.Data = new() {Estado=false, Mensaje="Existen restricciones municipio." };
+                result = await services.ValidadorPermisos(parametro);
+                
             }
             catch (Exception ex)
             {
@@ -185,7 +185,8 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.ConsultarValorBomberos(contexto, parametro);
+                result.Data=new ConsultarValorBomberosDtoDataResult() { ValorBomberos=5052.89 };
+                //result = await services.ConsultarValorBomberos( parametro);
             }
             catch (Exception ex)
             {
@@ -201,7 +202,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.ConsultarRucExoneraciones(contexto, parametro);
+                result = await services.ConsultarRucExoneraciones(parametro);
             }
             catch (Exception ex)
             {
@@ -217,7 +218,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.InsertarTranferenciaIat(contexto, parametro);
+                result = await services.InsertarTranferenciaIat(parametro);
             }
             catch (Exception ex)
             {
@@ -233,7 +234,7 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result = await services.ConsultarAnioAdeuda(contexto, parametro);
+                result = await services.ConsultarAnioAdeuda(parametro);
             }
             catch (Exception ex)
             {

@@ -19,7 +19,19 @@
             Nueva declaración
         </button>
     </div>
+    @if (_tieneRestriccionMunicipal)
+    {
+        <div class="restriccion-municipal-alert">
+            <div class="restriccion-icon">⚠️</div>
 
+            <div>
+                <div class="restriccion-title">No puede realizar la declaración</div>
+                <div class="restriccion-message">
+                    @_mensajeRestriccionMunicipal
+                </div>
+            </div>
+        </div>
+    }
     @if (_declaracionIniciada is not null)
     {
         <div class="declaracion-wizard-card">
@@ -307,54 +319,52 @@
                         <div class="resumen-impuestos-grid">
                             <div class="impuesto-card">
                                 <div class="impuesto-card-title">Patente</div>
-
+                                <div class="impuesto-row">
+                                    <span>Patrimonio</span>
+                                    <strong>@_resumen.Patrimonio.ToString("C2")</strong>
+                                </div>
                                 <div class="impuesto-row">
                                     <span>Derecho de patente anual</span>
-                                    <strong>@_resumen.DerechoPatenteAnual.ToString("C2")</strong>
+                                    <strong>+@_resumen.DerechoPatenteAnual.ToString("C2")</strong>
                                 </div>
-
                                 <div class="impuesto-row">
-                                    <span>Valores Bomberos Patente</span>
-                                    <strong>+ @_resumen.ValoresBomberosPatente.ToString("C2")</strong>
+                                    <span>Multa por presentación tardía</span>
+                                    <strong>+ @_resumen.MultaPatente.ToString("C2")</strong>
                                 </div>
-
-                                <div class="impuesto-row">
-                                    <span>Descuento anticipo pagado SRI</span>
-                                    <strong>- @_resumen.DescuentoAnticipoPagadoSri.ToString("C2")</strong>
-                                </div>
-
+                                @if (MostrarValorBomberos)
+                                {
+                                    <div class="impuesto-row">
+                                        <span>Valor Bomberos</span>
+                                        <strong>+ @_resumen.ValoresBomberosPatente.ToString("C2")</strong>
+                                    </div>
+                                }
                                 <div class="impuesto-row">
                                     <span>Descuento patente tercera edad</span>
                                     <strong>- @_resumen.DescuentoPatenteTerceraEdad.ToString("C2")</strong>
                                 </div>
 
-                                <div class="impuesto-row">
-                                    <span>Reducción descenso de utilidad</span>
-                                    <strong>- @_resumen.ReduccionDescensoUtilidad.ToString("C2")</strong>
-                                </div>
 
                                 <div class="impuesto-row impuesto-total">
                                     <span>Total patente a pagar</span>
                                     <strong>@_resumen.TotalPatentePagar.ToString("C2")</strong>
                                 </div>
 
-                                <div class="impuesto-row">
-                                    <span>Multa por presentación tardía</span>
-                                    <strong>+ @_resumen.MultaPatente.ToString("C2")</strong>
-                                </div>
                             </div>
 
                             <div class="impuesto-card">
                                 <div class="impuesto-card-title">1.5 por mil</div>
 
                                 <div class="impuesto-row">
-                                    <span>1.5 x mil activos</span>
-                                    <strong>@_resumen.ImpuestoActivos.ToString("C2")</strong>
+                                    <span>Base Imponible 1.5 x mil</span>
+                                    <strong>@_resumen.BaseImponible1_5_x_1000.ToString("C2")</strong>
                                 </div>
-
                                 <div class="impuesto-row">
-                                    <span>Valores Bomberos</span>
-                                    <strong>- @_resumen.ValoresBomberos1_1000.ToString("C2")</strong>
+                                    <span>1.5 x mil activos</span>
+                                    <strong>+ @_resumen.ImpuestoActivos.ToString("C2")</strong>
+                                </div>
+                                <div class="impuesto-row">
+                                    <span>Multa por presentación tardía</span>
+                                    <strong>+ @_resumen.Multa15.ToString("C2")</strong>
                                 </div>
 
                                 <div class="impuesto-row">
@@ -367,10 +377,6 @@
                                     <strong>@_resumen.Total15Pagar.ToString("C2")</strong>
                                 </div>
 
-                                <div class="impuesto-row">
-                                    <span>Multa por presentación tardía</span>
-                                    <strong>+ @_resumen.Multa15.ToString("C2")</strong>
-                                </div>
                             </div>
                         </div>
 
@@ -489,7 +495,13 @@
                                         <span>1.5 x Mil</span>
                                         <strong>@_declaracionRegistrada.UnoCincoXMil.ToString("N2")</strong>
                                     </div>
-
+                                    @if (MostrarValorBomberos)
+                                    {
+                                        <div class="comprobante-item">
+                                            <span>Bomberos</span>
+                                            <strong>@ValorBomberos.ToString("N2")</strong>
+                                        </div>
+                                    }
                                     <div class="comprobante-item total">
                                         <span>Total a pagar</span>
                                         <strong>@_declaracionRegistrada.TotalPagar.ToString("N2")</strong>
@@ -619,7 +631,13 @@
                         <span>1.5 x Mil</span>
                         <strong>@ValorUnoCincoPorMil.ToString("N2")</strong>
                     </div>
-
+                    @if (MostrarValorBomberos)
+                    {
+                        <div class="confirmacion-item">
+                            <span>Bomberos</span>
+                            <strong>@ValorBomberos.ToString("N2")</strong>
+                        </div>
+                    }
                     <div class="confirmacion-item total">
                         <span>Total a pagar</span>
                         <strong>@_resumen.TotalPagar.ToString("N2")</strong>
@@ -741,7 +759,13 @@
                         <span>1.5 x Mil</span>
                         <strong>@_declaracionRegistrada.UnoCincoXMil.ToString("N2")</strong>
                     </div>
-
+                    @if (MostrarValorBomberos)
+                    {
+                        <div class="comprobante-line">
+                            <span>Bomberos</span>
+                            <strong>@ValorBomberos.ToString("N2")</strong>
+                        </div>
+                    }
                     <div class="comprobante-line comprobante-total">
                         <span>Total a pagar</span>
                         <strong>@_declaracionRegistrada.TotalPagar.ToString("N2")</strong>

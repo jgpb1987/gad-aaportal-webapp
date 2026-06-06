@@ -67,19 +67,18 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
 
     public class ResumenImpuestoDeclaracionViewModel
     {
+        public decimal Patrimonio { get; set; }
         public decimal DerechoPatenteAnual { get; set; }
-        public decimal ValoresBomberosPatente { get; set; }
-        public decimal DescuentoAnticipoPagadoSri { get; set; }
-        public decimal DescuentoPatenteTerceraEdad { get; set; }
-        public decimal ReduccionDescensoUtilidad { get; set; }
-        public decimal TotalPatentePagar { get; set; }
         public decimal MultaPatente { get; set; }
+        public decimal ValoresBomberosPatente { get; set; }
+        public decimal DescuentoPatenteTerceraEdad { get; set; }
+        public decimal TotalPatentePagar { get; set; }
 
+        public decimal BaseImponible1_5_x_1000 { get; set; }
         public decimal ImpuestoActivos { get; set; }
-        public decimal ValoresBomberos1_1000 { get; set; }
+        public decimal Multa15 { get; set; }
         public decimal DescuentoTerceraEdad15 { get; set; }
         public decimal Total15Pagar { get; set; }
-        public decimal Multa15 { get; set; }
 
         public decimal TotalPagar { get; set; }
     }
@@ -98,6 +97,7 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
 
         public decimal UnoCincoXMil { get; set; }
         public decimal Patente { get; set; }
+        public decimal ValorBomberos { get; set; }
     }
 
     public class RegistrarDeclaracionDtoResult
@@ -119,7 +119,8 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
 
         public decimal UnoCincoXMil { get; set; }
         public decimal Patente { get; set; }
-        public decimal TotalPagar => UnoCincoXMil + Patente;
+        public decimal ValorBomberos { get; set; }
+        public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos;
     }
 
     public class RegistrarDeclaracionDataResult : BaseResult
@@ -151,7 +152,8 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
 
         public decimal UnoCincoXMil { get; set; }
         public decimal Patente { get; set; }
-        public decimal TotalPagar => UnoCincoXMil + Patente;
+        public decimal ValorBomberos { get; set; }
+        public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos;
 
         public bool Estado { get; set; }
     }

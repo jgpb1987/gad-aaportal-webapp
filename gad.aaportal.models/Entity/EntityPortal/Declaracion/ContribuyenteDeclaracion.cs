@@ -25,6 +25,7 @@ namespace gad.aaportal.models.Entity.Declaracion
         public decimal CostosGastos { get; set; }
         public decimal _15XMil { get; set; }
         public decimal Patente { get; set; }
+        public decimal ValorBomberos { get; set; }
         public bool Estado { get; set; }
 
         public virtual Contribuyente IdentificacionNavigation { get; set; } = null!;

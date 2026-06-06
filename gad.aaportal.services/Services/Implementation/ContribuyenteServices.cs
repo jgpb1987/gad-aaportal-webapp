@@ -1,6 +1,7 @@
 ﻿using gad.aaportal.commons.Base;
 using gad.aaportal.commons.Dto.Declaracion;
 using gad.aaportal.commons.Dto.Dinardap;
+using gad.aaportal.commons.Dto.DtoMunicipio;
 using gad.aaportal.commons.Dto.DtoPortal.Declaracion;
 using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.dataaccess.Configuration;
@@ -20,11 +21,13 @@ namespace gad.aaportal.services.Services.Implementation
         private readonly ILogger<ContribuyenteServices> logger;
         private readonly IDinardapService dinardapService;
         private readonly ServicesConfig servicesConfig;
-        public ContribuyenteServices(ILogger<ContribuyenteServices> logger, IDinardapService dinardapService, IOptions<ServicesConfig> servicesConfig)
+        private readonly ISpMunicipioServices spMunicipioServices;
+        public ContribuyenteServices(ILogger<ContribuyenteServices> logger, IDinardapService dinardapService, IOptions<ServicesConfig> servicesConfig, ISpMunicipioServices spMunicipioServices)
         {
             this.logger = logger;
             this.dinardapService = dinardapService;
             this.servicesConfig = servicesConfig.Value;
+            this.spMunicipioServices = spMunicipioServices;
         }
         public async Task<ContribuyenteResumenDataDtoResult> ResumenContribuyente(AaportalContext contexto, ContribuyenteResumenDtoParam parametro)
         {
@@ -306,7 +309,6 @@ namespace gad.aaportal.services.Services.Implementation
 
                 if (contribuyente.TipoContribuyente.Equals("PERSONA NATURAL"))
                 {
-                    //var listForm102=await dinardapService.ConsultPackage<ListForm102>(new PaqueteDinardapRequest() { Identificacion = "1091730940001", Paquete = "6282", Usuario =servicesConfig.DinardapUser });
                     var listForm102 = await dinardapService.ConsultPackage<ListForm102>(new PaqueteDinardapRequest() { Identificacion = parametro.Identificacion, Paquete = "6282", Usuario = servicesConfig.DinardapUser });
 
                     listForm102.Form102s = listForm102.Form102s.Where(f => f.AnioFiscal >= DateTime.Now.Year - servicesConfig.AniosDeclaracionMostrar && !aniosDeclarados.Contains(f.AnioFiscal)).ToList();
@@ -320,10 +322,10 @@ namespace gad.aaportal.services.Services.Implementation
                             ActivoCorriente = Math.Round(form102.TotActCorriente410 ?? 0, 2, MidpointRounding.AwayFromZero),
                             ActivoNoCorriente = Math.Round(form102.TotActivoNoCorriente812 ?? 0, 2, MidpointRounding.AwayFromZero),
                             CostosGastos = Math.Round(form102.TotalCostosGastos2760 ?? 0, 2, MidpointRounding.AwayFromZero),
-                            Ingresos = Math.Round(form102.TotActCorriente410 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            Ingresos = Math.Round(form102.TotalIngresos1440 ?? 0, 2, MidpointRounding.AwayFromZero),
                             PasivoContingente = Math.Round(form102.TotalPasivo1310 ?? 0, 2, MidpointRounding.AwayFromZero),
                             PasivoCorriente = Math.Round(form102.TotPasivoCorriente1030 ?? 0, 2, MidpointRounding.AwayFromZero),
-                            PasivoNoCorriente = Math.Round(form102.TotPatrimonioNeto1330 ?? 0, 2, MidpointRounding.AwayFromZero)
+                            PasivoNoCorriente = Math.Round(form102.TotalPasivo1310 ?? 0, 2, MidpointRounding.AwayFromZero) - Math.Round(form102.TotPasivoCorriente1030 ?? 0, 2, MidpointRounding.AwayFromZero)
                         });
                     }
                 }
@@ -346,7 +348,7 @@ namespace gad.aaportal.services.Services.Implementation
                             Ingresos = Math.Round(form101.TotalIngresos1930 ?? 0, 2, MidpointRounding.AwayFromZero),
                             PasivoContingente = Math.Round(form101.ProNoctePasCtgComNeg1577 ?? 0, 2, MidpointRounding.AwayFromZero),
                             PasivoCorriente = Math.Round(form101.TotPasivosCorrientes1340 ?? 0, 2, MidpointRounding.AwayFromZero),
-                            PasivoNoCorriente = Math.Round(form101.TotalPasivos1620 ?? 0, 2, MidpointRounding.AwayFromZero)
+                            PasivoNoCorriente = Math.Round(form101.TotalPasivosLargoPlazo1590 ?? 0, 2, MidpointRounding.AwayFromZero)
                         });
                     }
                 }
@@ -367,7 +369,106 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
+        public async Task<PeriodoDeclaracionDataResult> ConsultarPeriodosDeclaracionMunicipio(AaportalContext contexto, ContribuyenteDtoParam parametro)
+        {
+            PeriodoDeclaracionDataResult result = new();
+            List<PeriodoDeclaracionDtoResult> periodosDeclaracion = new();
+            try
+            {
+                var contribuyente = await contexto.Contribuyentes.AsNoTracking().FirstOrDefaultAsync(c => c.Identificacion == parametro.Identificacion);
 
+                if (contribuyente == null)
+                    throw SystemExceptionCustomized.CreateException("CPD001", "No se encontró información del contribuyente");
+
+                var municipioBase = servicesConfig.MunicipioBase.Trim();
+
+                var establecimientos = await contexto.ContribuyenteEstablecimientos.AsNoTracking().Where(e => e.Identificacion == parametro.Identificacion && e.Estado == "ABIERTO")
+                    .GroupBy(e => new
+                    {
+                        Provincia = e.Provincia.Trim(),
+                        Canton = e.Canton.Trim()
+                    })
+                    .Select(g => new ContribuyenteEstablecimientoPago
+                    {
+                        Provincia = g.Key.Provincia,
+                        Canton = g.Key.Canton,
+                        AplicaPago = g.Key.Canton == municipioBase,
+                        BaseImponible = 0,
+                        Porcentaje = g.Key.Canton.Equals(municipioBase) ? 100 : 0,
+                        Valor = 0,
+                        EsMunicipioBase = g.Key.Canton == municipioBase
+                    })
+                    .OrderByDescending(p => p.EsMunicipioBase).ThenBy(p => p.Provincia).ThenBy(p => p.Canton).ToListAsync();
+
+                if (establecimientos == null || !establecimientos.Any())
+                    throw SystemExceptionCustomized.CreateException("CPD002", "No se encontró información de establecimientos activos para el contribuyente");
+
+                var anioDeclarar= await spMunicipioServices.ConsultarAnioAdeuda(new ConsultarAnioAdeudaDtoParam() {Ruc = parametro.Identificacion });
+                if(anioDeclarar == null || anioDeclarar.Data == null)
+                    throw SystemExceptionCustomized.CreateException("CPD003", "No se pudo consultar el año a declarar en el municipio");
+
+
+                if (contribuyente.TipoContribuyente.Equals("PERSONA NATURAL"))
+                {
+                    var listForm102 = await dinardapService.ConsultPackage<ListForm102>(new PaqueteDinardapRequest() { Identificacion = parametro.Identificacion, Paquete = "6282", Usuario = servicesConfig.DinardapUser });
+
+                    listForm102.Form102s = listForm102.Form102s.Where(f => f.AnioFiscal.Equals(anioDeclarar.Data.Anio)).ToList();
+
+                    foreach (var form102 in listForm102.Form102s)
+                    {
+                        periodosDeclaracion.Add(new PeriodoDeclaracionDtoResult
+                        {
+                            AnioEjercicioFiscal = form102.AnioFiscal,
+                            Descripcion = $"Ejercicio Fiscal {form102.AnioFiscal}",
+                            ActivoCorriente = Math.Round(form102.TotActCorriente410 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            ActivoNoCorriente = Math.Round(form102.TotActivoNoCorriente812 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            CostosGastos = Math.Round(form102.TotalCostosGastos2760 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            Ingresos = Math.Round(form102.TotalIngresos1440 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            PasivoContingente = Math.Round(form102.TotalPasivo1310 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            PasivoCorriente = Math.Round(form102.TotPasivoCorriente1030 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            PasivoNoCorriente = Math.Round(form102.TotalPasivo1310 ?? 0, 2, MidpointRounding.AwayFromZero) - Math.Round(form102.TotPasivoCorriente1030 ?? 0, 2, MidpointRounding.AwayFromZero)
+                        });
+                    }
+                }
+                else
+                {
+                    var listForm101 = await dinardapService.ConsultPackage<ListForm101>(new PaqueteDinardapRequest() { Identificacion = parametro.Identificacion, Paquete = "6281", Usuario = servicesConfig.DinardapUser });
+                    listForm101.Form101s = listForm101.Form101s
+                       .Where(f => f.AnioFiscal.Equals(anioDeclarar.Data.Anio)).ToList();
+
+                    foreach (var form101 in listForm101.Form101s)
+                    {
+                        periodosDeclaracion.Add(new PeriodoDeclaracionDtoResult
+                        {
+                            AnioEjercicioFiscal = form101.AnioFiscal,
+                            Descripcion = $"Ejercicio Fiscal {form101.AnioFiscal}",
+                            ActivoCorriente = Math.Round(form101.TotalActivoCorriente470 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            ActivoNoCorriente = Math.Round(form101.TotActivoNoCorriente1077 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            CostosGastos = Math.Round(form101.TotasCostosGastos3380 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            Ingresos = Math.Round(form101.TotalIngresos1930 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            PasivoContingente = Math.Round(form101.ProNoctePasCtgComNeg1577 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            PasivoCorriente = Math.Round(form101.TotPasivosCorrientes1340 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            PasivoNoCorriente = Math.Round(form101.TotalPasivosLargoPlazo1590 ?? 0, 2, MidpointRounding.AwayFromZero)
+                        });
+                    }
+                }
+
+                result.Data = new() { Establecimientos = establecimientos, PeriodosDeclaracion = periodosDeclaracion.OrderBy(pd => pd.AnioEjercicioFiscal).ToList() };
+
+            }
+            catch (SystemExceptionCustomized sex)
+            {
+                logger.LogError(sex, sex.Description, sex.Code);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.Message, nameof(CodeMessage.SERVER_ERROR));
+                throw;
+            }
+
+            return result;
+        }
         public async Task<IniciarDeclaracionDataResult> IniciarDeclaracion(
             AaportalContext contexto,
             IniciarDeclaracionDtoParam parametro)
@@ -484,6 +585,7 @@ namespace gad.aaportal.services.Services.Implementation
 
                     _15XMil = parametro.UnoCincoXMil,
                     Patente = parametro.Patente,
+                    ValorBomberos=parametro.ValorBomberos,
                     Estado = true
                 };
 
@@ -508,7 +610,7 @@ namespace gad.aaportal.services.Services.Implementation
                         PasivoContingente = entity.PasivoContingente,
                         Ingresos = entity.Ingresos,
                         CostosGastos = entity.CostosGastos,
-
+                        ValorBomberos=entity.ValorBomberos,
                         UnoCincoXMil = entity._15XMil,
                         Patente = entity.Patente
                     },
@@ -562,7 +664,7 @@ namespace gad.aaportal.services.Services.Implementation
                         PasivoContingente = d.PasivoContingente,
                         Ingresos = d.Ingresos,
                         CostosGastos = d.CostosGastos,
-
+                        ValorBomberos= d.ValorBomberos,
                         UnoCincoXMil = d._15XMil,
                         Patente = d.Patente,
                         Estado = d.Estado

@@ -32,6 +32,8 @@ namespace gad.aaportal.components.Components.Contribuyente
         private bool _mostrarModalPeriodo;
         private int _stepActual = 1;
         private bool _procesoFinalizado;
+        private bool _tieneRestriccionMunicipal;
+        private string _mensajeRestriccionMunicipal = string.Empty;
 
         [Inject] private ISessionStorageServices JSSessionStorageServices { get; set; } = null!;
         [Inject] private IContribuyenteConsumers ServicesDeclaracion { get; set; } = null!;
@@ -74,14 +76,26 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var usuario = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Identificacion);
                 var parametro = new ContribuyenteDtoParam { Identificacion = usuario };
                 var result = await ServicesDeclaracion.ConsultarPeriodosDeclaracion(parametro);
-
+                #region consultar anio adeuda
+                var resultaAnioDeclaracion = await SpMunicipioConsumers.ConsultarAnioAdeuda(new ConsultarAnioAdeudaDtoParam() { Ruc=usuario });
+                #endregion
                 LoadingBorder?.Close();
 
                 if (result?.Data is not null)
                 {
-                    _periodosDeclaracion = result.Data;
-                    _establecimientosBase = ClonarEstablecimientos(_periodosDeclaracion.Establecimientos ?? new List<ContribuyenteEstablecimientoPago>());
-                    StateHasChanged();
+                    if (resultaAnioDeclaracion?.Data is not null)
+                    {
+                        result.Data.PeriodosDeclaracion = result.Data.PeriodosDeclaracion.Where(p => p.AnioEjercicioFiscal == resultaAnioDeclaracion.Data.Anio).ToList();
+                        _periodosDeclaracion = result.Data;
+                        _establecimientosBase = ClonarEstablecimientos(_periodosDeclaracion.Establecimientos ?? new List<ContribuyenteEstablecimientoPago>());
+                        StateHasChanged();
+                    }
+                    else
+                    {
+                        await MostrarMensaje("error",
+                        result?.Message?.Code ?? "PERIODOS",
+                        result?.Message?.Description ?? "No existen periodos a declarar en el Municipio");
+                    }
                 }
                 else
                 {
@@ -108,6 +122,15 @@ namespace gad.aaportal.components.Components.Contribuyente
                 return;
             }
 
+            LoadingBorder?.Open();
+
+            var puedeDeclarar = await ValidarRestriccionesMunicipales(identificacion);
+
+            LoadingBorder?.Close();
+
+            if (!puedeDeclarar)
+                return;
+
             _periodoSeleccionado = new IniciarDeclaracionDtoParam
             {
                 Identificacion = identificacion
@@ -125,6 +148,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         {
             try
             {
+
                 var periodo = _periodosDeclaracion.PeriodosDeclaracion
                     .FirstOrDefault(p => p.AnioEjercicioFiscal == _periodoSeleccionado.AnioDeclaracion);
 
@@ -142,7 +166,13 @@ namespace gad.aaportal.components.Components.Contribuyente
                     await MostrarMensaje("error", "IDENTIFICACION_NO_ENCONTRADA", "No se encontró la identificación del contribuyente en sesión");
                     return;
                 }
+                var puedeDeclarar = await ValidarRestriccionesMunicipales(identificacion);
 
+                if (!puedeDeclarar)
+                {
+                    _mostrarModalPeriodo = false;
+                    return;
+                }
                 _valoresSugeridos = periodo;
 
                 _valoresDeclaracion = new PeriodoDeclaracionDtoResult
@@ -299,6 +329,12 @@ namespace gad.aaportal.components.Components.Contribuyente
             _establecimientos.Sum(e => e.Porcentaje);
 
         private decimal ValorUnoCincoPorMil { get; set; }
+        private decimal ValorMultaPorMil { get; set; }
+        private decimal ValorMultaPatente { get; set; }
+        private decimal ValorBomberos { get; set; }
+        private bool MostrarValorBomberos => ValorBomberos > 0;
+        private decimal Valores3EdadPatente { get; set; }
+        private decimal Valores3EdadPorMil{ get; set; }
 
         private decimal TotalPatentePorEstablecimientos =>
             _establecimientos.Sum(e => e.Valor);
@@ -359,26 +395,30 @@ namespace gad.aaportal.components.Components.Contribuyente
         {
             _resumen = new ResumenImpuestoDeclaracionViewModel
             {
+                Patrimonio = Patrimonio,
                 DerechoPatenteAnual = TotalPatentePorEstablecimientos,
-                ValoresBomberosPatente = 0,
-                DescuentoAnticipoPagadoSri = 0,
+                ValoresBomberosPatente = ValorBomberos,
+                MultaPatente = ValorMultaPatente,
                 DescuentoPatenteTerceraEdad = 0,
-                ReduccionDescensoUtilidad = 0,
-                TotalPatentePagar = TotalPatentePorEstablecimientos,
-                MultaPatente = 0,
 
+                TotalPatentePagar =
+                    TotalPatentePorEstablecimientos +
+                    ValorMultaPatente +
+                    ValorBomberos,
+
+                BaseImponible1_5_x_1000 = BaseImponible,
                 ImpuestoActivos = ValorUnoCincoPorMil,
-                ValoresBomberos1_1000 = 0,
+                Multa15 = ValorMultaPorMil,
                 DescuentoTerceraEdad15 = 0,
-                Total15Pagar = ValorUnoCincoPorMil,
-                Multa15 = 0
+
+                Total15Pagar =
+                    ValorUnoCincoPorMil +
+                    ValorMultaPorMil,
             };
 
             _resumen.TotalPagar =
                 _resumen.TotalPatentePagar +
-                _resumen.MultaPatente +
-                _resumen.Total15Pagar +
-                _resumen.Multa15;
+                _resumen.Total15Pagar;
         }
         private async Task CalcularDeclaracion()
         {
@@ -408,9 +448,17 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 LoadingBorder?.Open();
 
+                #region Calculo valores patente sp municipio
                 await CalcularPatentePorEstablecimientos();
-
                 await CalcularUnoCincoPorMil();
+                await ConsultarValorBomberos();
+                #endregion
+
+                #region Calculo multa sp municipio
+                await CalcularMultaPatente();
+                await CalcularMulta1_5Mil();
+                #endregion
+
 
                 CargarResumenImpuestos();
 
@@ -496,7 +544,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                     CostosGastos = _valoresDeclaracion.CostosGastos,
 
                     UnoCincoXMil = ValorUnoCincoPorMil,
-                    Patente = TotalPatentePorEstablecimientos
+                    Patente = TotalPatentePorEstablecimientos,
+                    ValorBomberos = ValorBomberos
                 };
 
                 var result = await ServicesDeclaracion.RegistrarDeclaracion(parametro);
@@ -576,6 +625,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 _stepActual = 1;
                 _procesoFinalizado = false;
+                ValorBomberos = 0;
 
                 await CargarPeriodosDeclaracion();
 
@@ -591,5 +641,220 @@ namespace gad.aaportal.components.Components.Contribuyente
                     "Existe un error no administrado, por favor informe a Tecnología");
             }
         }
+
+        #region Cálculo multas
+        private async Task CalcularMultaPatente()
+        {
+            try
+            {
+                var fechaActual = DateTime.Today;
+                if (BaseImponible != 0)
+                {
+                    var result = await SpMunicipioConsumers.CalcularMulta(
+                        new CalcularMultaDtoParam()
+                        {
+                            PeriodoFin = new DateTime(
+                                _periodoSeleccionado.AnioDeclaracion,
+                                fechaActual.Month,
+                                fechaActual.Day
+                            ).ToString("yyyy-MM-dd"),
+                            FechaEmision = fechaActual.ToString("yyyy-MM-dd") ,
+                            Valor = BaseImponible
+                        });
+                    if (result != null)
+                    {
+                        if (result.Data != null)
+                        {
+                            ValorMultaPatente  = result.Data.Multa;
+                        }
+                        else
+                        {
+                            await MostrarMensaje("error", result.Message.Code, result.Message.Description);
+                        }
+                    }
+                    else
+                    {
+                        await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                    }
+                }
+            }
+            catch
+            {
+                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+            }
+            await Task.CompletedTask;
+        }
+        private async Task CalcularMulta1_5Mil()
+        {
+            try
+            {
+                var fechaActual = DateTime.Today;
+                if (BaseImponible != 0)
+                {
+                    var result = await SpMunicipioConsumers.CalcularMulta(
+                                          new CalcularMultaDtoParam()
+                                          {
+                                              PeriodoFin = new DateTime(
+                                                  _periodoSeleccionado.AnioDeclaracion,
+                                                  fechaActual.Month,
+                                                  fechaActual.Day
+                                              ).ToString("yyyy-MM-dd") ,
+                                              FechaEmision = fechaActual.ToString("yyyy-MM-dd"),
+                                              Valor = BaseImponible
+                                          });
+                    if (result != null)
+                    {
+                        if (result.Data != null)
+                        {
+                            ValorMultaPorMil = result.Data.Multa;
+                        }
+                        else
+                        {
+                            await MostrarMensaje("error", result.Message.Code, result.Message.Description);
+                        }
+                    }
+                    else
+                    {
+                        await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                    }
+                }
+            }
+            catch
+            {
+                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+            }
+            await Task.CompletedTask;
+        }
+        #endregion
+
+        #region Cálculo tercera edad
+        private async Task CalcularValoresTerceraEdadPatente()
+        {
+            try
+            {
+                var fechaActual = DateTime.Today;
+                if (BaseImponible != 0)
+                {
+                    var result = await SpMunicipioConsumers.CalcularTerceraEdad(new CalcularTerceraEdadDtoParam() {BasePatrimonio= (_valoresDeclaracion.ActivoCorriente + _valoresDeclaracion.ActivoNoCorriente) - (_valoresDeclaracion.PasivoCorriente + _valoresDeclaracion.PasivoNoCorriente + _valoresDeclaracion.PasivoContingente), Anio= _periodoSeleccionado.AnioDeclaracion, Ingresos = _valoresDeclaracion.Ingresos, Ruc= _periodoSeleccionado.Identificacion, TipoImpuesto="PMA", ValorImpuesto= TotalPatentePorEstablecimientos });
+                    if (result != null)
+                    {
+                        if (result.Message.Code.Equals("OK"))
+                        {
+                            await MostrarMensaje("success", result.Message.Code, result.Message.Description);
+                        }
+                        else
+                        {
+                            await MostrarMensaje("error", result.Message.Code, result.Message.Description);
+                        }
+                    }
+                    else
+                    {
+                        await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                    }
+                }
+            }
+            catch
+            {
+                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+            }
+            await Task.CompletedTask;
+        }
+        private async Task CalcularValoresTerceraEdad_1_5Mil()
+        {
+            try
+            {
+                var fechaActual = DateTime.Today;
+                if (BaseImponible != 0)
+                {
+                    var result = await SpMunicipioConsumers.CalcularTerceraEdad(new CalcularTerceraEdadDtoParam() { BasePatrimonio = (_valoresDeclaracion.ActivoCorriente + _valoresDeclaracion.ActivoNoCorriente) - (_valoresDeclaracion.PasivoCorriente + _valoresDeclaracion.PasivoNoCorriente + _valoresDeclaracion.PasivoContingente), Anio = _periodoSeleccionado.AnioDeclaracion, Ingresos = _valoresDeclaracion.Ingresos, Ruc = _periodoSeleccionado.Identificacion, TipoImpuesto = "IAT", ValorImpuesto = ValorUnoCincoPorMil });
+                    if (result != null)
+                    {
+                        if (result.Message.Code.Equals("OK"))
+                        {
+                            await MostrarMensaje("success", result.Message.Code, result.Message.Description);
+                        }
+                        else
+                        {
+                            await MostrarMensaje("error", result.Message.Code, result.Message.Description);
+                        }
+                    }
+                    else
+                    {
+                        await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                    }
+                }
+            }
+            catch
+            {
+                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+            }
+            await Task.CompletedTask;
+        }
+        #endregion
+
+        #region Validar Permisos
+        private async Task<bool> ValidarRestriccionesMunicipales(string identificacion)
+        {
+            var tieneRestricciones = await SpMunicipioConsumers.ValidadorPermisos(new ValidadorPermisosDtoParam {Ruc = identificacion});
+
+            if (tieneRestricciones?.Data is not null && tieneRestricciones.Data.Estado == false)
+            {
+                _tieneRestriccionMunicipal = true;
+
+                _mensajeRestriccionMunicipal =
+                    tieneRestricciones.Data.Mensaje ??
+                    "Usted mantiene restricciones en el Municipio. Para continuar con la declaración, debe acercarse a las oficinas municipales.";
+
+                await MostrarMensaje("error", "RESTRICCION_MUNICIPAL",  _mensajeRestriccionMunicipal);
+
+                StateHasChanged();
+                return false;
+            }
+
+            _tieneRestriccionMunicipal = false;
+            _mensajeRestriccionMunicipal = string.Empty;
+
+            return true;
+        }
+        #endregion
+
+        #region Valores Bomberos
+        private async Task ConsultarValorBomberos()
+        {
+            try
+            {
+                ValorBomberos = 0;
+
+                if (_declaracionIniciada is null ||
+                    string.IsNullOrWhiteSpace(_declaracionIniciada.Identificacion))
+                    return;
+
+                var result = await SpMunicipioConsumers.ConsultarValorBomberos(
+                    new ConsultarValorBomberosDtoParam
+                    {
+                        Ruc = _declaracionIniciada.Identificacion
+                    });
+
+                if (result?.Data is not null)
+                {
+                    ValorBomberos = Convert.ToDecimal(result.Data.ValorBomberos);
+                    return;
+                }
+
+                if (result?.Message is not null)
+                {
+                    await MostrarMensaje(
+                        "error",
+                        result.Message.Code,
+                        result.Message.Description);
+                }
+            }
+            catch
+            {
+                ValorBomberos = 0;
+                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error al consultar el valor de Bomberos");
+            }
+        }
+        #endregion
     }
 }

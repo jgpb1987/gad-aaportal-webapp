@@ -37,8 +37,8 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
 
     public class CalcularMultaDtoParam
     {
-        public string Ruc { get; set; }
-        public int AnioDeclaracion { get; set; }
+        public string PeriodoFin { get; set; } = null!;
+        public string FechaEmision { get; set; } = null!;
         public decimal Valor { get; set; }
     }
 

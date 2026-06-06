@@ -16,14 +16,16 @@ namespace gad.aaportal.services.Services.Implementation
 {
     public class SpMunicipioServices : ISpMunicipioServices
     {
+        private readonly BddGmaaContext contexto;
         private readonly ILogger<SpMunicipioServices> logger;
 
-        public SpMunicipioServices(ILogger<SpMunicipioServices> logger)
+        public SpMunicipioServices(BddGmaaContext contexto, ILogger<SpMunicipioServices> logger)
         {
+            this.contexto = contexto;
             this.logger = logger;
         }
 
-        public async Task<CalcularImpuestoPatenteDtoResult> CalcularImpuestoPatente(BddGmaaContext contexto, CalcularImpuestoPatenteDtoParam parametro)
+        public async Task<CalcularImpuestoPatenteDtoResult> CalcularImpuestoPatente(CalcularImpuestoPatenteDtoParam parametro)
         {
             CalcularImpuestoPatenteDtoResult result = new();
 
@@ -72,7 +74,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<CalcularImpuestoIatDtoResult> CalcularImpuestoIat(BddGmaaContext contexto, CalcularImpuestoIatDtoParam parametro)
+        public async Task<CalcularImpuestoIatDtoResult> CalcularImpuestoIat(CalcularImpuestoIatDtoParam parametro)
         {
             CalcularImpuestoIatDtoResult result = new();
 
@@ -118,7 +120,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<CalcularMultaDtoResult> CalcularMulta(BddGmaaContext contexto, CalcularMultaDtoParam parametro)
+        public async Task<CalcularMultaDtoResult> CalcularMulta(CalcularMultaDtoParam parametro)
         {
             CalcularMultaDtoResult result = new();
 
@@ -133,14 +135,14 @@ namespace gad.aaportal.services.Services.Implementation
                 command.CommandText = "dbo.SP_Pat_CalcularMulta";
                 command.CommandType = CommandType.StoredProcedure;
 
-                var parametroPeriodoFin = new SqlParameter("@Ruc", SqlDbType.VarChar)
+                var parametroPeriodoFin = new SqlParameter("@PeriodoFin", SqlDbType.VarChar)
                 {
-                    Value = parametro.Ruc
+                    Value = parametro.PeriodoFin
                 };
 
-                var parametroFechaEmision = new SqlParameter("@AnioDeclaracion", SqlDbType.Int)
+                var parametroFechaEmision = new SqlParameter("@FechaEmision", SqlDbType.VarChar)
                 {
-                    Value = parametro.AnioDeclaracion
+                    Value = parametro.FechaEmision
                 };
 
                 var parametroValor = new SqlParameter("@Valor", SqlDbType.Decimal)
@@ -186,9 +188,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<CalcularTerceraEdadDtoResult> CalcularTerceraEdad(
-    BddGmaaContext contexto,
-    CalcularTerceraEdadDtoParam parametro)
+        public async Task<CalcularTerceraEdadDtoResult> CalcularTerceraEdad(CalcularTerceraEdadDtoParam parametro)
         {
             CalcularTerceraEdadDtoResult result = new();
 
@@ -263,7 +263,6 @@ namespace gad.aaportal.services.Services.Implementation
             return result;
         }
         public async Task<InsertActividadAnualDtoResult> InsertActividadAnual(
-    BddGmaaContext contexto,
     InsertActividadAnualDtoParam parametro)
         {
             InsertActividadAnualDtoResult result = new();
@@ -324,7 +323,6 @@ namespace gad.aaportal.services.Services.Implementation
             return result;
         }
         public async Task<InsertTerceraEdadDtoResult> InsertTerceraEdad(
-    BddGmaaContext contexto,
     InsertTerceraEdadDtoParam parametro)
         {
             InsertTerceraEdadDtoResult result = new();
@@ -367,9 +365,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<InsertPagoPorTituloDtoResult> InsertPagoPorTitulo(
-    BddGmaaContext contexto,
-    InsertPagoPorTituloDtoParam parametro)
+        public async Task<InsertPagoPorTituloDtoResult> InsertPagoPorTitulo(InsertPagoPorTituloDtoParam parametro)
         {
             InsertPagoPorTituloDtoResult result = new();
 
@@ -415,8 +411,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<ActualizarCodigoIngresoDtoResult> ActualizarCodigoIngreso(BddGmaaContext contexto, 
-    ActualizarCodigoIngresoDtoParam parametro)
+        public async Task<ActualizarCodigoIngresoDtoResult> ActualizarCodigoIngreso(    ActualizarCodigoIngresoDtoParam parametro)
         {
             ActualizarCodigoIngresoDtoResult result = new();
 
@@ -446,7 +441,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<ConsultarValoresPagarDtoResult> ConsultarValoresPagar(BddGmaaContext contexto, ConsultarValoresPagarDtoParam parametro)
+        public async Task<ConsultarValoresPagarDtoResult> ConsultarValoresPagar(ConsultarValoresPagarDtoParam parametro)
         {
             ConsultarValoresPagarDtoResult result = new();
 
@@ -500,7 +495,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<ValidadorPermisosDtoResult> ValidadorPermisos(BddGmaaContext contexto, ValidadorPermisosDtoParam parametro)
+        public async Task<ValidadorPermisosDtoResult> ValidadorPermisos(ValidadorPermisosDtoParam parametro)
         {
             ValidadorPermisosDtoResult result = new();
 
@@ -540,9 +535,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<ConsultarValorBomberosDtoResult> ConsultarValorBomberos(
-    BddGmaaContext contexto,
-    ConsultarValorBomberosDtoParam parametro)
+        public async Task<ConsultarValorBomberosDtoResult> ConsultarValorBomberos(ConsultarValorBomberosDtoParam parametro)
         {
             ConsultarValorBomberosDtoResult result = new();
 
@@ -583,7 +576,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<ConsultarRucExoneracionesDtoResult> ConsultarRucExoneraciones(BddGmaaContext contexto, ConsultarRucExoneracionesDtoParam parametro)
+        public async Task<ConsultarRucExoneracionesDtoResult> ConsultarRucExoneraciones(ConsultarRucExoneracionesDtoParam parametro)
         {
             ConsultarRucExoneracionesDtoResult result = new();
 
@@ -625,7 +618,6 @@ namespace gad.aaportal.services.Services.Implementation
             return result;
         }
         public async Task<InsertarTranferenciaIatDtoResult> InsertarTranferenciaIat(
-    BddGmaaContext contexto,
     InsertarTranferenciaIatDtoParam parametro)
         {
             InsertarTranferenciaIatDtoResult result = new();
@@ -660,9 +652,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<ConsultarAnioAdeudaDtoResult> ConsultarAnioAdeuda(
-    BddGmaaContext contexto,
-    ConsultarAnioAdeudaDtoParam parametro)
+        public async Task<ConsultarAnioAdeudaDtoResult> ConsultarAnioAdeuda(ConsultarAnioAdeudaDtoParam parametro)
         {
             ConsultarAnioAdeudaDtoResult result = new();
 

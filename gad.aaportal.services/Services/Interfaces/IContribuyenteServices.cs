@@ -17,6 +17,7 @@ namespace gad.aaportal.services.Services.Interfaces
         Task<ActualizarDatosContribuyenteDataResult> ActualizarDatosContribuyente(AaportalContext contexto,  ActualizarDatosContribuyenteDtoParam parametro);
         Task<TipoMedioContactoDataResult> ConsultarTiposMedioContacto(AaportalContext contexto);
         Task<PeriodoDeclaracionDataResult> ConsultarPeriodosDeclaracion(AaportalContext contexto, ContribuyenteDtoParam parametro);
+        Task<PeriodoDeclaracionDataResult> ConsultarPeriodosDeclaracionMunicipio(AaportalContext contexto, ContribuyenteDtoParam parametro);
         Task<IniciarDeclaracionDataResult> IniciarDeclaracion(AaportalContext contexto,   IniciarDeclaracionDtoParam parametro);
         Task<RegistrarDeclaracionDataResult> RegistrarDeclaracion( AaportalContext contexto, RegistrarDeclaracionDtoParam parametro);
         Task<ConsultarDeclaracionContribuyenteDataResult> ConsultarDeclaracionesContribuyente(AaportalContext contexto,  ConsultarDeclaracionContribuyenteDtoParam parametro);

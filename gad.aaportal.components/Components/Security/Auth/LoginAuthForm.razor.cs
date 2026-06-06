@@ -112,14 +112,6 @@ namespace gad.aaportal.components.Components.Security.Auth
             try
             {
                 LoadingBorder!.Open();
-                //var tieneRestricciones = await SpMunicipioConsumers.ValidadorPermisos(new ValidadorPermisosDtoParam() { Ruc = _userRegistrationParam.User });
-                var tieneRestricciones = new ValidadorPermisosDtoResult() { Data=new() { Estado=true, Mensaje="OK"}, Message=new() { Code="OK", Description="Proceso Ejecutado exitosamente"} };
-                if (tieneRestricciones != null)
-                {
-                    if (tieneRestricciones.Data != null)
-                    {
-                        if (tieneRestricciones.Data.Estado)
-                        {
                             var dataDispositivo = await JSSessionStorageServices.GetInfoDispositivoUsuario();
                             var userRegistrationRequest = new UserRegistrationDtoParam()
                             {
@@ -172,24 +164,6 @@ namespace gad.aaportal.components.Components.Security.Auth
                                 LoadingBorder!.Close();
                                 await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
                             }
-                        }
-                        else
-                        {
-                            LoadingBorder!.Close();
-                            await Toast!.ShowMessage("error", tieneRestricciones.Message.Code, tieneRestricciones.Data.Mensaje);
-                        }
-                    }
-                    else
-                    {
-                        LoadingBorder!.Close();
-                        await Toast!.ShowMessage("error", tieneRestricciones.Message.Code, tieneRestricciones.Message.Description);
-                    }
-                }
-                else
-                {
-                    LoadingBorder!.Close();
-                    await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
-                }
 
             }
             catch (Exception ex)

@@ -2,7 +2,7 @@
 html, body {
     font-family: 'Montserrat', sans-serif;
 }
-/*
+
 :root {
     --pro-background-color: #1a75cc;
     --pro-button-background-color: #1a75cc;
@@ -15,8 +15,8 @@ html, body {
     --pro-text-sidebar-color: #ced4da;
     --pro-text-sidebar-color-hover: #ffffff;
     --pro-li-sidebar-hover: #1a75cc;
-}*/
-:root {
+}
+/*:root {
     --pro-background-color: rgba(228, 34, 27, 1);
     --pro-button-background-color: rgba(228, 34, 27, 1);
     --pro-button-background-color-hover: rgba(196, 29, 23, 1);
@@ -29,7 +29,7 @@ html, body {
     --pro-text-sidebar-color-hover: #ffffff;
     --pro-li-sidebar-hover: rgba(228, 34, 27, 1);
 }
-/*:root {
+*//*:root {
     --pro-background-color: #333333;
     --pro-button-background-color: #333333;
     --pro-button-background-color-hover: #4d4d4d;

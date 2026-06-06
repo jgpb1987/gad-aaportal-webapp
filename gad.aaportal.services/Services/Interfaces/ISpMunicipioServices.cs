@@ -5,20 +5,19 @@ namespace gad.aaportal.services.Services.Interfaces
 {
     public interface ISpMunicipioServices
     {
-        Task<CalcularImpuestoPatenteDtoResult> CalcularImpuestoPatente(BddGmaaContext contexto, CalcularImpuestoPatenteDtoParam parametro);
-        Task<CalcularImpuestoIatDtoResult> CalcularImpuestoIat(BddGmaaContext contexto,    CalcularImpuestoIatDtoParam parametro);
-        Task<CalcularMultaDtoResult> CalcularMulta(BddGmaaContext contexto, CalcularMultaDtoParam parametro);
-        Task<CalcularTerceraEdadDtoResult> CalcularTerceraEdad(BddGmaaContext contexto, CalcularTerceraEdadDtoParam parametro);
-        Task<InsertActividadAnualDtoResult> InsertActividadAnual(BddGmaaContext contexto,InsertActividadAnualDtoParam parametro);
-        Task<InsertTerceraEdadDtoResult> InsertTerceraEdad(BddGmaaContext contexto, InsertTerceraEdadDtoParam parametro);
-        Task<InsertPagoPorTituloDtoResult> InsertPagoPorTitulo(BddGmaaContext contexto, InsertPagoPorTituloDtoParam parametro);
-        Task<ActualizarCodigoIngresoDtoResult> ActualizarCodigoIngreso(BddGmaaContext contexto, ActualizarCodigoIngresoDtoParam parametro);
-        Task<ConsultarValoresPagarDtoResult> ConsultarValoresPagar(BddGmaaContext contexto, ConsultarValoresPagarDtoParam parametro);
-        Task<ValidadorPermisosDtoResult> ValidadorPermisos(BddGmaaContext contexto, ValidadorPermisosDtoParam parametro);
-        Task<ConsultarValorBomberosDtoResult> ConsultarValorBomberos( BddGmaaContext contexto, ConsultarValorBomberosDtoParam parametro);
-        Task<ConsultarRucExoneracionesDtoResult> ConsultarRucExoneraciones(BddGmaaContext contexto, ConsultarRucExoneracionesDtoParam parametro);
-        Task<InsertarTranferenciaIatDtoResult> InsertarTranferenciaIat(BddGmaaContext contexto,InsertarTranferenciaIatDtoParam parametro);
-        Task<ConsultarAnioAdeudaDtoResult> ConsultarAnioAdeuda(BddGmaaContext contexto,
-    ConsultarAnioAdeudaDtoParam parametro);
+        Task<CalcularImpuestoPatenteDtoResult> CalcularImpuestoPatente(CalcularImpuestoPatenteDtoParam parametro);
+        Task<CalcularImpuestoIatDtoResult> CalcularImpuestoIat(CalcularImpuestoIatDtoParam parametro);
+        Task<CalcularMultaDtoResult> CalcularMulta(CalcularMultaDtoParam parametro);
+        Task<CalcularTerceraEdadDtoResult> CalcularTerceraEdad(CalcularTerceraEdadDtoParam parametro);
+        Task<InsertActividadAnualDtoResult> InsertActividadAnual(InsertActividadAnualDtoParam parametro);
+        Task<InsertTerceraEdadDtoResult> InsertTerceraEdad(InsertTerceraEdadDtoParam parametro);
+        Task<InsertPagoPorTituloDtoResult> InsertPagoPorTitulo(InsertPagoPorTituloDtoParam parametro);
+        Task<ActualizarCodigoIngresoDtoResult> ActualizarCodigoIngreso(ActualizarCodigoIngresoDtoParam parametro);
+        Task<ConsultarValoresPagarDtoResult> ConsultarValoresPagar(ConsultarValoresPagarDtoParam parametro);
+        Task<ValidadorPermisosDtoResult> ValidadorPermisos(ValidadorPermisosDtoParam parametro);
+        Task<ConsultarValorBomberosDtoResult> ConsultarValorBomberos(ConsultarValorBomberosDtoParam parametro);
+        Task<ConsultarRucExoneracionesDtoResult> ConsultarRucExoneraciones(ConsultarRucExoneracionesDtoParam parametro);
+        Task<InsertarTranferenciaIatDtoResult> InsertarTranferenciaIat(InsertarTranferenciaIatDtoParam parametro);
+        Task<ConsultarAnioAdeudaDtoResult> ConsultarAnioAdeuda(ConsultarAnioAdeudaDtoParam parametro);
     }
 }

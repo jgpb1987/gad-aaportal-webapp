@@ -185,8 +185,8 @@ namespace gad.aaportal.apis.Controllers
 
             try
             {
-                result.Data=new ConsultarValorBomberosDtoDataResult() { ValorBomberos=5052.89 };
-                //result = await services.ConsultarValorBomberos( parametro);
+                //result.Data=new ConsultarValorBomberosDtoDataResult() { ValorBomberos=5052.89 };
+                result = await services.ConsultarValorBomberos( parametro);
             }
             catch (Exception ex)
             {

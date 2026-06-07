@@ -19,5 +19,6 @@ namespace gad.aaportal.services.Services.Interfaces
         Task<ConsultarRucExoneracionesDtoResult> ConsultarRucExoneraciones(ConsultarRucExoneracionesDtoParam parametro);
         Task<InsertarTranferenciaIatDtoResult> InsertarTranferenciaIat(InsertarTranferenciaIatDtoParam parametro);
         Task<ConsultarAnioAdeudaDtoResult> ConsultarAnioAdeuda(ConsultarAnioAdeudaDtoParam parametro);
+        Task<AnioVencimientoDtoResult> ConsultarFechaVencimiento(ConsultaAnioVencimientoDtoParam parametro);
     }
 }

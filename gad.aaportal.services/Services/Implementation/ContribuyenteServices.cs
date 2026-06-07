@@ -5,7 +5,6 @@ using gad.aaportal.commons.Dto.DtoMunicipio;
 using gad.aaportal.commons.Dto.DtoPortal.Declaracion;
 using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.dataaccess.Configuration;
-using gad.aaportal.models.Entity.Dbo;
 using gad.aaportal.models.Entity.Declaracion;
 using gad.aaportal.services.Config;
 using gad.aaportal.services.MessageException;
@@ -13,6 +12,7 @@ using gad.aaportal.services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Security.Cryptography;
 
 namespace gad.aaportal.services.Services.Implementation
 {
@@ -403,8 +403,8 @@ namespace gad.aaportal.services.Services.Implementation
                 if (establecimientos == null || !establecimientos.Any())
                     throw SystemExceptionCustomized.CreateException("CPD002", "No se encontró información de establecimientos activos para el contribuyente");
 
-                var anioDeclarar= await spMunicipioServices.ConsultarAnioAdeuda(new ConsultarAnioAdeudaDtoParam() {Ruc = parametro.Identificacion });
-                if(anioDeclarar == null || anioDeclarar.Data == null)
+                var anioDeclarar = await spMunicipioServices.ConsultarAnioAdeuda(new ConsultarAnioAdeudaDtoParam() { Ruc = parametro.Identificacion });
+                if (anioDeclarar == null || anioDeclarar.Data == null)
                     throw SystemExceptionCustomized.CreateException("CPD003", "No se pudo consultar el año a declarar en el municipio");
 
 
@@ -585,11 +585,137 @@ namespace gad.aaportal.services.Services.Implementation
 
                     _15XMil = parametro.UnoCincoXMil,
                     Patente = parametro.Patente,
-                    ValorBomberos=parametro.ValorBomberos,
+                    ValorBomberos = parametro.ValorBomberos,
                     Estado = true
                 };
 
                 await contexto.ContribuyenteDeclaracions.AddAsync(entity);
+
+
+                InsertActividadAnualDtoParam insert = new InsertActividadAnualDtoParam
+                {
+                    Ruc = parametro.Identificacion,
+                    IngresoTotales = (double)parametro.Ingresos,
+                    TotalActivos = (double)parametro.ActivoCorriente + (double)parametro.ActivoNoCorriente,
+                    TotalPasivos = (double)parametro.PasivoCorriente + (double)parametro.PasivoNoCorriente + (double)parametro.PasivoContingente,
+                    Patrimonio = (double)parametro.ActivoCorriente + (double)parametro.ActivoNoCorriente - (double)parametro.PasivoCorriente + (double)parametro.PasivoNoCorriente + (double)parametro.PasivoContingente,
+                    FechaInicio = DateTime.Now,
+                    FechaVencimiento = parametro.FechaVencimiento,
+                    AnioPatente = parametro.Anio,
+                    BaseImponiblePatente = (double)parametro.ActivoCorriente + (double)parametro.ActivoNoCorriente - (double)parametro.PasivoCorriente + (double)parametro.PasivoNoCorriente + (double)parametro.PasivoContingente,
+                    TarifaPatente = (double)parametro.Patente,
+                    MultaPatente = (double)parametro.MultaPatente,
+                    PorcentajeDescuentoTercera = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
+                    UsuarioIngreso = "SYSWEB",//consultar a municipio que usuario deberia enviar o setear x default
+                    Utilidad = (double)parametro.Ingresos - (double)parametro.CostosGastos,
+                    ContingenciaPasivos = (double)parametro.PasivoContingente,
+                    BaseImponibleIat = (double)parametro.BaseImponibleIAT,
+                    ImpuestoIat = (double)parametro.UnoCincoXMil,
+                    MultaIat = (double)parametro.MultaIat,
+                    PorcentajeCalculoIat = (double)parametro.PorcentajeCalculoIat,
+                    AreaArriendo = 0,//consulta a q hace referencia
+                    Sustitutiva = string.Empty,//validar q enviar cuando sea sustitutiva
+                    PagoSri = 0,//validar de donde se puede traer esto
+                    PorcentajeTeiat = (double)parametro.PorcentajeDescuentoTerceraEdadIAT
+                };
+
+                var resultActividadAnual = await spMunicipioServices.InsertActividadAnual(insert);
+                var actividadGenerada = resultActividadAnual.Data.IdActividadGenerada;//TRATAR CODIGO DE ACTIVIDAD GENERADO Y VER QUE SE HACE CON EL
+
+                if (parametro.PorcentajeDescuentoTerceraEdadPatente > 0)
+                {
+                    InsertTerceraEdadDtoParam insertTP = new InsertTerceraEdadDtoParam
+                    {
+                        AnioCalculo = parametro.Anio,
+                        Rbu = 470,
+                        PatrimonioAa = (double)parametro.BaseImponiblePatente,
+                        Ingresos = (double)parametro.Ingresos,
+                        PorcentajeExoneracion = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
+                        ExedenteAplicado = 0, // traer excedente del sp tercera edad
+                        PorcentajePatrimonio = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
+                        PorcentajeIngreso = 0, //traer del sp tercera edad
+                        BaseImponible = (double)parametro.BaseImponiblePatente,
+                        ImpuestoGravado = (double)parametro.Patente,
+                        PorcentajeAplicado = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
+                        ValorExonerado = (double)parametro.ValorExoneradoPatente,
+                        TipoImpuesto = "PMA",
+                        UsuarioIngreso = "SYSWEB",
+                        IdCalculoImpuesto = actividadGenerada
+                    };
+
+                    await spMunicipioServices.InsertTerceraEdad(insertTP);
+                }
+
+                if (parametro.PorcentajeDescuentoTerceraEdadIAT > 0)
+                {
+                    InsertTerceraEdadDtoParam insertTP = new InsertTerceraEdadDtoParam
+                    {
+                        AnioCalculo = parametro.Anio,
+                        Rbu = 470,
+                        PatrimonioAa = (double)parametro.BaseImponiblePatente,
+                        Ingresos = (double)parametro.Ingresos,
+                        PorcentajeExoneracion = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
+                        ExedenteAplicado = 0, // traer excedente del sp tercera edad
+                        PorcentajePatrimonio = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
+                        PorcentajeIngreso = 0, //traer del sp tercera edad
+                        BaseImponible = (double)parametro.BaseImponibleIAT,
+                        ImpuestoGravado = (double)parametro.UnoCincoXMil,
+                        PorcentajeAplicado = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
+                        ValorExonerado = (double)parametro.ValorExoneradoIAT,
+                        TipoImpuesto = "IAT",
+                        UsuarioIngreso = "SYSWEB",
+                        IdCalculoImpuesto = actividadGenerada
+                    };
+
+                    await spMunicipioServices.InsertTerceraEdad(insertTP);
+                }
+
+                InsertPagoPorTituloDtoParam insertPPT = new InsertPagoPorTituloDtoParam
+                {
+                    Ruc = parametro.Identificacion,
+                    CodTituloDatos = "PMA",
+                    FechaIngreso = DateTime.Now,
+                    FechaVencimiento = parametro.FechaVencimiento,
+                    FechaVencInteres = parametro.FechaVencimiento,
+                    UserIngreso = "SYSWEB",
+                    BaseImponible = (double)parametro.BaseImponiblePatente,
+                    Valor = (double)parametro.Patente,
+                    AnioDeclaracion = parametro.Anio,
+                    ValorPagadoOtroCanton = 0//DEFINIR SI SON VARIOS CANTONES APARTE
+                };
+                var tituloPatente = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
+
+                ActualizarCodigoIngresoDtoParam codIngreso = new ActualizarCodigoIngresoDtoParam
+                {
+                    CodigoIngreso = tituloPatente.Data.CodigoIngreso,
+                    IdDeclaracionAnual = actividadGenerada,
+                    CodTitulo = "PMA"
+                };
+                await spMunicipioServices.ActualizarCodigoIngreso(codIngreso);
+
+                insertPPT = new InsertPagoPorTituloDtoParam
+                {
+                    Ruc = parametro.Identificacion,
+                    CodTituloDatos = "IAT",
+                    FechaIngreso = DateTime.Now,
+                    FechaVencimiento = parametro.FechaVencimiento,
+                    FechaVencInteres = parametro.FechaVencimiento,
+                    UserIngreso = "SYSWEB",
+                    BaseImponible = (double)parametro.BaseImponibleIAT,
+                    Valor = (double)parametro.UnoCincoXMil,
+                    AnioDeclaracion = parametro.Anio,
+                    ValorPagadoOtroCanton = 0//DEFINIR SI SON VARIOS CANTONES APARTE
+                };
+                var tituloIAT = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
+
+                codIngreso = new ActualizarCodigoIngresoDtoParam
+                {
+                    CodigoIngreso = tituloIAT.Data.CodigoIngreso,
+                    IdDeclaracionAnual = actividadGenerada,
+                    CodTitulo = "IAT"
+                };
+                await spMunicipioServices.ActualizarCodigoIngreso(codIngreso);
+
                 await contexto.SaveChangesAsync();
 
                 return new RegistrarDeclaracionDataResult
@@ -610,7 +736,7 @@ namespace gad.aaportal.services.Services.Implementation
                         PasivoContingente = entity.PasivoContingente,
                         Ingresos = entity.Ingresos,
                         CostosGastos = entity.CostosGastos,
-                        ValorBomberos=entity.ValorBomberos,
+                        ValorBomberos = entity.ValorBomberos,
                         UnoCincoXMil = entity._15XMil,
                         Patente = entity.Patente
                     },
@@ -644,7 +770,7 @@ namespace gad.aaportal.services.Services.Implementation
                     throw SystemExceptionCustomized.CreateException("CDC002", "La identificación del contribuyente es requerida");
 
                 var declaraciones = await contexto.ContribuyenteDeclaracions
-                    .AsNoTracking() .Where(d =>
+                    .AsNoTracking().Where(d =>
                         d.Identificacion == parametro.Identificacion &&
                         d.Estado)
                     .OrderByDescending(d => d.FechaRegistro)
@@ -664,7 +790,7 @@ namespace gad.aaportal.services.Services.Implementation
                         PasivoContingente = d.PasivoContingente,
                         Ingresos = d.Ingresos,
                         CostosGastos = d.CostosGastos,
-                        ValorBomberos= d.ValorBomberos,
+                        ValorBomberos = d.ValorBomberos,
                         UnoCincoXMil = d._15XMil,
                         Patente = d.Patente,
                         Estado = d.Estado
@@ -694,5 +820,6 @@ namespace gad.aaportal.services.Services.Implementation
                 logger.LogError(ex, nameof(CodeMessage.SERVER_ERROR));
                 throw;
             }
-    }   }
+        }
+    }
 }

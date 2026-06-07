@@ -250,7 +250,6 @@ namespace gad.aaportal.services.Services.Implementation
                     result.Data.TipoAplicacion = reader["TipoAplicacion"] != DBNull.Value ? reader["TipoAplicacion"].ToString()! : string.Empty;
                     result.Data.PorcentajeTe = reader["PorcentajeTE"] != DBNull.Value ? Convert.ToDecimal(reader["PorcentajeTE"]) : 0;
                     result.Data.Patrimonio = reader["Patrimonio"] != DBNull.Value ? Convert.ToDecimal(reader["Patrimonio"]) : 0;
-                    result.Data.TipoImpuesto = reader["TipoImpuesto"] != DBNull.Value ? reader["TipoImpuesto"].ToString()! : string.Empty;
                     result.Data.Msj = reader["Msj"] != DBNull.Value ? reader["Msj"].ToString()! : string.Empty;
                 }
             }
@@ -262,8 +261,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<InsertActividadAnualDtoResult> InsertActividadAnual(
-    InsertActividadAnualDtoParam parametro)
+        public async Task<InsertActividadAnualDtoResult> InsertActividadAnual(InsertActividadAnualDtoParam parametro)
         {
             InsertActividadAnualDtoResult result = new();
 
@@ -301,9 +299,6 @@ namespace gad.aaportal.services.Services.Implementation
                 command.Parameters.Add(new SqlParameter("@Sustitutiva", SqlDbType.Char, 1) { Value = parametro.Sustitutiva });
                 command.Parameters.Add(new SqlParameter("@PagoSri", SqlDbType.Float) { Value = parametro.PagoSri });
                 command.Parameters.Add(new SqlParameter("@PorcentajeTEIAT", SqlDbType.Float) { Value = parametro.PorcentajeTeiat });
-                command.Parameters.Add(new SqlParameter("@DescuentoTEIAT", SqlDbType.Float) { Value = parametro.DescuentoTeiat });
-                command.Parameters.Add(new SqlParameter("@ValorEmitidoIAT", SqlDbType.Float) { Value = parametro.ValorEmitidoIat });
-                command.Parameters.Add(new SqlParameter("@DescuentoTEPma", SqlDbType.Float) { Value = parametro.DescuentoTepma });
 
                 await using var reader = await command.ExecuteReaderAsync();
 
@@ -411,7 +406,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<ActualizarCodigoIngresoDtoResult> ActualizarCodigoIngreso(    ActualizarCodigoIngresoDtoParam parametro)
+        public async Task<ActualizarCodigoIngresoDtoResult> ActualizarCodigoIngreso(ActualizarCodigoIngresoDtoParam parametro)
         {
             ActualizarCodigoIngresoDtoResult result = new();
 
@@ -687,6 +682,55 @@ namespace gad.aaportal.services.Services.Implementation
                 throw;
             }
 
+            return result;
+        }
+
+        public async Task<AnioVencimientoDtoResult> ConsultarFechaVencimiento(ConsultaAnioVencimientoDtoParam parametro)
+        {
+            AnioVencimientoDtoResult result = new();
+            try
+            {
+                await using var connection = contexto.Database.GetDbConnection();
+
+                if (connection.State != ConnectionState.Open)
+                    await connection.OpenAsync();
+
+                await using var command = connection.CreateCommand();
+                command.CommandText = "dbo.SP_Pat_FechaVencimiento";
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@anio", SqlDbType.Int)
+                {
+                    Value = parametro.Anio
+                });
+
+                command.Parameters.Add(new SqlParameter("@ruc", SqlDbType.VarChar, 13)
+                {
+                    Value = parametro.Ruc
+                });
+
+                await using var reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    result.Data.Id = reader["Id"] != DBNull.Value
+                         ? reader["Id"].ToString()!
+                         : string.Empty;
+
+                    result.Data.Parametro = reader["Parametro"] != DBNull.Value
+                         ? reader["Parametro"].ToString()!
+                         : string.Empty;
+
+                    result.Data.Descripcion = reader["Descripcion"] != DBNull.Value
+                         ? reader["Descripcion"].ToString()!
+                         : string.Empty;
+                }
+            }
+            catch (SystemExceptionCustomized sex)
+            {
+                logger.LogError(sex, sex.Description, sex.Code);
+                throw;
+            }
             return result;
         }
     }

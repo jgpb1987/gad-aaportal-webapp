@@ -92,7 +92,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
             await CargaData();
             await ValorPatente();
             multaPatente = await CalculaMulta(impuestoPatente.Data.ValorImpuesto);
-            descuentoPatente = await CalculaDescuentoEdad((ingresosEgresos.TotalActivos - TotalPasivos), impuestoPatente.Data.ValorImpuesto, "PAT");
+            descuentoPatente = await CalculaDescuentoEdad((ingresosEgresos.TotalActivos - TotalPasivos), impuestoPatente.Data.ValorImpuesto, "PMA");
             await ImpuestoActivosTotales();
             multaIAT = await CalculaMulta(impuestoIAT.Data.ImpuestoIat);
             descuentoIAT = await CalculaDescuentoEdad((ingresosEgresos.TotalActivos - PasivoCorriente), impuestoIAT.Data.ImpuestoIat, "IAT");
@@ -216,7 +216,7 @@ namespace gad.aaportal.components.Components.Aplicacion.Formularios
                 {
                     await ValorPatente();
                     multaPatente = await CalculaMulta(impuestoPatente.Data.ValorImpuesto);
-                    descuentoPatente = await CalculaDescuentoEdad((ingresosEgresos.TotalActivos - TotalPasivos), impuestoPatente.Data.ValorImpuesto, "PAT");
+                    descuentoPatente = await CalculaDescuentoEdad((ingresosEgresos.TotalActivos - TotalPasivos), impuestoPatente.Data.ValorImpuesto, "PMA");
                     if (origen == "PC")
                     {
                         await ImpuestoActivosTotales();

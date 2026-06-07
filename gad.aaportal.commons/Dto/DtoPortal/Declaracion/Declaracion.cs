@@ -98,6 +98,17 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
         public decimal UnoCincoXMil { get; set; }
         public decimal Patente { get; set; }
         public decimal ValorBomberos { get; set; }
+
+        public decimal MultaPatente { get; set; }
+        public decimal MultaIat { get; set; }
+        public decimal BaseImponiblePatente { get; set; }
+        public decimal BaseImponibleIAT { get; set; }
+        public DateTime FechaVencimiento { get; set; }
+        public decimal PorcentajeDescuentoTerceraEdadPatente { get; set; }
+        public decimal PorcentajeDescuentoTerceraEdadIAT { get; set; }
+        public decimal PorcentajeCalculoIat { get; set; }
+        public decimal ValorExoneradoPatente { get; set; }
+        public decimal ValorExoneradoIAT { get; set; }
     }
 
     public class RegistrarDeclaracionDtoResult

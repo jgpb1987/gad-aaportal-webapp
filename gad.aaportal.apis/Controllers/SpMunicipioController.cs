@@ -243,5 +243,22 @@ namespace gad.aaportal.apis.Controllers
 
             return result;
         }
+
+        [HttpPost("consultarAnioVencimiento")]
+        public async Task<ActionResult<AnioVencimientoDtoResult>> ConsultarFechaVencimiento([FromBody] ConsultaAnioVencimientoDtoParam parametro)
+        {
+            AnioVencimientoDtoResult result = new();
+
+            try
+            {
+                result = await services.ConsultarFechaVencimiento(parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
     }
 }

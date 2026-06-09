@@ -247,9 +247,12 @@ namespace gad.aaportal.services.Services.Implementation
                     result.Data.PorcentajeIngresos = reader["PorcentajeIngresos"] != DBNull.Value ? Convert.ToDecimal(reader["PorcentajeIngresos"]) : 0;
                     result.Data.PorcentajeAplicar = reader["PorcentajeAplicar"] != DBNull.Value ? Convert.ToDecimal(reader["PorcentajeAplicar"]) : 0;
                     result.Data.ValorDescuento = reader["ValorDescuento"] != DBNull.Value ? Convert.ToDecimal(reader["ValorDescuento"]) : 0;
-                    result.Data.TipoAplicacion = reader["TipoAplicacion"] != DBNull.Value ? reader["TipoAplicacion"].ToString()! : string.Empty;
+                    result.Data.ExedenteAplicado = reader["ExedenteAplicado"] != DBNull.Value ? reader["ExedenteAplicado"].ToString()! : string.Empty;
                     result.Data.PorcentajeTe = reader["PorcentajeTE"] != DBNull.Value ? Convert.ToDecimal(reader["PorcentajeTE"]) : 0;
                     result.Data.Patrimonio = reader["Patrimonio"] != DBNull.Value ? Convert.ToDecimal(reader["Patrimonio"]) : 0;
+                    result.Data.TipoImpuesto = reader["TipoImpuesto"] != DBNull.Value ? reader["TipoImpuesto"].ToString()! : string.Empty;
+                    result.Data.SalarioBasico = reader["SalarioBasico"] != DBNull.Value ? Convert.ToDecimal(reader["SalarioBasico"]) : 0;
+                    result.Data.Ingresos = reader["Ingresos"] != DBNull.Value ? Convert.ToDecimal(reader["Ingresos"]) : 0;
                     result.Data.Msj = reader["Msj"] != DBNull.Value ? reader["Msj"].ToString()! : string.Empty;
                 }
             }
@@ -334,7 +337,6 @@ namespace gad.aaportal.services.Services.Implementation
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.Add(new SqlParameter("@AnioCalculo", SqlDbType.Int) { Value = parametro.AnioCalculo });
-                command.Parameters.Add(new SqlParameter("@RBU", SqlDbType.Float) { Value = parametro.Rbu });
                 command.Parameters.Add(new SqlParameter("@PatrimonioAA", SqlDbType.Float) { Value = parametro.PatrimonioAa });
                 command.Parameters.Add(new SqlParameter("@Ingresos", SqlDbType.Float) { Value = parametro.Ingresos });
                 command.Parameters.Add(new SqlParameter("@PorcentajeExoneracion", SqlDbType.Float) { Value = parametro.PorcentajeExoneracion });
@@ -382,10 +384,8 @@ namespace gad.aaportal.services.Services.Implementation
                 command.Parameters.Add(new SqlParameter("@Fecha_Venc_Interes", SqlDbType.DateTime) { Value = parametro.FechaVencInteres });
                 command.Parameters.Add(new SqlParameter("@User_Ingreso", SqlDbType.NVarChar, 25) { Value = parametro.UserIngreso });
                 command.Parameters.Add(new SqlParameter("@Base_Imponible", SqlDbType.Float) { Value = parametro.BaseImponible });
-                command.Parameters.Add(new SqlParameter("@ValorPatente", SqlDbType.Float) { Value = parametro.ValorPatente });
-                command.Parameters.Add(new SqlParameter("@MultaPatente", SqlDbType.Float) { Value = parametro.MultaPatente });
-                command.Parameters.Add(new SqlParameter("@ValorIAT", SqlDbType.Float) { Value = parametro.ValorIat });
-                command.Parameters.Add(new SqlParameter("@MultaIAT", SqlDbType.Float) { Value = parametro.MultaIat });
+                command.Parameters.Add(new SqlParameter("@Valor", SqlDbType.Float) { Value = parametro.Valor });
+                command.Parameters.Add(new SqlParameter("@Multa", SqlDbType.Float) { Value = parametro.Multa });
                 command.Parameters.Add(new SqlParameter("@anioDeclaracion", SqlDbType.Int) { Value = parametro.AnioDeclaracion });
                 command.Parameters.Add(new SqlParameter("@ValorPagadoOtroCanton", SqlDbType.Float) { Value = parametro.ValorPagadoOtroCanton });
 

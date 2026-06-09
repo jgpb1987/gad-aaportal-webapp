@@ -35,6 +35,9 @@ namespace gad.aaportal.components.Components.Contribuyente
         private decimal PorcentajeDescuentoTerceraEdadIAT = 0;
         private decimal ValorExoneradoPatente = 0;
         private decimal ValorExoneradoIAT = 0;
+        private decimal PorcentajeIngreso = 0;
+        private string ExedentePatente = string.Empty;
+        private string ExedenteIAT = string.Empty;
 
         [Inject] private ISessionStorageServices JSSessionStorageServices { get; set; } = null!;
         [Inject] private IContribuyenteConsumers ServicesDeclaracion { get; set; } = null!;
@@ -564,6 +567,9 @@ namespace gad.aaportal.components.Components.Contribuyente
                     PorcentajeCalculoIat = _establecimientosBase.FirstOrDefault().Porcentaje,
                     ValorExoneradoPatente = ValorExoneradoPatente,
                     ValorExoneradoIAT = ValorExoneradoIAT,
+                    ExedentePatente = ExedentePatente,
+                    ExedenteIAT = ExedenteIAT,
+                    PorcentajeIngreso = PorcentajeIngreso
                 };
 
                 var result = await ServicesDeclaracion.RegistrarDeclaracion(parametro);
@@ -761,6 +767,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                             //await MostrarMensaje("success", result.Message.Code, result.Message.Description);
                             PorcentajeDescuentoTerceraEdadPatente = result.Data.PorcentajeAplicar;
                             ValorExoneradoPatente = result.Data.ValorDescuento;
+                            ExedentePatente = result.Data.ExedenteAplicado;
+                            PorcentajeIngreso = result.Data.PorcentajeIngresos;
                         }
                         else
                         {
@@ -794,6 +802,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                             //await MostrarMensaje("success", result.Message.Code, result.Message.Description);
                             PorcentajeDescuentoTerceraEdadIAT = result.Data.ValorDescuento;
                             ValorExoneradoIAT = result.Data.ValorDescuento;
+                            ExedenteIAT = result.Data.ExedenteAplicado;
+                            PorcentajeIngreso = result.Data.PorcentajeIngresos;
                         }
                         else
                         {

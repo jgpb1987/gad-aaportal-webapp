@@ -627,13 +627,12 @@ namespace gad.aaportal.services.Services.Implementation
                     InsertTerceraEdadDtoParam insertTP = new InsertTerceraEdadDtoParam
                     {
                         AnioCalculo = parametro.Anio,
-                        Rbu = 470,
                         PatrimonioAa = (double)parametro.BaseImponiblePatente,
                         Ingresos = (double)parametro.Ingresos,
                         PorcentajeExoneracion = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
                         ExedenteAplicado = 0, // traer excedente del sp tercera edad
                         PorcentajePatrimonio = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
-                        PorcentajeIngreso = 0, //traer del sp tercera edad
+                        PorcentajeIngreso = (double)parametro.PorcentajeIngreso,
                         BaseImponible = (double)parametro.BaseImponiblePatente,
                         ImpuestoGravado = (double)parametro.Patente,
                         PorcentajeAplicado = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
@@ -651,13 +650,12 @@ namespace gad.aaportal.services.Services.Implementation
                     InsertTerceraEdadDtoParam insertTP = new InsertTerceraEdadDtoParam
                     {
                         AnioCalculo = parametro.Anio,
-                        Rbu = 470,
                         PatrimonioAa = (double)parametro.BaseImponiblePatente,
                         Ingresos = (double)parametro.Ingresos,
                         PorcentajeExoneracion = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
                         ExedenteAplicado = 0, // traer excedente del sp tercera edad
                         PorcentajePatrimonio = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
-                        PorcentajeIngreso = 0, //traer del sp tercera edad
+                        PorcentajeIngreso = (double)parametro.PorcentajeIngreso,
                         BaseImponible = (double)parametro.BaseImponibleIAT,
                         ImpuestoGravado = (double)parametro.UnoCincoXMil,
                         PorcentajeAplicado = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,

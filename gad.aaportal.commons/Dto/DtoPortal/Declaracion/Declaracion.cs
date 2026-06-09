@@ -109,6 +109,9 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
         public decimal PorcentajeCalculoIat { get; set; }
         public decimal ValorExoneradoPatente { get; set; }
         public decimal ValorExoneradoIAT { get; set; }
+        public string ExedentePatente { get; set; } = string.Empty;
+        public string ExedenteIAT { get; set; } = string.Empty;
+        public decimal PorcentajeIngreso { get; set; }
     }
 
     public class RegistrarDeclaracionDtoResult

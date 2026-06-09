@@ -68,10 +68,13 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
         public decimal PorcentajeIngresos { get; set; }
         public decimal PorcentajeAplicar { get; set; }
         public decimal ValorDescuento { get; set; }
+        public string ExedenteAplicado { get; set; } = string.Empty;
         public string TipoAplicacion { get; set; } = string.Empty;
         public decimal PorcentajeTe { get; set; }
         public decimal Patrimonio { get; set; }
         public string TipoImpuesto { get; set; } = string.Empty;
+        public decimal SalarioBasico { get; set; }
+        public decimal Ingresos { get; set; }
         public string Msj { get; set; } = string.Empty;
     }
 
@@ -121,7 +124,6 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     public class InsertTerceraEdadDtoParam
     {
         public int AnioCalculo { get; set; }
-        public double Rbu { get; set; }
         public double PatrimonioAa { get; set; }
         public double Ingresos { get; set; }
         public double PorcentajeExoneracion { get; set; }

@@ -5,11 +5,7 @@ using gad.aaportal.consumers.consumers.Interface;
 using gad.aaportal.consumers.Js;
 using gad.generic.components.Components.Several;
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace gad.aaportal.components.Components.Contribuyente
 {
@@ -34,6 +30,14 @@ namespace gad.aaportal.components.Components.Contribuyente
         private bool _procesoFinalizado;
         private bool _tieneRestriccionMunicipal;
         private string _mensajeRestriccionMunicipal = string.Empty;
+        private DateTime FechaVencimiento;
+        private decimal PorcentajeDescuentoTerceraEdadPatente = 0;
+        private decimal PorcentajeDescuentoTerceraEdadIAT = 0;
+        private decimal ValorExoneradoPatente = 0;
+        private decimal ValorExoneradoIAT = 0;
+        private decimal PorcentajeIngreso = 0;
+        private string ExedentePatente = string.Empty;
+        private string ExedenteIAT = string.Empty;
 
         [Inject] private ISessionStorageServices JSSessionStorageServices { get; set; } = null!;
         [Inject] private IContribuyenteConsumers ServicesDeclaracion { get; set; } = null!;
@@ -77,7 +81,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var parametro = new ContribuyenteDtoParam { Identificacion = usuario };
                 var result = await ServicesDeclaracion.ConsultarPeriodosDeclaracion(parametro);
                 #region consultar anio adeuda
-                var resultaAnioDeclaracion = await SpMunicipioConsumers.ConsultarAnioAdeuda(new ConsultarAnioAdeudaDtoParam() { Ruc=usuario });
+                var resultaAnioDeclaracion = await SpMunicipioConsumers.ConsultarAnioAdeuda(new ConsultarAnioAdeudaDtoParam() { Ruc = usuario });
                 #endregion
                 LoadingBorder?.Close();
 
@@ -148,7 +152,6 @@ namespace gad.aaportal.components.Components.Contribuyente
         {
             try
             {
-
                 var periodo = _periodosDeclaracion.PeriodosDeclaracion
                     .FirstOrDefault(p => p.AnioEjercicioFiscal == _periodoSeleccionado.AnioDeclaracion);
 
@@ -173,6 +176,12 @@ namespace gad.aaportal.components.Components.Contribuyente
                     _mostrarModalPeriodo = false;
                     return;
                 }
+
+                var consultaFechaVencimiento = await SpMunicipioConsumers.ConsultarFechaVencimiento(new ConsultaAnioVencimientoDtoParam() { Anio = periodo.AnioEjercicioFiscal, Ruc = identificacion });
+                string fechaStr = $"{consultaFechaVencimiento.Data.Parametro}{periodo.AnioEjercicioFiscal}";
+                DateTime fecha = DateTime.ParseExact(fechaStr, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                FechaVencimiento = fecha;
+
                 _valoresSugeridos = periodo;
 
                 _valoresDeclaracion = new PeriodoDeclaracionDtoResult
@@ -204,7 +213,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                 };
 
                 _establecimientos = ClonarEstablecimientos(_establecimientosBase);
-               
+
                 ValorUnoCincoPorMil = 0;
                 _stepActual = 1;
                 _declaracionCalculada = false;
@@ -313,7 +322,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             TotalActivo - TotalPasivo;
 
         private decimal BaseImponible =>
-            Patrimonio > 0 ? Patrimonio : 0;
+            (TotalActivo - _valoresDeclaracion.PasivoCorriente) > 0 ? (TotalActivo - _valoresDeclaracion.PasivoCorriente) : 0;
 
         private decimal UtilidadEjercicio =>
             _valoresDeclaracion.Ingresos > _valoresDeclaracion.CostosGastos
@@ -334,7 +343,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         private decimal ValorBomberos { get; set; }
         private bool MostrarValorBomberos => ValorBomberos > 0;
         private decimal Valores3EdadPatente { get; set; }
-        private decimal Valores3EdadPorMil{ get; set; }
+        private decimal Valores3EdadPorMil { get; set; }
 
         private decimal TotalPatentePorEstablecimientos =>
             _establecimientos.Sum(e => e.Valor);
@@ -351,7 +360,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                         item.BaseImponible = Math.Round(BaseImponible * (item.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
                         var result = await SpMunicipioConsumers.CalcularImpuestoPatente(new CalcularImpuestoPatenteDtoParam { BaseImponible = item.BaseImponible });
                         item.Valor = result.Data.ValorImpuesto;
-                    }                    
+                    }
                 }
             }
             catch
@@ -459,8 +468,10 @@ namespace gad.aaportal.components.Components.Contribuyente
                 await CalcularMulta1_5Mil();
                 #endregion
 
-
                 CargarResumenImpuestos();
+
+                await CalcularValoresTerceraEdadPatente();
+                await CalcularValoresTerceraEdad_1_5Mil();
 
                 LoadingBorder?.Close();
 
@@ -545,7 +556,20 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                     UnoCincoXMil = ValorUnoCincoPorMil,
                     Patente = TotalPatentePorEstablecimientos,
-                    ValorBomberos = ValorBomberos
+                    ValorBomberos = ValorBomberos,
+
+                    MultaPatente = ValorMultaPatente,
+                    BaseImponiblePatente = BaseImponible,
+                    MultaIat = ValorMultaPorMil,
+                    FechaVencimiento = FechaVencimiento,
+                    PorcentajeDescuentoTerceraEdadPatente = PorcentajeDescuentoTerceraEdadPatente,
+                    PorcentajeDescuentoTerceraEdadIAT = PorcentajeDescuentoTerceraEdadIAT,
+                    PorcentajeCalculoIat = _establecimientosBase.FirstOrDefault().Porcentaje,
+                    ValorExoneradoPatente = ValorExoneradoPatente,
+                    ValorExoneradoIAT = ValorExoneradoIAT,
+                    ExedentePatente = ExedentePatente,
+                    ExedenteIAT = ExedenteIAT,
+                    PorcentajeIngreso = PorcentajeIngreso
                 };
 
                 var result = await ServicesDeclaracion.RegistrarDeclaracion(parametro);
@@ -658,14 +682,14 @@ namespace gad.aaportal.components.Components.Contribuyente
                                 fechaActual.Month,
                                 fechaActual.Day
                             ).ToString("yyyy-MM-dd"),
-                            FechaEmision = fechaActual.ToString("yyyy-MM-dd") ,
+                            FechaEmision = fechaActual.ToString("yyyy-MM-dd"),
                             Valor = BaseImponible
                         });
                     if (result != null)
                     {
                         if (result.Data != null)
                         {
-                            ValorMultaPatente  = result.Data.Multa;
+                            ValorMultaPatente = result.Data.Multa;
                         }
                         else
                         {
@@ -698,7 +722,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                                                   _periodoSeleccionado.AnioDeclaracion,
                                                   fechaActual.Month,
                                                   fechaActual.Day
-                                              ).ToString("yyyy-MM-dd") ,
+                                              ).ToString("yyyy-MM-dd"),
                                               FechaEmision = fechaActual.ToString("yyyy-MM-dd"),
                                               Valor = BaseImponible
                                           });
@@ -735,12 +759,16 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var fechaActual = DateTime.Today;
                 if (BaseImponible != 0)
                 {
-                    var result = await SpMunicipioConsumers.CalcularTerceraEdad(new CalcularTerceraEdadDtoParam() {BasePatrimonio= (_valoresDeclaracion.ActivoCorriente + _valoresDeclaracion.ActivoNoCorriente) - (_valoresDeclaracion.PasivoCorriente + _valoresDeclaracion.PasivoNoCorriente + _valoresDeclaracion.PasivoContingente), Anio= _periodoSeleccionado.AnioDeclaracion, Ingresos = _valoresDeclaracion.Ingresos, Ruc= _periodoSeleccionado.Identificacion, TipoImpuesto="PMA", ValorImpuesto= TotalPatentePorEstablecimientos });
+                    var result = await SpMunicipioConsumers.CalcularTerceraEdad(new CalcularTerceraEdadDtoParam() { BasePatrimonio = (_valoresDeclaracion.ActivoCorriente + _valoresDeclaracion.ActivoNoCorriente) - (_valoresDeclaracion.PasivoCorriente + _valoresDeclaracion.PasivoNoCorriente + _valoresDeclaracion.PasivoContingente), Anio = _periodoSeleccionado.AnioDeclaracion, Ingresos = _valoresDeclaracion.Ingresos, Ruc = _periodoSeleccionado.Identificacion, TipoImpuesto = "PMA", ValorImpuesto = TotalPatentePorEstablecimientos });
                     if (result != null)
                     {
                         if (result.Message.Code.Equals("OK"))
                         {
-                            await MostrarMensaje("success", result.Message.Code, result.Message.Description);
+                            //await MostrarMensaje("success", result.Message.Code, result.Message.Description);
+                            PorcentajeDescuentoTerceraEdadPatente = result.Data.PorcentajeAplicar;
+                            ValorExoneradoPatente = result.Data.ValorDescuento;
+                            ExedentePatente = result.Data.ExedenteAplicado;
+                            PorcentajeIngreso = result.Data.PorcentajeIngresos;
                         }
                         else
                         {
@@ -771,7 +799,11 @@ namespace gad.aaportal.components.Components.Contribuyente
                     {
                         if (result.Message.Code.Equals("OK"))
                         {
-                            await MostrarMensaje("success", result.Message.Code, result.Message.Description);
+                            //await MostrarMensaje("success", result.Message.Code, result.Message.Description);
+                            PorcentajeDescuentoTerceraEdadIAT = result.Data.ValorDescuento;
+                            ValorExoneradoIAT = result.Data.ValorDescuento;
+                            ExedenteIAT = result.Data.ExedenteAplicado;
+                            PorcentajeIngreso = result.Data.PorcentajeIngresos;
                         }
                         else
                         {
@@ -795,7 +827,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         #region Validar Permisos
         private async Task<bool> ValidarRestriccionesMunicipales(string identificacion)
         {
-            var tieneRestricciones = await SpMunicipioConsumers.ValidadorPermisos(new ValidadorPermisosDtoParam {Ruc = identificacion});
+            var tieneRestricciones = await SpMunicipioConsumers.ValidadorPermisos(new ValidadorPermisosDtoParam { Ruc = identificacion });
 
             if (tieneRestricciones?.Data is not null && tieneRestricciones.Data.Estado == false)
             {
@@ -805,7 +837,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                     tieneRestricciones.Data.Mensaje ??
                     "Usted mantiene restricciones en el Municipio. Para continuar con la declaración, debe acercarse a las oficinas municipales.";
 
-                await MostrarMensaje("error", "RESTRICCION_MUNICIPAL",  _mensajeRestriccionMunicipal);
+                await MostrarMensaje("error", "RESTRICCION_MUNICIPAL", _mensajeRestriccionMunicipal);
 
                 StateHasChanged();
                 return false;

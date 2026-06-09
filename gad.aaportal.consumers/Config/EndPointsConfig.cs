@@ -31,6 +31,7 @@ namespace gad.aaportal.consumers.Config
         public string ConsultarRucExoneraciones { get; set; } = null!;
         public string InsertarTranferenciaIat { get; set; } = null!;
         public string ConsultarAnioAdeuda { get; set; } = null!;
+        public string ConsultarFechaVencimiento { get; set; } = null!;
 
         /*Fin Store Procedure Municipio*/
     }

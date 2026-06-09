@@ -216,5 +216,19 @@ namespace gad.aaportal.consumers.consumers.Implementation
             }
             return result;
         }
+
+        public async Task<AnioVencimientoDtoResult> ConsultarFechaVencimiento(ConsultaAnioVencimientoDtoParam parametro)
+        {
+            AnioVencimientoDtoResult result = new();
+            try
+            {
+                result = await _httpClient.Post<ConsultaAnioVencimientoDtoParam, AnioVencimientoDtoResult>(parametro, configuraciones.EndPointsConfig.ConsultarFechaVencimiento);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return result;
+        }
     }
 }

@@ -68,10 +68,13 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
         public decimal PorcentajeIngresos { get; set; }
         public decimal PorcentajeAplicar { get; set; }
         public decimal ValorDescuento { get; set; }
+        public string ExedenteAplicado { get; set; } = string.Empty;
         public string TipoAplicacion { get; set; } = string.Empty;
         public decimal PorcentajeTe { get; set; }
         public decimal Patrimonio { get; set; }
         public string TipoImpuesto { get; set; } = string.Empty;
+        public decimal SalarioBasico { get; set; }
+        public decimal Ingresos { get; set; }
         public string Msj { get; set; } = string.Empty;
     }
 
@@ -121,7 +124,6 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     public class InsertTerceraEdadDtoParam
     {
         public int AnioCalculo { get; set; }
-        public double Rbu { get; set; }
         public double PatrimonioAa { get; set; }
         public double Ingresos { get; set; }
         public double PorcentajeExoneracion { get; set; }
@@ -155,10 +157,8 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
         public DateTime FechaVencInteres { get; set; }
         public string UserIngreso { get; set; } = null!;
         public double BaseImponible { get; set; }
-        public double ValorPatente { get; set; }
-        public double MultaPatente { get; set; }
-        public double ValorIat { get; set; }
-        public double MultaIat { get; set; }
+        public double Valor { get; set; }
+        public double Multa { get; set; }
         public int AnioDeclaracion { get; set; }
         public double ValorPagadoOtroCanton { get; set; }
     }
@@ -291,6 +291,12 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
         public string Ruc { get; set; } = null!;
     }
 
+    public class ConsultaAnioVencimientoDtoParam
+    {
+        public string Ruc { get; set; }
+        public int Anio { get; set; }
+    }
+
     public class ConsultarAnioAdeudaDtoDataResult
     {
         public int Anio { get; set; }
@@ -299,5 +305,17 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     public class ConsultarAnioAdeudaDtoResult : BaseResult
     {
         public ConsultarAnioAdeudaDtoDataResult Data { get; set; } = new();
+    }
+
+    public class FechaVencimientoDtoResul
+    {
+        public string Id { get; set; }
+        public string Parametro { get; set; }
+        public string Descripcion { get; set; }
+    }
+
+    public class AnioVencimientoDtoResult : BaseResult
+    {
+        public FechaVencimientoDtoResul Data { get; set; } = new();
     }
 }

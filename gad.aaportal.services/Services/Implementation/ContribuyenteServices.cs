@@ -606,16 +606,13 @@ namespace gad.aaportal.services.Services.Implementation
                     TarifaPatente = (double)parametro.Patente,
                     MultaPatente = (double)parametro.MultaPatente,
                     PorcentajeDescuentoTercera = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
-                    UsuarioIngreso = "SYSWEB",//consultar a municipio que usuario deberia enviar o setear x default
+                    UsuarioIngreso = "PATWEB",//CONFIGURAR PARA TOMAR DE CONFIG
                     Utilidad = (double)parametro.Ingresos - (double)parametro.CostosGastos,
                     ContingenciaPasivos = (double)parametro.PasivoContingente,
                     BaseImponibleIat = (double)parametro.BaseImponibleIAT,
                     ImpuestoIat = (double)parametro.UnoCincoXMil,
                     MultaIat = (double)parametro.MultaIat,
                     PorcentajeCalculoIat = (double)parametro.PorcentajeCalculoIat,
-                    AreaArriendo = 0,//consulta a q hace referencia
-                    Sustitutiva = string.Empty,//validar q enviar cuando sea sustitutiva
-                    PagoSri = 0,//validar de donde se puede traer esto
                     PorcentajeTeiat = (double)parametro.PorcentajeDescuentoTerceraEdadIAT
                 };
 
@@ -627,18 +624,18 @@ namespace gad.aaportal.services.Services.Implementation
                     InsertTerceraEdadDtoParam insertTP = new InsertTerceraEdadDtoParam
                     {
                         AnioCalculo = parametro.Anio,
-                        PatrimonioAa = (double)parametro.BaseImponiblePatente,
+                        Patrimonio = (double)parametro.BaseImponiblePatente,
                         Ingresos = (double)parametro.Ingresos,
-                        PorcentajeExoneracion = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
-                        ExedenteAplicado = 0, // traer excedente del sp tercera edad
+                        PorcentajeTE = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
+                        ExedenteAplicado = parametro.ExedentePatente,
                         PorcentajePatrimonio = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
                         PorcentajeIngreso = (double)parametro.PorcentajeIngreso,
                         BaseImponible = (double)parametro.BaseImponiblePatente,
                         ImpuestoGravado = (double)parametro.Patente,
-                        PorcentajeAplicado = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
-                        ValorExonerado = (double)parametro.ValorExoneradoPatente,
+                        PorcentajeAplicar = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
+                        ValorDescuento = (double)parametro.ValorExoneradoPatente,
                         TipoImpuesto = "PMA",
-                        UsuarioIngreso = "SYSWEB",
+                        UsuarioIngreso = "PATWEB",
                         IdCalculoImpuesto = actividadGenerada
                     };
 
@@ -650,18 +647,18 @@ namespace gad.aaportal.services.Services.Implementation
                     InsertTerceraEdadDtoParam insertTP = new InsertTerceraEdadDtoParam
                     {
                         AnioCalculo = parametro.Anio,
-                        PatrimonioAa = (double)parametro.BaseImponiblePatente,
+                        Patrimonio = (double)parametro.BaseImponiblePatente,
                         Ingresos = (double)parametro.Ingresos,
-                        PorcentajeExoneracion = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
-                        ExedenteAplicado = 0, // traer excedente del sp tercera edad
+                        PorcentajeTE = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
+                        ExedenteAplicado = parametro.ExedenteIAT,
                         PorcentajePatrimonio = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
                         PorcentajeIngreso = (double)parametro.PorcentajeIngreso,
                         BaseImponible = (double)parametro.BaseImponibleIAT,
                         ImpuestoGravado = (double)parametro.UnoCincoXMil,
-                        PorcentajeAplicado = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
-                        ValorExonerado = (double)parametro.ValorExoneradoIAT,
+                        PorcentajeAplicar = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
+                        ValorDescuento = (double)parametro.ValorExoneradoIAT,
                         TipoImpuesto = "IAT",
-                        UsuarioIngreso = "SYSWEB",
+                        UsuarioIngreso = "PATWEB",
                         IdCalculoImpuesto = actividadGenerada
                     };
 
@@ -675,7 +672,7 @@ namespace gad.aaportal.services.Services.Implementation
                     FechaIngreso = DateTime.Now,
                     FechaVencimiento = parametro.FechaVencimiento,
                     FechaVencInteres = parametro.FechaVencimiento,
-                    UserIngreso = "SYSWEB",
+                    UserIngreso = "PATWEB",
                     BaseImponible = (double)parametro.BaseImponiblePatente,
                     Valor = (double)parametro.Patente,
                     AnioDeclaracion = parametro.Anio,
@@ -698,7 +695,7 @@ namespace gad.aaportal.services.Services.Implementation
                     FechaIngreso = DateTime.Now,
                     FechaVencimiento = parametro.FechaVencimiento,
                     FechaVencInteres = parametro.FechaVencimiento,
-                    UserIngreso = "SYSWEB",
+                    UserIngreso = "PATWEB",
                     BaseImponible = (double)parametro.BaseImponibleIAT,
                     Valor = (double)parametro.UnoCincoXMil,
                     AnioDeclaracion = parametro.Anio,

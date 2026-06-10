@@ -103,13 +103,7 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
         public double ImpuestoIat { get; set; }
         public double MultaIat { get; set; }
         public double PorcentajeCalculoIat { get; set; }
-        public double AreaArriendo { get; set; }
-        public string Sustitutiva { get; set; } = null!;
-        public double PagoSri { get; set; }
         public double PorcentajeTeiat { get; set; }
-        public double DescuentoTeiat { get; set; }
-        public double ValorEmitidoIat { get; set; }
-        public double DescuentoTepma { get; set; }
     }
 
     public class InsertActividadAnualDtoDataResult
@@ -124,17 +118,17 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     public class InsertTerceraEdadDtoParam
     {
         public int AnioCalculo { get; set; }
-        public double PatrimonioAa { get; set; }
-        public double Ingresos { get; set; }
-        public double PorcentajeExoneracion { get; set; }
-        public double ExedenteAplicado { get; set; }
         public double PorcentajePatrimonio { get; set; }
         public double PorcentajeIngreso { get; set; }
+        public double PorcentajeAplicar { get; set; }
+        public double ValorDescuento { get; set; }
+        public string ExedenteAplicado { get; set; } = string.Empty;
+        public double PorcentajeTE { get; set; }
+        public double Patrimonio { get; set; }
+        public string TipoImpuesto { get; set; } = null!;
+        public double Ingresos { get; set; }
         public double BaseImponible { get; set; }
         public double ImpuestoGravado { get; set; }
-        public double PorcentajeAplicado { get; set; }
-        public double ValorExonerado { get; set; }
-        public string TipoImpuesto { get; set; } = null!;
         public string UsuarioIngreso { get; set; } = null!;
         public int IdCalculoImpuesto { get; set; }
     }

@@ -298,9 +298,6 @@ namespace gad.aaportal.services.Services.Implementation
                 command.Parameters.Add(new SqlParameter("@ImpuestoIAT", SqlDbType.Float) { Value = parametro.ImpuestoIat });
                 command.Parameters.Add(new SqlParameter("@MultaIAT", SqlDbType.Float) { Value = parametro.MultaIat });
                 command.Parameters.Add(new SqlParameter("@PorcentajeCalculoIAT", SqlDbType.Float) { Value = parametro.PorcentajeCalculoIat });
-                command.Parameters.Add(new SqlParameter("@AreaArriendo", SqlDbType.Float) { Value = parametro.AreaArriendo });
-                command.Parameters.Add(new SqlParameter("@Sustitutiva", SqlDbType.Char, 1) { Value = parametro.Sustitutiva });
-                command.Parameters.Add(new SqlParameter("@PagoSri", SqlDbType.Float) { Value = parametro.PagoSri });
                 command.Parameters.Add(new SqlParameter("@PorcentajeTEIAT", SqlDbType.Float) { Value = parametro.PorcentajeTeiat });
 
                 await using var reader = await command.ExecuteReaderAsync();
@@ -337,17 +334,17 @@ namespace gad.aaportal.services.Services.Implementation
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.Add(new SqlParameter("@AnioCalculo", SqlDbType.Int) { Value = parametro.AnioCalculo });
-                command.Parameters.Add(new SqlParameter("@PatrimonioAA", SqlDbType.Float) { Value = parametro.PatrimonioAa });
-                command.Parameters.Add(new SqlParameter("@Ingresos", SqlDbType.Float) { Value = parametro.Ingresos });
-                command.Parameters.Add(new SqlParameter("@PorcentajeExoneracion", SqlDbType.Float) { Value = parametro.PorcentajeExoneracion });
-                command.Parameters.Add(new SqlParameter("@ExedenteAplicado", SqlDbType.Float) { Value = parametro.ExedenteAplicado });
                 command.Parameters.Add(new SqlParameter("@PorcentajePatrimonio", SqlDbType.Float) { Value = parametro.PorcentajePatrimonio });
                 command.Parameters.Add(new SqlParameter("@PorcentajeIngreso", SqlDbType.Float) { Value = parametro.PorcentajeIngreso });
+                command.Parameters.Add(new SqlParameter("@PorcentajeAplicar", SqlDbType.Float) { Value = parametro.PorcentajeAplicar });
+                command.Parameters.Add(new SqlParameter("@ValorDescuento", SqlDbType.Float) { Value = parametro.ValorDescuento });
+                command.Parameters.Add(new SqlParameter("@ExedenteAplicado", SqlDbType.VarChar, 5) { Value = parametro.ExedenteAplicado });
+                command.Parameters.Add(new SqlParameter("@PorcentajeTE", SqlDbType.Float) { Value = parametro.PorcentajeTE });
+                command.Parameters.Add(new SqlParameter("@Patrimonio", SqlDbType.Float) { Value = parametro.Patrimonio });
+                command.Parameters.Add(new SqlParameter("@TipoImpuesto", SqlDbType.VarChar, 80) { Value = parametro.TipoImpuesto });
+                command.Parameters.Add(new SqlParameter("@Ingresos", SqlDbType.Float) { Value = parametro.Ingresos });
                 command.Parameters.Add(new SqlParameter("@BaseImponible", SqlDbType.Float) { Value = parametro.BaseImponible });
                 command.Parameters.Add(new SqlParameter("@ImpuestoGravado", SqlDbType.Float) { Value = parametro.ImpuestoGravado });
-                command.Parameters.Add(new SqlParameter("@PorcentajeAplicado", SqlDbType.Float) { Value = parametro.PorcentajeAplicado });
-                command.Parameters.Add(new SqlParameter("@ValorExonerado", SqlDbType.Float) { Value = parametro.ValorExonerado });
-                command.Parameters.Add(new SqlParameter("@TipoImpuesto", SqlDbType.VarChar, 80) { Value = parametro.TipoImpuesto });
                 command.Parameters.Add(new SqlParameter("@UsuarioIngreso", SqlDbType.VarChar, 80) { Value = parametro.UsuarioIngreso });
                 command.Parameters.Add(new SqlParameter("@IdCalculoImpuesto", SqlDbType.Int) { Value = parametro.IdCalculoImpuesto });
 

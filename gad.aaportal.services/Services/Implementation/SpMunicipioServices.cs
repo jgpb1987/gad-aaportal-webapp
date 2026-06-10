@@ -730,5 +730,44 @@ namespace gad.aaportal.services.Services.Implementation
             }
             return result;
         }
+        public async Task<ConsultaValorPDtoResult> ConsultaValorP(ConsultaValorPDtoParam parametro)
+        {
+            ConsultaValorPDtoResult result = new();
+
+            try
+            {
+                await using var connection = contexto.Database.GetDbConnection();
+
+                if (connection.State != ConnectionState.Open)
+                    await connection.OpenAsync();
+
+                await using var command = connection.CreateCommand();
+                command.CommandText = "dbo.SP_Pat_ConsultaValorP";
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@ValorImpuesto", SqlDbType.Float) { Value = parametro.ValorImpuesto });
+                command.Parameters.Add(new SqlParameter("@ValorMulta", SqlDbType.Float) { Value = parametro.ValorMulta });
+                command.Parameters.Add(new SqlParameter("@TipoImpuesto", SqlDbType.VarChar, 5) { Value = parametro.TipoImpuesto });
+                command.Parameters.Add(new SqlParameter("@Ruc", SqlDbType.VarChar, 20) { Value = parametro.Ruc });
+                command.Parameters.Add(new SqlParameter("@AnioDeclaracion", SqlDbType.Int) { Value = parametro.AnioDeclaracion });
+
+                await using var reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    result.Data.Intereses = reader["Intereses"] != DBNull.Value ? Convert.ToDecimal(reader["Intereses"]) : 0;
+                    result.Data.Recargo = reader["Recargo"] != DBNull.Value ? Convert.ToDecimal(reader["Recargo"]) : 0;
+                    result.Data.CostaJ = reader["CostaJ"] != DBNull.Value ? Convert.ToDecimal(reader["CostaJ"]) : 0;
+                    result.Data.TasaAdministrativa = reader["TasaAdministrativa"] != DBNull.Value ? Convert.ToDecimal(reader["TasaAdministrativa"]) : 0;
+                }
+            }
+            catch (SystemExceptionCustomized sex)
+            {
+                logger.LogError(sex, sex.Description, sex.Code);
+                throw;
+            }
+
+            return result;
+        }
     }
 }

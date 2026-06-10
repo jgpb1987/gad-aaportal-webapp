@@ -312,4 +312,25 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     {
         public FechaVencimientoDtoResul Data { get; set; } = new();
     }
+    public class ConsultaValorPDtoParam
+    {
+        public double ValorImpuesto { get; set; }
+        public double ValorMulta { get; set; }
+        public string TipoImpuesto { get; set; } = null!;
+        public string Ruc { get; set; } = null!;
+        public int AnioDeclaracion { get; set; }
+    }
+
+    public class ConsultaValorPDtoDataResult
+    {
+        public decimal Intereses { get; set; }
+        public decimal Recargo { get; set; }
+        public decimal CostaJ { get; set; }
+        public decimal TasaAdministrativa { get; set; }
+    }
+
+    public class ConsultaValorPDtoResult : BaseResult
+    {
+        public ConsultaValorPDtoDataResult Data { get; set; } = new();
+    }
 }

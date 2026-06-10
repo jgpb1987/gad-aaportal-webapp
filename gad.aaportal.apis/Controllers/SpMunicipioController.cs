@@ -260,5 +260,21 @@ namespace gad.aaportal.apis.Controllers
 
             return result;
         }
+        [HttpPost("consultaValorP")]
+        public async Task<ActionResult<ConsultaValorPDtoResult>> ConsultaValorP( [FromBody] ConsultaValorPDtoParam parametro)
+        {
+            ConsultaValorPDtoResult result = new();
+
+            try
+            {
+                result = await services.ConsultaValorP(parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
     }
 }

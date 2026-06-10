@@ -677,11 +677,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                     var result = await SpMunicipioConsumers.CalcularMulta(
                         new CalcularMultaDtoParam()
                         {
-                            PeriodoFin = new DateTime(
-                                _periodoSeleccionado.AnioDeclaracion,
-                                fechaActual.Month,
-                                fechaActual.Day
-                            ).ToString("yyyy-MM-dd"),
+                            PeriodoFin = FechaVencimiento.ToString("yyyy-MM-dd"),
                             FechaEmision = fechaActual.ToString("yyyy-MM-dd"),
                             Valor = BaseImponible
                         });

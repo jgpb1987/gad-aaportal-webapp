@@ -314,8 +314,8 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     }
     public class ConsultaValorPDtoParam
     {
-        public double ValorImpuesto { get; set; }
-        public double ValorMulta { get; set; }
+        public decimal ValorImpuesto { get; set; }
+        public decimal ValorMulta { get; set; }
         public string TipoImpuesto { get; set; } = null!;
         public string Ruc { get; set; } = null!;
         public int AnioDeclaracion { get; set; }

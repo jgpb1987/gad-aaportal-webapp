@@ -38,11 +38,22 @@ namespace gad.aaportal.dataaccess.Configuration
             entity.Property(e => e.PasivoNoCorriente).HasColumnType("decimal(18, 6)");
 
             entity.Property(e => e.Patente).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e._15XMil).HasColumnType("decimal(18, 6)").HasColumnName("1_5_x_Mil");
             entity.Property(e => e.ValorBomberos).HasColumnType("decimal(18, 6)");
 
-            entity.Property(e => e._15XMil)
-                .HasColumnType("decimal(18, 6)")
-                .HasColumnName("1_5_x_Mil");
+            entity.Property(e => e.MultaPatente).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.MultaIat).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.DescuentoTerceraEdadPatente).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.DescuentoTerceraEdadIat).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.InteresPatente).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.RecargoPatente).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.CostasPatente).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.TasaAdministrativaPatente).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.InteresIat).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.RecargoIat).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.CostasIat).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.TasaAdministrativaIat).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.Estado).HasColumnType("bit");
 
             entity.HasOne(d => d.IdentificacionNavigation)
                 .WithMany(p => p.ContribuyenteDeclaracions)

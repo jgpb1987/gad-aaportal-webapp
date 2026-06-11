@@ -24,5 +24,7 @@ namespace gad.aaportal.consumers.consumers.Interface
         Task<InsertarTranferenciaIatDtoResult> InsertarTranferenciaIat(InsertarTranferenciaIatDtoParam parametro);
         Task<ConsultarAnioAdeudaDtoResult> ConsultarAnioAdeuda(ConsultarAnioAdeudaDtoParam parametro);
         Task<AnioVencimientoDtoResult> ConsultarFechaVencimiento(ConsultaAnioVencimientoDtoParam parametro);
+
+        Task<ConsultaValorPDtoResult> ConsultaValorP(ConsultaValorPDtoParam parametro);
     }
 }

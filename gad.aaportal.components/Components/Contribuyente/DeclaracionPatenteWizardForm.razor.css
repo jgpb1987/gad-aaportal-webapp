@@ -1148,3 +1148,6 @@
     font-weight: 700;
     line-height: 1.35;
 }
+.confirmacion-item.full-row {
+    grid-column: 1 / -1;
+}

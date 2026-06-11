@@ -112,6 +112,16 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
         public string ExedentePatente { get; set; } = string.Empty;
         public string ExedenteIAT { get; set; } = string.Empty;
         public decimal PorcentajeIngreso { get; set; }
+
+        public decimal InteresPatente { get; set; }
+        public decimal RecargoPatente { get; set; }
+        public decimal CostasPatente { get; set; }
+        public decimal TasaAdministrativaPatente { get; set; }
+
+        public decimal InteresIat { get; set; }
+        public decimal RecargoIat { get; set; }
+        public decimal CostasIat { get; set; }
+        public decimal TasaAdministrativaIat { get; set; }
     }
 
     public class RegistrarDeclaracionDtoResult
@@ -134,7 +144,21 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
         public decimal UnoCincoXMil { get; set; }
         public decimal Patente { get; set; }
         public decimal ValorBomberos { get; set; }
-        public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos;
+        public decimal MultaPatente { get; set; }
+        public decimal MultaIat { get; set; }
+        public decimal DescuentoTerceraEdadPatente { get; set; }
+        public decimal DescuentoTerceraEdadIat { get; set; }
+
+        public decimal InteresPatente { get; set; }
+        public decimal RecargoPatente { get; set; }
+        public decimal CostasPatente { get; set; }
+        public decimal TasaAdministrativaPatente { get; set; }
+
+        public decimal InteresIat { get; set; }
+        public decimal RecargoIat { get; set; }
+        public decimal CostasIat { get; set; }
+        public decimal TasaAdministrativaIat { get; set; }
+        public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos + MultaPatente + MultaIat  + InteresPatente + RecargoPatente + CostasPatente + TasaAdministrativaPatente + InteresIat + RecargoIat + CostasIat + TasaAdministrativaIat - (DescuentoTerceraEdadPatente + DescuentoTerceraEdadIat);
     }
 
     public class RegistrarDeclaracionDataResult : BaseResult
@@ -167,7 +191,21 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
         public decimal UnoCincoXMil { get; set; }
         public decimal Patente { get; set; }
         public decimal ValorBomberos { get; set; }
-        public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos;
+        public decimal MultaPatente { get; set; }
+        public decimal MultaIat { get; set; }
+        public decimal DescuentoTerceraEdadPatente { get; set; }
+        public decimal DescuentoTerceraEdadIat { get; set; }
+
+        public decimal InteresPatente { get; set; }
+        public decimal RecargoPatente { get; set; }
+        public decimal CostasPatente { get; set; }
+        public decimal TasaAdministrativaPatente { get; set; }
+
+        public decimal InteresIat { get; set; }
+        public decimal RecargoIat { get; set; }
+        public decimal CostasIat { get; set; }
+        public decimal TasaAdministrativaIat { get; set; }
+        public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos + MultaPatente + MultaIat + InteresPatente + RecargoPatente + CostasPatente + TasaAdministrativaPatente + InteresIat + RecargoIat + CostasIat + TasaAdministrativaIat - (DescuentoTerceraEdadPatente + DescuentoTerceraEdadIat);
 
         public bool Estado { get; set; }
     }

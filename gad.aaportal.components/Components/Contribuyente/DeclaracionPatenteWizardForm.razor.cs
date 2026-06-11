@@ -344,7 +344,15 @@ namespace gad.aaportal.components.Components.Contribuyente
         private bool MostrarValorBomberos => ValorBomberos > 0;
         private decimal Valores3EdadPatente { get; set; }
         private decimal Valores3EdadPorMil { get; set; }
+        private decimal InteresPatente { get; set; }
+        private decimal RecargoPatente { get; set; }
+        private decimal CostasPatente { get; set; }
+        private decimal TasaAdministrativaPatente { get; set; }
 
+        private decimal InteresIat { get; set; }
+        private decimal RecargoIat { get; set; }
+        private decimal CostasIat { get; set; }
+        private decimal TasaAdministrativaIat { get; set; }
         private decimal TotalPatentePorEstablecimientos =>
             _establecimientos.Sum(e => e.Valor);
 
@@ -402,27 +410,47 @@ namespace gad.aaportal.components.Components.Contribuyente
         }
         private void CargarResumenImpuestos()
         {
+            var totalAdicionalesPatente =
+                InteresPatente +
+                RecargoPatente +
+                CostasPatente +
+                TasaAdministrativaPatente;
+
+            var totalAdicionalesIat =
+                InteresIat +
+                RecargoIat +
+                CostasIat +
+                TasaAdministrativaIat;
+
+            var totalDescuentoPatente = ValorExoneradoPatente;
+            var totalDescuentoIat = ValorExoneradoIAT;
+
             _resumen = new ResumenImpuestoDeclaracionViewModel
             {
                 Patrimonio = Patrimonio,
+
                 DerechoPatenteAnual = TotalPatentePorEstablecimientos,
                 ValoresBomberosPatente = ValorBomberos,
                 MultaPatente = ValorMultaPatente,
-                DescuentoPatenteTerceraEdad = 0,
+                DescuentoPatenteTerceraEdad = totalDescuentoPatente,
 
                 TotalPatentePagar =
                     TotalPatentePorEstablecimientos +
                     ValorMultaPatente +
-                    ValorBomberos,
+                    ValorBomberos +
+                    totalAdicionalesPatente -
+                    totalDescuentoPatente,
 
                 BaseImponible1_5_x_1000 = BaseImponible,
                 ImpuestoActivos = ValorUnoCincoPorMil,
                 Multa15 = ValorMultaPorMil,
-                DescuentoTerceraEdad15 = 0,
+                DescuentoTerceraEdad15 = totalDescuentoIat,
 
                 Total15Pagar =
                     ValorUnoCincoPorMil +
-                    ValorMultaPorMil,
+                    ValorMultaPorMil +
+                    totalAdicionalesIat -
+                    totalDescuentoIat
             };
 
             _resumen.TotalPagar =
@@ -468,10 +496,16 @@ namespace gad.aaportal.components.Components.Contribuyente
                 await CalcularMulta1_5Mil();
                 #endregion
 
-                CargarResumenImpuestos();
+                #region Consulta valores a pagar patente / 1.5x1000
+                await ConsultarValoresPagar();
+                #endregion
 
+                #region Descuentos tercera edad
                 await CalcularValoresTerceraEdadPatente();
                 await CalcularValoresTerceraEdad_1_5Mil();
+                #endregion
+
+                CargarResumenImpuestos();
 
                 LoadingBorder?.Close();
 
@@ -562,9 +596,20 @@ namespace gad.aaportal.components.Components.Contribuyente
                     BaseImponiblePatente = BaseImponible,
                     MultaIat = ValorMultaPorMil,
                     FechaVencimiento = FechaVencimiento,
+
+                    InteresPatente = InteresPatente,
+                    RecargoPatente = RecargoPatente,
+                    CostasPatente = CostasPatente,
+                    TasaAdministrativaPatente = TasaAdministrativaPatente,
+
+                    InteresIat = InteresIat,
+                    RecargoIat = RecargoIat,
+                    CostasIat = CostasIat,
+                    TasaAdministrativaIat = TasaAdministrativaIat,
+
                     PorcentajeDescuentoTerceraEdadPatente = PorcentajeDescuentoTerceraEdadPatente,
                     PorcentajeDescuentoTerceraEdadIAT = PorcentajeDescuentoTerceraEdadIAT,
-                    PorcentajeCalculoIat = _establecimientosBase.FirstOrDefault().Porcentaje,
+                    PorcentajeCalculoIat = _establecimientosBase.FirstOrDefault()!.Porcentaje,
                     ValorExoneradoPatente = ValorExoneradoPatente,
                     ValorExoneradoIAT = ValorExoneradoIAT,
                     ExedentePatente = ExedentePatente,
@@ -628,6 +673,23 @@ namespace gad.aaportal.components.Components.Contribuyente
         {
             try
             {
+                InteresPatente = 0;
+                RecargoPatente = 0;
+                CostasPatente = 0;
+                TasaAdministrativaPatente = 0;
+
+                InteresIat = 0;
+                RecargoIat = 0;
+                CostasIat = 0;
+                TasaAdministrativaIat = 0;
+
+                ValorMultaPatente = 0;
+                ValorMultaPorMil = 0;
+                ValorExoneradoPatente = 0;
+                ValorExoneradoIAT = 0;
+                PorcentajeDescuentoTerceraEdadPatente = 0;
+                PorcentajeDescuentoTerceraEdadIAT = 0;
+
                 _mostrarModalPeriodo = false;
                 _mostrarModalConfirmarValores = false;
                 _mostrarModalComprobante = false;
@@ -881,6 +943,76 @@ namespace gad.aaportal.components.Components.Contribuyente
             {
                 ValorBomberos = 0;
                 await MostrarMensaje("error", "SERVER_ERROR", "Existe un error al consultar el valor de Bomberos");
+            }
+        }
+        #endregion
+
+        #region Calcular valores municipio
+        private async Task ConsultarValoresPagar()
+        {
+            try
+            {
+                InteresPatente = 0;
+                RecargoPatente = 0;
+                CostasPatente = 0;
+                TasaAdministrativaPatente = 0;
+
+                InteresIat = 0;
+                RecargoIat = 0;
+                CostasIat = 0;
+                TasaAdministrativaIat = 0;
+
+                if (_declaracionIniciada is null ||
+                    string.IsNullOrWhiteSpace(_declaracionIniciada.Identificacion))
+                    return;
+
+                var resultPatente = await SpMunicipioConsumers.ConsultaValorP(
+                    new ConsultaValorPDtoParam
+                    {
+                        ValorImpuesto = Patrimonio,
+                        ValorMulta = ValorMultaPatente,
+                        TipoImpuesto = "PMA",
+                        Ruc = _declaracionIniciada.Identificacion,
+                        AnioDeclaracion = _declaracionIniciada.AnioDeclaracion
+                    });
+
+                if (resultPatente?.Data is not null)
+                {
+                    InteresPatente = Convert.ToDecimal(resultPatente.Data.Intereses);
+                    RecargoPatente = Convert.ToDecimal(resultPatente.Data.Recargo);
+                    CostasPatente = Convert.ToDecimal(resultPatente.Data.CostaJ);
+                    TasaAdministrativaPatente = Convert.ToDecimal(resultPatente.Data.TasaAdministrativa);
+                }
+                else if (resultPatente?.Message is not null && !string.IsNullOrWhiteSpace(resultPatente.Message.Code))
+                {
+                    await MostrarMensaje("error", resultPatente.Message.Code, resultPatente.Message.Description);
+                }
+
+                var resultIat = await SpMunicipioConsumers.ConsultaValorP(
+                    new ConsultaValorPDtoParam
+                    {
+                        ValorImpuesto = BaseImponible,
+                        ValorMulta = ValorMultaPorMil,
+                        TipoImpuesto = "IAT",
+                        Ruc = _declaracionIniciada.Identificacion,
+                        AnioDeclaracion = _declaracionIniciada.AnioDeclaracion
+                    });
+
+                if (resultIat?.Data is not null)
+                {
+                    InteresIat = Convert.ToDecimal(resultIat.Data.Intereses);
+                    RecargoIat = Convert.ToDecimal(resultIat.Data.Recargo);
+                    CostasIat = Convert.ToDecimal(resultIat.Data.CostaJ);
+                    TasaAdministrativaIat = Convert.ToDecimal(resultIat.Data.TasaAdministrativa);
+                }
+                else if (resultIat?.Message is not null && !string.IsNullOrWhiteSpace(resultIat.Message.Code))
+                {
+                    await MostrarMensaje("error", resultIat.Message.Code, resultIat.Message.Description);
+                }
+            }
+            catch
+            {
+                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error al consultar los valores a pagar Municipio");
             }
         }
         #endregion

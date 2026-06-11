@@ -230,5 +230,19 @@ namespace gad.aaportal.consumers.consumers.Implementation
             }
             return result;
         }
+
+        public async Task<ConsultaValorPDtoResult> ConsultaValorP(ConsultaValorPDtoParam parametro)
+        {
+            ConsultaValorPDtoResult result = new();
+            try
+            {
+                result = await _httpClient.Post<ConsultaValorPDtoParam, ConsultaValorPDtoResult>(parametro, configuraciones.EndPointsConfig.ConsultaValorP);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return result;
+        }
     }
 }

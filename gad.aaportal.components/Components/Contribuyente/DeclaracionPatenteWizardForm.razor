@@ -319,7 +319,7 @@
                         <div class="resumen-impuestos-grid">
                             <div class="impuesto-card">
                                 <div class="impuesto-card-title">Patente</div>
-                                <div class="impuesto-row">
+                                <div class="impuesto-row impuesto-total">
                                     <span>Patrimonio</span>
                                     <strong>@_resumen.Patrimonio.ToString("C2")</strong>
                                 </div>
@@ -331,6 +331,22 @@
                                     <span>Multa por presentación tardía</span>
                                     <strong>+ @_resumen.MultaPatente.ToString("C2")</strong>
                                 </div>
+                                    <div class="impuesto-row">
+                                        <span>Interés</span>
+                                        <strong>+ @InteresPatente.ToString("C2")</strong>
+                                    </div>
+                                    <div class="impuesto-row">
+                                        <span>Recargo</span>
+                                        <strong>+ @RecargoPatente.ToString("C2")</strong>
+                                    </div>
+                                    <div class="impuesto-row">
+                                        <span>Costas judiciales</span>
+                                        <strong>+ @CostasPatente.ToString("C2")</strong>
+                                    </div>
+                                    <div class="impuesto-row">
+                                        <span>Tasa administrativa</span>
+                                        <strong>+ @TasaAdministrativaPatente.ToString("C2")</strong>
+                                    </div>
                                 @if (MostrarValorBomberos)
                                 {
                                     <div class="impuesto-row">
@@ -354,7 +370,7 @@
                             <div class="impuesto-card">
                                 <div class="impuesto-card-title">1.5 por mil</div>
 
-                                <div class="impuesto-row">
+                                <div class="impuesto-row impuesto-total">
                                     <span>Base Imponible 1.5 x mil</span>
                                     <strong>@_resumen.BaseImponible1_5_x_1000.ToString("C2")</strong>
                                 </div>
@@ -366,7 +382,22 @@
                                     <span>Multa por presentación tardía</span>
                                     <strong>+ @_resumen.Multa15.ToString("C2")</strong>
                                 </div>
-
+                                    <div class="impuesto-row">
+                                        <span>Interés</span>
+                                        <strong>+ @InteresIat.ToString("C2")</strong>
+                                    </div>
+                                    <div class="impuesto-row">
+                                        <span>Recargo</span>
+                                        <strong>+ @RecargoIat.ToString("C2")</strong>
+                                    </div>
+                                    <div class="impuesto-row">
+                                        <span>Costas judiciales</span>
+                                        <strong>+ @CostasIat.ToString("C2")</strong>
+                                    </div>
+                                    <div class="impuesto-row">
+                                        <span>Tasa administrativa</span>
+                                        <strong>+ @TasaAdministrativaIat.ToString("C2")</strong>
+                                    </div>
                                 <div class="impuesto-row">
                                     <span>Descuento tercera edad</span>
                                     <strong>- @_resumen.DescuentoTerceraEdad15.ToString("C2")</strong>
@@ -612,25 +643,31 @@
 
             <div class="modal-periodo-body">
                 <div class="confirmacion-valores-grid">
-                    <div class="confirmacion-item">
+                    <div class="confirmacion-item full-row">
                         <span>Ejercicio fiscal</span>
                         <strong>@_declaracionIniciada?.EjercicioFiscal</strong>
                     </div>
 
                     <div class="confirmacion-item">
-                        <span>Base imponible</span>
-                        <strong>@BaseImponible.ToString("N2")</strong>
+                        <span>Patrimonio</span>
+                        <strong>@Patrimonio.ToString("N2")</strong>
                     </div>
 
                     <div class="confirmacion-item">
-                        <span>Patente</span>
+                        <span>Valor patente</span>
                         <strong>@TotalPatentePorEstablecimientos.ToString("N2")</strong>
                     </div>
 
                     <div class="confirmacion-item">
-                        <span>1.5 x Mil</span>
+                        <span>Base imponible 1.5 x mil</span>
+                        <strong>@BaseImponible.ToString("N2")</strong>
+                    </div>
+
+                    <div class="confirmacion-item">
+                        <span>Valor 1.5 x mil</span>
                         <strong>@ValorUnoCincoPorMil.ToString("N2")</strong>
                     </div>
+
                     @if (MostrarValorBomberos)
                     {
                         <div class="confirmacion-item">
@@ -638,6 +675,7 @@
                             <strong>@ValorBomberos.ToString("N2")</strong>
                         </div>
                     }
+
                     <div class="confirmacion-item total">
                         <span>Total a pagar</span>
                         <strong>@_resumen.TotalPagar.ToString("N2")</strong>

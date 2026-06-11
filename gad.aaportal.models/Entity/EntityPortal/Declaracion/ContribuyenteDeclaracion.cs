@@ -26,6 +26,22 @@ namespace gad.aaportal.models.Entity.Declaracion
         public decimal _15XMil { get; set; }
         public decimal Patente { get; set; }
         public decimal ValorBomberos { get; set; }
+
+        public decimal MultaPatente { get; set; }
+        public decimal MultaIat { get; set; }
+        public decimal DescuentoTerceraEdadPatente { get; set; }
+        public decimal DescuentoTerceraEdadIat { get; set; }
+
+        public decimal InteresPatente { get; set; }
+        public decimal RecargoPatente { get; set; }
+        public decimal CostasPatente { get; set; }
+        public decimal TasaAdministrativaPatente { get; set; }
+
+        public decimal InteresIat { get; set; }
+        public decimal RecargoIat { get; set; }
+        public decimal CostasIat { get; set; }
+        public decimal TasaAdministrativaIat { get; set; }
+
         public bool Estado { get; set; }
 
         public virtual Contribuyente IdentificacionNavigation { get; set; } = null!;

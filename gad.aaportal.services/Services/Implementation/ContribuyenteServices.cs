@@ -586,6 +586,18 @@ namespace gad.aaportal.services.Services.Implementation
                     _15XMil = parametro.UnoCincoXMil,
                     Patente = parametro.Patente,
                     ValorBomberos = parametro.ValorBomberos,
+                    MultaPatente = parametro.MultaPatente,
+                    MultaIat = parametro.MultaIat,
+                    DescuentoTerceraEdadPatente = parametro.PorcentajeDescuentoTerceraEdadPatente,
+                    DescuentoTerceraEdadIat = parametro.PorcentajeDescuentoTerceraEdadIAT,
+                    InteresPatente = parametro.InteresPatente,
+                    RecargoPatente = parametro.RecargoPatente,
+                    CostasPatente = parametro.CostasPatente,
+                    TasaAdministrativaPatente = parametro.TasaAdministrativaPatente,
+                    InteresIat = parametro.InteresIat,
+                    RecargoIat = parametro.RecargoIat,
+                    CostasIat = parametro.CostasIat,
+                    TasaAdministrativaIat = parametro.TasaAdministrativaIat,                    
                     Estado = true
                 };
 

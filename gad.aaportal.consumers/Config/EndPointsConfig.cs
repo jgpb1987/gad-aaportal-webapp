@@ -32,6 +32,7 @@ namespace gad.aaportal.consumers.Config
         public string InsertarTranferenciaIat { get; set; } = null!;
         public string ConsultarAnioAdeuda { get; set; } = null!;
         public string ConsultarFechaVencimiento { get; set; } = null!;
+        public string ConsultaValorP { get; set; } = null!;
 
         /*Fin Store Procedure Municipio*/
     }

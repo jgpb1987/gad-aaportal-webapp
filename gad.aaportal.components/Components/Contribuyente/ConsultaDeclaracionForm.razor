@@ -52,18 +52,18 @@
                                 </div>
 
                                 <div class="declaracion-info-item">
-                                    <span>Patente</span>
-                                    <strong>@item.Patente.ToString("N2")</strong>
+                                    <span>Total patente</span>
+                                    <strong>@TotalPatente(item).ToString("N2")</strong>
                                 </div>
 
                                 <div class="declaracion-info-item">
-                                    <span>1.5 x Mil</span>
-                                    <strong>@item.UnoCincoXMil.ToString("N2")</strong>
+                                    <span>Total 1.5 x mil</span>
+                                    <strong>@TotalIat(item).ToString("N2")</strong>
                                 </div>
 
                                 <div class="declaracion-info-item total">
                                     <span>Total a pagar</span>
-                                    <strong>@item.TotalPagar.ToString("N2")</strong>
+                                    <strong>@TotalDeclaracion(item).ToString("N2")</strong>
                                 </div>
                             </div>
 
@@ -91,7 +91,7 @@
 @if (_mostrarModalDetalle && _declaracionSeleccionada is not null)
 {
     <div class="modal-backdrop-custom">
-        <div class="modal-comprobante-card">
+        <div class="modal-comprobante-card comprobante-simple-card">
             <div class="modal-detalle-header">
                 <div>
                     <div class="modal-title-custom">Detalle de declaración</div>
@@ -107,85 +107,205 @@
                 </button>
             </div>
 
-            <div class="modal-detalle-body">
-                <div class="comprobante-box">
-                    <div class="comprobante-header">
-                        <div class="comprobante-title">GAD Municipal Antonio Ante</div>
-                        <div class="comprobante-subtitle">Comprobante de declaración de patente</div>
+            <div class="modal-detalle-body comprobante-simple-body">
+                <div id="comprobanteConsultaImprimir" class="comprobante-simple-box">
+
+                    <div class="comprobante-simple-title">
+                        <strong>GAD Municipal Antonio Ante</strong>
+                        <span>Comprobante de declaración de patente</span>
                     </div>
 
-                    <div class="comprobante-line">
-                        <span>Código único de pago</span>
-                        <strong>@_declaracionSeleccionada.CodigoUnicoPago</strong>
+                    <div class="comprobante-simple-section">
+                        <div class="comprobante-simple-section-title">Datos de la declaración</div>
+
+                        <div class="comprobante-simple-grid">
+                            <div>
+                                <span>Código único de pago</span>
+                                <strong>@_declaracionSeleccionada.CodigoUnicoPago</strong>
+                            </div>
+
+                            <div>
+                                <span>Identificación</span>
+                                <strong>@_declaracionSeleccionada.Identificacion</strong>
+                            </div>
+
+                            <div>
+                                <span>Fecha emisión</span>
+                                <strong>@_declaracionSeleccionada.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</strong>
+                            </div>
+
+                            <div>
+                                <span>Ejercicio fiscal</span>
+                                <strong>@_declaracionSeleccionada.Anio</strong>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="comprobante-line">
-                        <span>Identificación</span>
-                        <strong>@_declaracionSeleccionada.Identificacion</strong>
+                    <div class="comprobante-simple-section">
+                        <div class="comprobante-simple-section-title">Información financiera declarada</div>
+
+                        <div class="comprobante-simple-grid">
+                            <div>
+                                <span>Activo corriente</span>
+                                <strong>@_declaracionSeleccionada.ActivoCorriente.ToString("N2")</strong>
+                            </div>
+
+                            <div>
+                                <span>Activo no corriente</span>
+                                <strong>@_declaracionSeleccionada.ActivoNoCorriente.ToString("N2")</strong>
+                            </div>
+
+                            <div>
+                                <span>Total activo</span>
+                                <strong>@TotalActivo(_declaracionSeleccionada).ToString("N2")</strong>
+                            </div>
+
+                            <div>
+                                <span>Total pasivo</span>
+                                <strong>@TotalPasivo(_declaracionSeleccionada).ToString("N2")</strong>
+                            </div>
+
+                            <div>
+                                <span>Pasivo corriente</span>
+                                <strong>@_declaracionSeleccionada.PasivoCorriente.ToString("N2")</strong>
+                            </div>
+
+                            <div>
+                                <span>Pasivo no corriente</span>
+                                <strong>@_declaracionSeleccionada.PasivoNoCorriente.ToString("N2")</strong>
+                            </div>
+
+                            <div>
+                                <span>Pasivo contingente</span>
+                                <strong>@_declaracionSeleccionada.PasivoContingente.ToString("N2")</strong>
+                            </div>
+
+                            <div>
+                                <span>Patrimonio</span>
+                                <strong>@Patrimonio(_declaracionSeleccionada).ToString("N2")</strong>
+                            </div>
+
+                            <div>
+                                <span>Ingresos</span>
+                                <strong>@_declaracionSeleccionada.Ingresos.ToString("N2")</strong>
+                            </div>
+
+                            <div>
+                                <span>Costos y gastos</span>
+                                <strong>@_declaracionSeleccionada.CostosGastos.ToString("N2")</strong>
+                            </div>
+
+                            <div>
+                                <span>Utilidad</span>
+                                <strong>@UtilidadEjercicio(_declaracionSeleccionada).ToString("N2")</strong>
+                            </div>
+
+                            <div>
+                                <span>Pérdida</span>
+                                <strong>@PerdidaEjercicio(_declaracionSeleccionada).ToString("N2")</strong>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="comprobante-line">
-                        <span>Fecha de emisión</span>
-                        <strong>@_declaracionSeleccionada.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</strong>
+                    <div class="comprobante-simple-two-columns">
+                        <div class="comprobante-simple-section">
+                            <div class="comprobante-simple-section-title">Patente municipal</div>
+
+                            <table class="comprobante-simple-table">
+                                <tbody>
+                                    <tr>
+                                        <td>Patrimonio</td>
+                                        <td>@Patrimonio(_declaracionSeleccionada).ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Valor patente</td>
+                                        <td>@_declaracionSeleccionada.Patente.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bomberos</td>
+                                        <td>@_declaracionSeleccionada.ValorBomberos.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Multa patente</td>
+                                        <td>@_declaracionSeleccionada.MultaPatente.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Interés patente</td>
+                                        <td>@_declaracionSeleccionada.InteresPatente.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Recargo patente</td>
+                                        <td>@_declaracionSeleccionada.RecargoPatente.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Costas patente</td>
+                                        <td>@_declaracionSeleccionada.CostasPatente.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tasa administrativa</td>
+                                        <td>@_declaracionSeleccionada.TasaAdministrativaPatente.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Descuento tercera edad</td>
+                                        <td>- @_declaracionSeleccionada.DescuentoTerceraEdadPatente.ToString("N2")</td>
+                                    </tr>
+                                    <tr class="comprobante-simple-subtotal">
+                                        <td>Total patente</td>
+                                        <td>@TotalPatente(_declaracionSeleccionada).ToString("N2")</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="comprobante-simple-section">
+                            <div class="comprobante-simple-section-title">1.5 x mil</div>
+
+                            <table class="comprobante-simple-table">
+                                <tbody>
+                                    <tr>
+                                        <td>Base imponible</td>
+                                        <td>@Patrimonio(_declaracionSeleccionada).ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Valor 1.5 x mil</td>
+                                        <td>@_declaracionSeleccionada.UnoCincoXMil.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Multa 1.5 x mil</td>
+                                        <td>@_declaracionSeleccionada.MultaIat.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Interés 1.5 x mil</td>
+                                        <td>@_declaracionSeleccionada.InteresIat.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Recargo 1.5 x mil</td>
+                                        <td>@_declaracionSeleccionada.RecargoIat.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Costas 1.5 x mil</td>
+                                        <td>@_declaracionSeleccionada.CostasIat.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tasa administrativa</td>
+                                        <td>@_declaracionSeleccionada.TasaAdministrativaIat.ToString("N2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Descuento tercera edad</td>
+                                        <td>- @_declaracionSeleccionada.DescuentoTerceraEdadIat.ToString("N2")</td>
+                                    </tr>
+                                    <tr class="comprobante-simple-subtotal">
+                                        <td>Total 1.5 x mil</td>
+                                        <td>@TotalIat(_declaracionSeleccionada).ToString("N2")</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    <div class="comprobante-line">
-                        <span>Año declarado</span>
-                        <strong>@_declaracionSeleccionada.Anio</strong>
-                    </div>
-
-                    <div class="comprobante-divider"></div>
-
-                    <div class="comprobante-line">
-                        <span>Activo corriente</span>
-                        <strong>@_declaracionSeleccionada.ActivoCorriente.ToString("N2")</strong>
-                    </div>
-
-                    <div class="comprobante-line">
-                        <span>Activo no corriente</span>
-                        <strong>@_declaracionSeleccionada.ActivoNoCorriente.ToString("N2")</strong>
-                    </div>
-
-                    <div class="comprobante-line">
-                        <span>Pasivo corriente</span>
-                        <strong>@_declaracionSeleccionada.PasivoCorriente.ToString("N2")</strong>
-                    </div>
-
-                    <div class="comprobante-line">
-                        <span>Pasivo no corriente</span>
-                        <strong>@_declaracionSeleccionada.PasivoNoCorriente.ToString("N2")</strong>
-                    </div>
-
-                    <div class="comprobante-line">
-                        <span>Pasivo contingente</span>
-                        <strong>@_declaracionSeleccionada.PasivoContingente.ToString("N2")</strong>
-                    </div>
-
-                    <div class="comprobante-line">
-                        <span>Ingresos</span>
-                        <strong>@_declaracionSeleccionada.Ingresos.ToString("N2")</strong>
-                    </div>
-
-                    <div class="comprobante-line">
-                        <span>Costos y gastos</span>
-                        <strong>@_declaracionSeleccionada.CostosGastos.ToString("N2")</strong>
-                    </div>
-
-                    <div class="comprobante-divider"></div>
-
-                    <div class="comprobante-line">
-                        <span>Patente</span>
-                        <strong>@_declaracionSeleccionada.Patente.ToString("N2")</strong>
-                    </div>
-
-                    <div class="comprobante-line">
-                        <span>1.5 x Mil</span>
-                        <strong>@_declaracionSeleccionada.UnoCincoXMil.ToString("N2")</strong>
-                    </div>
-
-                    <div class="comprobante-line comprobante-total">
+                    <div class="comprobante-simple-total">
                         <span>Total a pagar</span>
-                        <strong>@_declaracionSeleccionada.TotalPagar.ToString("N2")</strong>
+                        <strong>@TotalDeclaracion(_declaracionSeleccionada).ToString("N2")</strong>
                     </div>
                 </div>
             </div>
@@ -199,7 +319,7 @@
 
                 <button type="button"
                         class="btn-modal-primary"
-                        onclick="window.print()">
+                        @onclick="ImprimirComprobante">
                     Reimprimir comprobante
                 </button>
             </div>

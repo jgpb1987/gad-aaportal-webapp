@@ -158,5 +158,75 @@ namespace gad.aaportal.apis.Controllers
             var result = await services.ConsultarDeclaracionesContribuyente(contexto, parametro);
             return Ok(result);
         }
+        [HttpPost("subirArchivoDeclaracion")]
+        [Consumes("multipart/form-data")]
+        [RequestSizeLimit(10_000_000)]
+        public async Task<ActionResult<SubirDeclaracionArchivoDtoResult>> SubirArchivoDeclaracion(
+            [FromForm] SubirDeclaracionArchivoDtoParam parametro)
+        {
+            SubirDeclaracionArchivoDtoResult result = new();
+
+            try
+            {
+                result = await services.SubirArchivoDeclaracion(contexto,
+                    parametro.IdContribuyenteDeclaracion,
+                    parametro.Archivo);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
+        [HttpPost("consultarArchivosDeclaracion")]
+        public async Task<ActionResult<ConsultarDeclaracionArchivoDataResult>> ConsultarArchivosDeclaracion([FromBody] ConsultarDeclaracionArchivoDtoParam parametro)
+        {
+            ConsultarDeclaracionArchivoDataResult result = new();
+
+            try
+            {
+                result = await services.ConsultarArchivosDeclaracion(contexto,parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
+        [HttpGet("descargarArchivoDeclaracion/{idArchivo:long}")]
+        public async Task<IActionResult> DescargarArchivoDeclaracion(long idArchivo)
+        {
+            try
+            {
+                var archivo = await services.ObtenerArchivoDeclaracion(contexto, idArchivo);
+
+                if (archivo is null ||
+                    string.IsNullOrWhiteSpace(archivo.UbicacionArchivo) ||
+                    !System.IO.File.Exists(archivo.UbicacionArchivo))
+                {
+                    return NotFound("No se encontró el archivo solicitado.");
+                }
+
+                var bytes = await System.IO.File.ReadAllBytesAsync(archivo.UbicacionArchivo);
+
+                var contentType = archivo.ExtensionArchivo.ToLowerInvariant() switch
+                {
+                    ".pdf" => "application/pdf",
+                    ".doc" => "application/msword",
+                    ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    ".xls" => "application/vnd.ms-excel",
+                    ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    _ => "application/octet-stream"
+                };
+
+                return File(bytes, contentType, archivo.NombreArchivo);
+            }
+            catch
+            {
+                return StatusCode(500, "No fue posible descargar el archivo.");
+            }
+        }
     }
 }

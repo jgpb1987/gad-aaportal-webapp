@@ -2,6 +2,7 @@
 using gad.aaportal.commons.Dto.DtoPortal.Declaracion;
 using gad.aaportal.commons.Dto.Seguridad;
 using gad.aaportal.dataaccess.Configuration;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,10 @@ namespace gad.aaportal.services.Services.Interfaces
         Task<IniciarDeclaracionDataResult> IniciarDeclaracion(AaportalContext contexto,   IniciarDeclaracionDtoParam parametro);
         Task<RegistrarDeclaracionDataResult> RegistrarDeclaracion( AaportalContext contexto, RegistrarDeclaracionDtoParam parametro);
         Task<ConsultarDeclaracionContribuyenteDataResult> ConsultarDeclaracionesContribuyente(AaportalContext contexto,  ConsultarDeclaracionContribuyenteDtoParam parametro);
+        Task<SubirDeclaracionArchivoDtoResult> SubirArchivoDeclaracion(AaportalContext contexto, long idContribuyenteDeclaracion, IFormFile archivo);
 
+        Task<ConsultarDeclaracionArchivoDataResult> ConsultarArchivosDeclaracion(AaportalContext contexto, ConsultarDeclaracionArchivoDtoParam parametro);
+
+        Task<DescargarDeclaracionArchivoDtoResult?> ObtenerArchivoDeclaracion(AaportalContext contexto, long idArchivo);
     }
 }

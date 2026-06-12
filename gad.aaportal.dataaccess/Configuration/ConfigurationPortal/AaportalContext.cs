@@ -64,6 +64,7 @@ public partial class AaportalContext : DbContext
     public virtual DbSet<ContribuyenteEstablecimiento> ContribuyenteEstablecimientos { get; set; } = null!;
     public virtual DbSet<ContribuyenteDeclaracion> ContribuyenteDeclaracions { get; set; } = null!;
     public virtual DbSet<ContribuyenteDeclaracionPagoEstablecimiento> ContribuyenteDeclaracionPagoEstablecimientos { get; set; } = null!;
+    public virtual DbSet<ContribuyenteDeclaracionArchivo> ContribuyenteDeclaracionArchivos { get; set; } = null!;
     #endregion
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -101,5 +102,6 @@ public partial class AaportalContext : DbContext
         modelBuilder.ApplyConfiguration(new ContribuyenteEstablecimientoConfiguracion());
         modelBuilder.ApplyConfiguration(new ContribuyenteDeclaracionConfiguracion());
         modelBuilder.ApplyConfiguration(new ContribuyenteDeclaracionPagoEstablecimientoConfiguracion());
+        modelBuilder.ApplyConfiguration(new ContribuyenteDeclaracionArchivoConfiguracion());
     }
 }

@@ -9,6 +9,7 @@ using gad.aaportal.models.Entity.Declaracion;
 using gad.aaportal.services.Config;
 using gad.aaportal.services.MessageException;
 using gad.aaportal.services.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -747,7 +748,19 @@ namespace gad.aaportal.services.Services.Implementation
                         CostosGastos = entity.CostosGastos,
                         ValorBomberos = entity.ValorBomberos,
                         UnoCincoXMil = entity._15XMil,
-                        Patente = entity.Patente
+                        Patente = entity.Patente,
+                        CostasIat = entity.CostasIat,
+                        CostasPatente = entity.CostasPatente,
+                        DescuentoTerceraEdadIat = entity.DescuentoTerceraEdadIat,
+                        DescuentoTerceraEdadPatente = entity.DescuentoTerceraEdadPatente,
+                        InteresIat = entity.InteresIat,
+                        InteresPatente = entity.InteresPatente,
+                        MultaIat = entity.MultaIat,
+                        MultaPatente = entity.MultaPatente,
+                        RecargoIat = entity.RecargoIat,
+                        RecargoPatente = entity.RecargoPatente,
+                        TasaAdministrativaIat = entity.TasaAdministrativaIat,
+                        TasaAdministrativaPatente = entity.TasaAdministrativaPatente
                     },
                     Message = new MessageResult
                     {
@@ -802,6 +815,18 @@ namespace gad.aaportal.services.Services.Implementation
                         ValorBomberos = d.ValorBomberos,
                         UnoCincoXMil = d._15XMil,
                         Patente = d.Patente,
+                        CostasIat=d.CostasIat,
+                        CostasPatente=d.CostasPatente,
+                        DescuentoTerceraEdadIat=d.DescuentoTerceraEdadIat,
+                        DescuentoTerceraEdadPatente=d.DescuentoTerceraEdadPatente,
+                        InteresIat=d.InteresIat,
+                        InteresPatente=d.InteresPatente,
+                        MultaIat=d.MultaIat,
+                        MultaPatente=d.MultaPatente,
+                        RecargoIat=d.RecargoIat,
+                        RecargoPatente=d.RecargoPatente,
+                        TasaAdministrativaIat=d.TasaAdministrativaIat,
+                        TasaAdministrativaPatente=d.TasaAdministrativaPatente,
                         Estado = d.Estado
                     })
                     .ToListAsync();
@@ -829,6 +854,197 @@ namespace gad.aaportal.services.Services.Implementation
                 logger.LogError(ex, nameof(CodeMessage.SERVER_ERROR));
                 throw;
             }
+        }
+        public async Task<SubirDeclaracionArchivoDtoResult> SubirArchivoDeclaracion(AaportalContext contexto, long idContribuyenteDeclaracion,  IFormFile archivo)
+        {
+            SubirDeclaracionArchivoDtoResult result = new();
+
+            try
+            {
+                if (idContribuyenteDeclaracion <= 0)
+                {
+                    result.Message.Code = "DECLARACION_INVALIDA";
+                    result.Message.Description = "La declaración enviada no es válida.";
+                    return result;
+                }
+
+                if (archivo is null || archivo.Length == 0)
+                {
+                    result.Message.Code = "ARCHIVO_INVALIDO";
+                    result.Message.Description = "Debe seleccionar un archivo válido.";
+                    return result;
+                }
+
+                const long maxSizeBytes = 10 * 1024 * 1024;
+
+                if (archivo.Length > maxSizeBytes)
+                {
+                    result.Message.Code = "ARCHIVO_SUPERA_TAMANO";
+                    result.Message.Description = "El archivo no debe superar los 10 MB.";
+                    return result;
+                }
+
+                var extensionesPermitidas = new[]
+                {
+            ".pdf", ".doc", ".docx", ".xls", ".xlsx"
+        };
+
+                var extension = Path.GetExtension(archivo.FileName).ToLowerInvariant();
+
+                if (!extensionesPermitidas.Contains(extension))
+                {
+                    result.Message.Code = "EXTENSION_NO_PERMITIDA";
+                    result.Message.Description = "Solo se permiten archivos PDF, Word o Excel.";
+                    return result;
+                }
+
+                var declaracionExiste = await contexto.ContribuyenteDeclaracions
+                    .AsNoTracking()
+                    .AnyAsync(x => x.Id == idContribuyenteDeclaracion);
+
+                if (!declaracionExiste)
+                {
+                    result.Message.Code = "DECLARACION_NO_EXISTE";
+                    result.Message.Description = "No existe la declaración seleccionada.";
+                    return result;
+                }
+
+                var yaTieneArchivo = await contexto.ContribuyenteDeclaracionArchivos
+                    .AsNoTracking()
+                    .AnyAsync(x =>
+                        x.IdContribuyenteDeclaracion == idContribuyenteDeclaracion &&
+                        x.Estado);
+
+                if (yaTieneArchivo)
+                {
+                    result.Message.Code = "ARCHIVO_YA_REGISTRADO";
+                    result.Message.Description = "La declaración ya tiene un archivo de sustento registrado.";
+                    return result;
+                }
+
+                var nombreOriginal = Path.GetFileName(archivo.FileName);
+
+                var nombreFisico =
+                    $"{idContribuyenteDeclaracion}_{DateTime.Now:yyyyMMddHHmmssfff}_{Guid.NewGuid():N}{extension}";
+
+                //var rutaBase = configuration["DeclaracionArchivos:RutaBase"];
+                var rutaBase = "C:\\GadAA";
+                if (string.IsNullOrWhiteSpace(rutaBase))
+                {
+                    rutaBase = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "ArchivosDeclaracion");
+                }
+
+                var carpetaDeclaracion = Path.Combine(
+                    rutaBase,
+                    idContribuyenteDeclaracion.ToString());
+
+                if (!Directory.Exists(carpetaDeclaracion))
+                {
+                    Directory.CreateDirectory(carpetaDeclaracion);
+                }
+
+                var rutaCompleta = Path.Combine(carpetaDeclaracion, nombreFisico);
+
+                await using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+                {
+                    await archivo.CopyToAsync(stream);
+                }
+
+                var entidad = new ContribuyenteDeclaracionArchivo
+                {
+                    IdContribuyenteDeclaracion = idContribuyenteDeclaracion,
+                    FechaHora = DateTime.Now,
+                    UbicacionArchivo = rutaCompleta,
+                    NombreArchivo = nombreOriginal,
+                    ExtensionArchivo = extension,
+                    Estado = true
+                };
+
+                contexto.ContribuyenteDeclaracionArchivos.Add(entidad);
+                await contexto.SaveChangesAsync();
+
+                result.Data = new DeclaracionArchivoDtoResult
+                {
+                    Id = entidad.Id,
+                    IdContribuyenteDeclaracion = entidad.IdContribuyenteDeclaracion,
+                    FechaHora = entidad.FechaHora,
+                    NombreArchivo = entidad.NombreArchivo,
+                    ExtensionArchivo = entidad.ExtensionArchivo,
+                    Estado = entidad.Estado
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+                return result;
+            }
+        }
+
+        public async Task<ConsultarDeclaracionArchivoDataResult> ConsultarArchivosDeclaracion(AaportalContext contexto,    ConsultarDeclaracionArchivoDtoParam parametro)
+        {
+            ConsultarDeclaracionArchivoDataResult result = new();
+
+            try
+            {
+                if (parametro.IdContribuyenteDeclaracion <= 0)
+                {
+                    result.Message.Code = "DECLARACION_INVALIDA";
+                    result.Message.Description = "La declaración enviada no es válida.";
+                    return result;
+                }
+
+                var archivos = await contexto.ContribuyenteDeclaracionArchivos
+                    .AsNoTracking()
+                    .Where(x =>
+                        x.IdContribuyenteDeclaracion == parametro.IdContribuyenteDeclaracion &&
+                        x.Estado)
+                    .OrderByDescending(x => x.FechaHora)
+                    .Select(x => new DeclaracionArchivoDtoResult
+                    {
+                        Id = x.Id,
+                        IdContribuyenteDeclaracion = x.IdContribuyenteDeclaracion,
+                        FechaHora = x.FechaHora,
+                        NombreArchivo = x.NombreArchivo,
+                        ExtensionArchivo = x.ExtensionArchivo,
+                        Estado = x.Estado
+                    })
+                    .ToListAsync();
+
+                result.Data = new ConsultarDeclaracionArchivoListResult
+                {
+                    Archivos = archivos
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+                return result;
+            }
+        }
+        public async Task<DescargarDeclaracionArchivoDtoResult?> ObtenerArchivoDeclaracion(AaportalContext contexto, long idArchivo)
+        {
+            if (idArchivo <= 0)
+                return null;
+
+            var archivo = await contexto.ContribuyenteDeclaracionArchivos
+                .AsNoTracking()
+                .Where(x => x.Id == idArchivo && x.Estado)
+                .Select(x => new DescargarDeclaracionArchivoDtoResult
+                {
+                    Id = x.Id,
+                    NombreArchivo = x.NombreArchivo,
+                    ExtensionArchivo = x.ExtensionArchivo,
+                    UbicacionArchivo = x.UbicacionArchivo
+                })
+                .FirstOrDefaultAsync();
+
+            return archivo;
         }
     }
 }

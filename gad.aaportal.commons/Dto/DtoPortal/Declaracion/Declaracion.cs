@@ -1,5 +1,6 @@
 ﻿using gad.aaportal.commons.Base;
 using gad.aaportal.commons.Dto.Seguridad;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -218,5 +219,44 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
     public class ConsultarDeclaracionContribuyenteDataResult : BaseResult
     {
         public ConsultarDeclaracionContribuyenteListResult? Data { get; set; }
+    }
+
+    public class DeclaracionArchivoDtoResult
+    {
+        public long Id { get; set; }
+        public long IdContribuyenteDeclaracion { get; set; }
+        public DateTime FechaHora { get; set; }
+        public string NombreArchivo { get; set; } = string.Empty;
+        public string ExtensionArchivo { get; set; } = string.Empty;
+        public bool Estado { get; set; }
+    }
+    public class ConsultarDeclaracionArchivoDtoParam
+    {
+        public long IdContribuyenteDeclaracion { get; set; }
+    }
+    public class ConsultarDeclaracionArchivoListResult
+    {
+        public List<DeclaracionArchivoDtoResult> Archivos { get; set; } = new();
+    }
+    public class ConsultarDeclaracionArchivoDataResult : BaseResult
+    {
+        public ConsultarDeclaracionArchivoListResult? Data { get; set; }
+    }
+    public class SubirDeclaracionArchivoDtoResult : BaseResult
+    {
+        public DeclaracionArchivoDtoResult? Data { get; set; }
+    }
+    public class DescargarDeclaracionArchivoDtoResult
+    {
+        public long Id { get; set; }
+        public string NombreArchivo { get; set; } = string.Empty;
+        public string ExtensionArchivo { get; set; } = string.Empty;
+        public string UbicacionArchivo { get; set; } = string.Empty;
+    }
+    public class SubirDeclaracionArchivoDtoParam
+    {
+        public long IdContribuyenteDeclaracion { get; set; }
+
+        public IFormFile Archivo { get; set; } = default!;
     }
 }

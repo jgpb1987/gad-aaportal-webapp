@@ -5,6 +5,7 @@ using gad.aaportal.consumers.consumers.Interface;
 using gad.aaportal.consumers.Js;
 using gad.generic.components.Components.Several;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System.Globalization;
 
 namespace gad.aaportal.components.Components.Contribuyente
@@ -44,6 +45,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         [Inject] private ConfiguracionesApp Configuraciones { get; set; } = null!;
         [Inject] private ISpMunicipioConsumers SpMunicipioConsumers { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+        [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
 
         public ToastsServices? Toast { get; set; }
         private LoadingBorderModalServices? LoadingBorder { get; set; }
@@ -1016,5 +1018,10 @@ namespace gad.aaportal.components.Components.Contribuyente
             }
         }
         #endregion
+
+        private async Task ImprimirComprobante()
+        {
+            await JSRuntime.InvokeVoidAsync("imprimirComprobante", "comprobanteImprimir");
+        }
     }
 }

@@ -7,6 +7,7 @@ namespace gad.aaportal.models.Entity.Declaracion
     {
         public ContribuyenteDeclaracion()
         {
+            ContribuyenteDeclaracionArchivos = new HashSet<ContribuyenteDeclaracionArchivo>();
             ContribuyenteDeclaracionPagoEstablecimientos = new HashSet<ContribuyenteDeclaracionPagoEstablecimiento>();
         }
 
@@ -45,6 +46,7 @@ namespace gad.aaportal.models.Entity.Declaracion
         public bool Estado { get; set; }
 
         public virtual Contribuyente IdentificacionNavigation { get; set; } = null!;
+        public virtual ICollection<ContribuyenteDeclaracionArchivo> ContribuyenteDeclaracionArchivos { get; set; }
         public virtual ICollection<ContribuyenteDeclaracionPagoEstablecimiento> ContribuyenteDeclaracionPagoEstablecimientos { get; set; }
     }
 }

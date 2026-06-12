@@ -1054,28 +1054,79 @@
     }
 
 @media print {
-    body * {
-        visibility: hidden;
+    html,
+    body {
+        width: 100%;
+        height: auto !important;
+        overflow: visible !important;
+        background: #ffffff !important;
     }
 
+        body * {
+            visibility: hidden;
+        }
+
+    .modal-backdrop-custom,
     .modal-comprobante-card,
     .modal-comprobante-card * {
         visibility: visible;
     }
 
-    .modal-comprobante-card {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        max-height: none;
-        box-shadow: none;
-        border-radius: 0;
+    .modal-backdrop-custom {
+        position: static !important;
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #ffffff !important;
+        overflow: visible !important;
     }
 
-    .modal-periodo-header button,
-    .modal-periodo-actions {
+    .modal-comprobante-card {
+        position: static !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding-top: 0 !important;
+        margin: 0 !important;
+        background: #ffffff !important;
+    }
+
+        .modal-comprobante-card::before {
+            display: none !important;
+        }
+
+    .modal-periodo-header,
+    .modal-periodo-actions,
+    .btn-close-modal,
+    .wizard-actions {
         display: none !important;
+    }
+
+    .comprobante-box {
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        border: none !important;
+        border-radius: 0 !important;
+    }
+
+    .comprobante-line,
+    .comprobante-section-title,
+    .comprobante-divider {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .comprobante-header {
+        break-inside: avoid;
+        page-break-inside: avoid;
     }
 }
 
@@ -1151,3 +1202,51 @@
 .confirmacion-item.full-row {
     grid-column: 1 / -1;
 }
+.finalizacion-resumen-secciones {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.finalizacion-section {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.85rem;
+    overflow: hidden;
+}
+
+.finalizacion-section-title {
+    padding: 10px 14px;
+    color: var(--pro-button-background-color);
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.35px;
+}
+
+.finalizacion-section .comprobante-resumen-grid {
+    padding: 12px;
+}
+.comprobante-section-title {
+    padding: 10px 14px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    color: var(--pro-button-background-color);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.35px;
+}
+
+.comprobante-subtotal {
+    background: #f9fafb;
+    color: #111827;
+}
+
+    .comprobante-subtotal span,
+    .comprobante-subtotal strong {
+        font-weight: 900;
+    }

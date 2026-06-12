@@ -688,7 +688,8 @@ namespace gad.aaportal.services.Services.Implementation
                     BaseImponible = (double)parametro.BaseImponiblePatente,
                     Valor = (double)parametro.Patente,
                     AnioDeclaracion = parametro.Anio,
-                    ValorPagadoOtroCanton = 0//DEFINIR SI SON VARIOS CANTONES APARTE
+                    ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
+                    Multa = 0
                 };
                 var tituloPatente = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
 
@@ -711,7 +712,8 @@ namespace gad.aaportal.services.Services.Implementation
                     BaseImponible = (double)parametro.BaseImponibleIAT,
                     Valor = (double)parametro.UnoCincoXMil,
                     AnioDeclaracion = parametro.Anio,
-                    ValorPagadoOtroCanton = 0//DEFINIR SI SON VARIOS CANTONES APARTE
+                    ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
+                    Multa=0
                 };
                 var tituloIAT = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
 

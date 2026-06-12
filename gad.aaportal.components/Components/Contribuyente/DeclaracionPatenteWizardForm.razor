@@ -500,45 +500,183 @@
                                     Código único de pago:
                                     <strong>@_declaracionRegistrada.CodigoUnicoPago</strong>
                                 </div>
+                                <!-- AQUÍ VA EL NUEVO RESUMEN EN 4 SECCIONES -->
+                                <div class="finalizacion-resumen-secciones">
 
-                                <div class="comprobante-resumen-grid">
-                                    <div class="comprobante-item">
-                                        <span>Identificación</span>
-                                        <strong>@_declaracionRegistrada.Identificacion</strong>
-                                    </div>
+                                    <!-- SECCIÓN 1: DATOS DE LA DECLARACIÓN -->
+                                    <div class="finalizacion-section">
+                                        <div class="finalizacion-section-title">Datos de la declaración</div>
 
-                                    <div class="comprobante-item">
-                                        <span>Fecha</span>
-                                        <strong>@_declaracionRegistrada.Fecha.ToString("dd/MM/yyyy")</strong>
-                                    </div>
-
-                                    <div class="comprobante-item">
-                                        <span>Año</span>
-                                        <strong>@_declaracionRegistrada.Anio</strong>
-                                    </div>
-
-                                    <div class="comprobante-item">
-                                        <span>Patente</span>
-                                        <strong>@_declaracionRegistrada.Patente.ToString("N2")</strong>
-                                    </div>
-
-                                    <div class="comprobante-item">
-                                        <span>1.5 x Mil</span>
-                                        <strong>@_declaracionRegistrada.UnoCincoXMil.ToString("N2")</strong>
-                                    </div>
-                                    @if (MostrarValorBomberos)
-                                    {
-                                        <div class="comprobante-item">
-                                            <span>Bomberos</span>
-                                            <strong>@ValorBomberos.ToString("N2")</strong>
+                                        <div class="comprobante-resumen-grid">
+                                            <div class="comprobante-item total">
+                                                <span>Ejercicio fiscal</span>
+                                                <strong>@_declaracionRegistrada.Anio</strong>
+                                            </div>
                                         </div>
-                                    }
-                                    <div class="comprobante-item total">
-                                        <span>Total a pagar</span>
-                                        <strong>@_declaracionRegistrada.TotalPagar.ToString("N2")</strong>
                                     </div>
-                                </div>
 
+                                    <!-- SECCIÓN 2: VALORES PATENTE -->
+                                    <div class="finalizacion-section">
+                                        <div class="finalizacion-section-title">Valores patente municipal</div>
+
+                                        <div class="comprobante-resumen-grid">
+                                            <div class="comprobante-item">
+                                                <span>Patrimonio</span>
+                                                <strong>@_resumen.Patrimonio.ToString("N2")</strong>
+                                            </div>
+
+                                            <div class="comprobante-item">
+                                                <span>Valor patente</span>
+                                                <strong>@_resumen.DerechoPatenteAnual.ToString("N2")</strong>
+                                            </div>
+
+                                            @if (_resumen.ValoresBomberosPatente > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Bomberos</span>
+                                                    <strong>@_resumen.ValoresBomberosPatente.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            @if (_resumen.MultaPatente > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Multa patente</span>
+                                                    <strong>@_resumen.MultaPatente.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            @if (InteresPatente > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Interés patente</span>
+                                                    <strong>@InteresPatente.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            @if (RecargoPatente > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Recargo patente</span>
+                                                    <strong>@RecargoPatente.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            @if (CostasPatente > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Costas patente</span>
+                                                    <strong>@CostasPatente.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            @if (TasaAdministrativaPatente > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Tasa administrativa patente</span>
+                                                    <strong>@TasaAdministrativaPatente.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            @if (_resumen.DescuentoPatenteTerceraEdad > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Descuento tercera edad patente</span>
+                                                    <strong>- @_resumen.DescuentoPatenteTerceraEdad.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            <div class="comprobante-item total">
+                                                <span>Total patente</span>
+                                                <strong>@_resumen.TotalPatentePagar.ToString("N2")</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- SECCIÓN 3: VALORES 1.5 X MIL -->
+                                    <div class="finalizacion-section">
+                                        <div class="finalizacion-section-title">Valores 1.5 x mil</div>
+
+                                        <div class="comprobante-resumen-grid">
+                                            <div class="comprobante-item">
+                                                <span>Base imponible 1.5 x mil</span>
+                                                <strong>@_resumen.BaseImponible1_5_x_1000.ToString("N2")</strong>
+                                            </div>
+
+                                            <div class="comprobante-item">
+                                                <span>Valor 1.5 x mil</span>
+                                                <strong>@_resumen.ImpuestoActivos.ToString("N2")</strong>
+                                            </div>
+
+                                            @if (_resumen.Multa15 > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Multa 1.5 x mil</span>
+                                                    <strong>@_resumen.Multa15.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            @if (InteresIat > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Interés 1.5 x mil</span>
+                                                    <strong>@InteresIat.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            @if (RecargoIat > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Recargo 1.5 x mil</span>
+                                                    <strong>@RecargoIat.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            @if (CostasIat > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Costas 1.5 x mil</span>
+                                                    <strong>@CostasIat.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            @if (TasaAdministrativaIat > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Tasa administrativa 1.5 x mil</span>
+                                                    <strong>@TasaAdministrativaIat.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            @if (_resumen.DescuentoTerceraEdad15 > 0)
+                                            {
+                                                <div class="comprobante-item">
+                                                    <span>Descuento tercera edad 1.5 x mil</span>
+                                                    <strong>- @_resumen.DescuentoTerceraEdad15.ToString("N2")</strong>
+                                                </div>
+                                            }
+
+                                            <div class="comprobante-item total">
+                                                <span>Total 1.5 x mil</span>
+                                                <strong>@_resumen.Total15Pagar.ToString("N2")</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- SECCIÓN 4: TOTAL GENERAL -->
+                                    <div class="finalizacion-section">
+                                        <div class="finalizacion-section-title">Total de la declaración</div>
+
+                                        <div class="comprobante-resumen-grid">
+                                            <div class="comprobante-item total">
+                                                <span>Total a pagar</span>
+                                                <strong>@_resumen.TotalPagar.ToString("N2")</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                         
                                 <div class="wizard-actions">
                                     <button type="button"
                                             class="btn btn-color-per btn-wizard"
@@ -729,6 +867,9 @@
                         <div class="comprobante-subtitle">Comprobante de declaración de patente</div>
                     </div>
 
+                    <!-- DATOS GENERALES -->
+                    <div class="comprobante-section-title">Datos de la declaración</div>
+
                     <div class="comprobante-line">
                         <span>Código único de pago</span>
                         <strong>@_declaracionRegistrada.CodigoUnicoPago</strong>
@@ -745,11 +886,14 @@
                     </div>
 
                     <div class="comprobante-line">
-                        <span>Año declarado</span>
+                        <span>Ejercicio fiscal</span>
                         <strong>@_declaracionRegistrada.Anio</strong>
                     </div>
 
                     <div class="comprobante-divider"></div>
+
+                    <!-- INFORMACIÓN FINANCIERA -->
+                    <div class="comprobante-section-title">Información financiera declarada</div>
 
                     <div class="comprobante-line">
                         <span>Activo corriente</span>
@@ -759,6 +903,11 @@
                     <div class="comprobante-line">
                         <span>Activo no corriente</span>
                         <strong>@_declaracionRegistrada.ActivoNoCorriente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Total activo</span>
+                        <strong>@TotalActivo.ToString("N2")</strong>
                     </div>
 
                     <div class="comprobante-line">
@@ -777,6 +926,21 @@
                     </div>
 
                     <div class="comprobante-line">
+                        <span>Total pasivo</span>
+                        <strong>@TotalPasivo.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Patrimonio</span>
+                        <strong>@Patrimonio.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Base imponible 1.5 x mil</span>
+                        <strong>@BaseImponible.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
                         <span>Ingresos</span>
                         <strong>@_declaracionRegistrada.Ingresos.ToString("N2")</strong>
                     </div>
@@ -786,27 +950,122 @@
                         <strong>@_declaracionRegistrada.CostosGastos.ToString("N2")</strong>
                     </div>
 
+                    <div class="comprobante-line">
+                        <span>Utilidad del ejercicio</span>
+                        <strong>@UtilidadEjercicio.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Pérdida del ejercicio</span>
+                        <strong>@PerdidaEjercicio.ToString("N2")</strong>
+                    </div>
+
                     <div class="comprobante-divider"></div>
 
+                    <!-- PATENTE -->
+                    <div class="comprobante-section-title">Valores patente municipal</div>
+
                     <div class="comprobante-line">
-                        <span>Patente</span>
-                        <strong>@_declaracionRegistrada.Patente.ToString("N2")</strong>
+                        <span>Valor patente</span>
+                        <strong>@_resumen.DerechoPatenteAnual.ToString("N2")</strong>
                     </div>
 
                     <div class="comprobante-line">
-                        <span>1.5 x Mil</span>
-                        <strong>@_declaracionRegistrada.UnoCincoXMil.ToString("N2")</strong>
+                        <span>Bomberos</span>
+                        <strong>@_resumen.ValoresBomberosPatente.ToString("N2")</strong>
                     </div>
-                    @if (MostrarValorBomberos)
-                    {
-                        <div class="comprobante-line">
-                            <span>Bomberos</span>
-                            <strong>@ValorBomberos.ToString("N2")</strong>
-                        </div>
-                    }
+
+                    <div class="comprobante-line">
+                        <span>Multa patente</span>
+                        <strong>@_resumen.MultaPatente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Interés patente</span>
+                        <strong>@InteresPatente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Recargo patente</span>
+                        <strong>@RecargoPatente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Costas patente</span>
+                        <strong>@CostasPatente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Tasa administrativa patente</span>
+                        <strong>@TasaAdministrativaPatente.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Descuento tercera edad patente</span>
+                        <strong>- @_resumen.DescuentoPatenteTerceraEdad.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line comprobante-subtotal">
+                        <span>Total patente</span>
+                        <strong>@_resumen.TotalPatentePagar.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-divider"></div>
+
+                    <!-- 1.5 X MIL -->
+                    <div class="comprobante-section-title">Valores 1.5 x mil</div>
+
+                    <div class="comprobante-line">
+                        <span>Base imponible 1.5 x mil</span>
+                        <strong>@_resumen.BaseImponible1_5_x_1000.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Valor 1.5 x mil</span>
+                        <strong>@_resumen.ImpuestoActivos.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Multa 1.5 x mil</span>
+                        <strong>@_resumen.Multa15.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Interés 1.5 x mil</span>
+                        <strong>@InteresIat.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Recargo 1.5 x mil</span>
+                        <strong>@RecargoIat.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Costas 1.5 x mil</span>
+                        <strong>@CostasIat.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Tasa administrativa 1.5 x mil</span>
+                        <strong>@TasaAdministrativaIat.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line">
+                        <span>Descuento tercera edad 1.5 x mil</span>
+                        <strong>- @_resumen.DescuentoTerceraEdad15.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-line comprobante-subtotal">
+                        <span>Total 1.5 x mil</span>
+                        <strong>@_resumen.Total15Pagar.ToString("N2")</strong>
+                    </div>
+
+                    <div class="comprobante-divider"></div>
+
+                    <!-- TOTAL GENERAL -->
                     <div class="comprobante-line comprobante-total">
                         <span>Total a pagar</span>
-                        <strong>@_declaracionRegistrada.TotalPagar.ToString("N2")</strong>
+                        <strong>@_resumen.TotalPagar.ToString("N2")</strong>
                     </div>
                 </div>
             </div>

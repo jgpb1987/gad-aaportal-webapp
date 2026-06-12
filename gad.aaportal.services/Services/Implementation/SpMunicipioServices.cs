@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,18 +25,27 @@ namespace gad.aaportal.services.Services.Implementation
             this.contexto = contexto;
             this.logger = logger;
         }
+        private async Task<DbConnection> ObtenerConexionAbiertaAsync()
+        {
+            var connection = contexto.Database.GetDbConnection();
 
+            if (string.IsNullOrWhiteSpace(connection.ConnectionString))
+                throw SystemExceptionCustomized.CreateException(
+                    "CON001",
+                    "La cadena de conexión de BddGmaaContext no está configurada.");
+
+            if (connection.State != ConnectionState.Open)
+                await connection.OpenAsync();
+
+            return connection;
+        }
         public async Task<CalcularImpuestoPatenteDtoResult> CalcularImpuestoPatente(CalcularImpuestoPatenteDtoParam parametro)
         {
             CalcularImpuestoPatenteDtoResult result = new();
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_CalcularImpuestoPatente";
                 command.CommandType = CommandType.StoredProcedure;
@@ -80,11 +90,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_CalcularImpuestoIAT";
                 command.CommandType = CommandType.StoredProcedure;
@@ -126,11 +132,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_CalcularMulta";
                 command.CommandType = CommandType.StoredProcedure;
@@ -194,11 +196,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_CalcularTerceraEdad";
                 command.CommandType = CommandType.StoredProcedure;
@@ -270,11 +268,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_InsertActividadAnual";
                 command.CommandType = CommandType.StoredProcedure;
@@ -324,11 +318,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_InsertTerceraEdad";
                 command.CommandType = CommandType.StoredProcedure;
@@ -365,11 +355,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_InsertPagoPorTitulo";
                 command.CommandType = CommandType.StoredProcedure;
@@ -409,11 +395,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_ActualizarCodigoIngreso";
                 command.CommandType = CommandType.StoredProcedure;
@@ -439,11 +421,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_ConsultarValoresPagar";
                 command.CommandType = CommandType.StoredProcedure;
@@ -493,11 +471,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_ValidadorPermisos";
                 command.CommandType = CommandType.StoredProcedure;
@@ -533,11 +507,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_ConsultarValorBomberos";
                 command.CommandType = CommandType.StoredProcedure;
@@ -574,11 +544,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_ConsultarRucExoneraciones";
                 command.CommandType = CommandType.StoredProcedure;
@@ -616,11 +582,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_InsertarTranferenciaIAT";
                 command.CommandType = CommandType.StoredProcedure;
@@ -650,11 +612,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_ConsultarAnioAdeuda";
                 command.CommandType = CommandType.StoredProcedure;
@@ -687,11 +645,7 @@ namespace gad.aaportal.services.Services.Implementation
             AnioVencimientoDtoResult result = new();
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_FechaVencimiento";
                 command.CommandType = CommandType.StoredProcedure;
@@ -736,11 +690,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             try
             {
-                await using var connection = contexto.Database.GetDbConnection();
-
-                if (connection.State != ConnectionState.Open)
-                    await connection.OpenAsync();
-
+                var connection = await ObtenerConexionAbiertaAsync();
                 await using var command = connection.CreateCommand();
                 command.CommandText = "dbo.SP_Pat_ConsultaValorP";
                 command.CommandType = CommandType.StoredProcedure;

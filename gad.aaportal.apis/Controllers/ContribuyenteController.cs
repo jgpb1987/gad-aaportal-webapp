@@ -3,6 +3,7 @@ using gad.aaportal.commons.Dto.DtoPortal.Declaracion;
 using gad.aaportal.dataaccess.Configuration;
 using gad.aaportal.services.MessageException;
 using gad.aaportal.services.Services.Interfaces;
+using gad.aaportal.services.Util;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gad.aaportal.apis.Controllers

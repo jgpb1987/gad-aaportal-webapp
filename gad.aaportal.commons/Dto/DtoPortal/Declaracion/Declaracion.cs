@@ -1,6 +1,5 @@
 ﻿using gad.aaportal.commons.Base;
 using gad.aaportal.commons.Dto.Seguridad;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -252,11 +251,5 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
         public string NombreArchivo { get; set; } = string.Empty;
         public string ExtensionArchivo { get; set; } = string.Empty;
         public string UbicacionArchivo { get; set; } = string.Empty;
-    }
-    public class SubirDeclaracionArchivoDtoParam
-    {
-        public long IdContribuyenteDeclaracion { get; set; }
-
-        public IFormFile Archivo { get; set; } = default!;
     }
 }

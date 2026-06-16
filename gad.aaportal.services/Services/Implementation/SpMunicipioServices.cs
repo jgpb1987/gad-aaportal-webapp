@@ -560,11 +560,11 @@ namespace gad.aaportal.services.Services.Implementation
                 {
                     result.Data.ExoneracionPatente = reader["ExoneracionPatente"] != DBNull.Value
                         ? reader["ExoneracionPatente"].ToString()!
-                        : string.Empty;
+                        : "SiPaga";
 
                     result.Data.ExoneracionIat = reader["ExoneracionIAT"] != DBNull.Value
                         ? reader["ExoneracionIAT"].ToString()!
-                        : string.Empty;
+                        : "SiPaga";
                 }
             }
             catch (SystemExceptionCustomized sex)
@@ -575,8 +575,7 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
-        public async Task<InsertarTranferenciaIatDtoResult> InsertarTranferenciaIat(
-    InsertarTranferenciaIatDtoParam parametro)
+        public async Task<InsertarTranferenciaIatDtoResult> InsertarTranferenciaIat(InsertarTranferenciaIatDtoParam parametro)
         {
             InsertarTranferenciaIatDtoResult result = new();
 

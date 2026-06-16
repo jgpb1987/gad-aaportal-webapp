@@ -35,6 +35,7 @@ builder.Services.AddScoped<ISecurityAlgorithmConsumers, SecurityAlgorithmConsume
 builder.Services.AddScoped<IServicesExternsConsumers, ServicesExternsConsumers>();
 builder.Services.AddScoped<IContribuyenteConsumers, ContribuyenteConsumers>();
 builder.Services.AddScoped<ISpMunicipioConsumers, SpMunicipioConsumers>();
+builder.Services.AddScoped<IConsultaServices, ConsultaServices>();
 
 //Fin Consumers
 //Inicio config

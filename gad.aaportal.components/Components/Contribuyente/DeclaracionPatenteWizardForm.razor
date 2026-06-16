@@ -1,5 +1,4 @@
-﻿
-@using gad.aaportal.commons.Dto.Declaracion
+﻿@using gad.aaportal.commons.Dto.Declaracion
 
 <ToastsServices @ref="Toast" Time="5000" />
 <LoadingBorderModalServices @ref="LoadingBorder" />
@@ -15,7 +14,7 @@
             </div>
         </div>
 
-        <button type="button" class="btn-nueva-declaracion"  disabled="@_procesoFinalizado"  @onclick="AbrirModalPeriodo">
+        <button type="button" class="btn-nueva-declaracion" disabled="@_procesoFinalizado" @onclick="AbrirModalPeriodo">
             Nueva declaración
         </button>
     </div>
@@ -53,7 +52,7 @@
                     <div class="step-text">Resumen</div>
                 </div>
 
-@*                 <div class="step-line"></div>
+                @*                 <div class="step-line"></div>
 
                 <div class="@ObtenerClaseStep(3)">
                     <div class="step-circle">3</div>
@@ -83,7 +82,7 @@
                             <div class="valores-grid">
                                 <div class="valor-row">
                                     <label>Activo Corriente <span>*</span></label>
-                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoCorriente"/>
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoCorriente" />
                                     <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.ActivoCorriente = _valoresSugeridos.ActivoCorriente">
                                         @_valoresSugeridos.ActivoCorriente.ToString("N2")
                                     </a>
@@ -315,10 +314,14 @@
                         <div class="panel-subtitle">
                             Revise los valores generados antes de continuar con el pago.
                         </div>
-
                         <div class="resumen-impuestos-grid">
                             <div class="impuesto-card">
-                                <div class="impuesto-card-title">Patente</div>
+                                <div class="impuesto-card-title d-flex justify-content-between align-items-center">
+                                    <span>Patente</span>
+                                    @* <button type="button" class="btn btn-color-per btn-wizard" @onclick="PagoOtroCanton">
+                                        Registrar pago
+                                    </button> *@
+                                </div>
                                 <div class="impuesto-row impuesto-total">
                                     <span>Patrimonio</span>
                                     <strong>@_resumen.Patrimonio.ToString("C2")</strong>
@@ -331,22 +334,22 @@
                                     <span>Multa por presentación tardía</span>
                                     <strong>+ @_resumen.MultaPatente.ToString("C2")</strong>
                                 </div>
-                                    <div class="impuesto-row">
-                                        <span>Interés</span>
-                                        <strong>+ @InteresPatente.ToString("C2")</strong>
-                                    </div>
-                                    <div class="impuesto-row">
-                                        <span>Recargo</span>
-                                        <strong>+ @RecargoPatente.ToString("C2")</strong>
-                                    </div>
-                                    <div class="impuesto-row">
-                                        <span>Costas judiciales</span>
-                                        <strong>+ @CostasPatente.ToString("C2")</strong>
-                                    </div>
-                                    <div class="impuesto-row">
-                                        <span>Tasa administrativa</span>
-                                        <strong>+ @TasaAdministrativaPatente.ToString("C2")</strong>
-                                    </div>
+                                <div class="impuesto-row">
+                                    <span>Interés</span>
+                                    <strong>+ @InteresPatente.ToString("C2")</strong>
+                                </div>
+                                <div class="impuesto-row">
+                                    <span>Recargo</span>
+                                    <strong>+ @RecargoPatente.ToString("C2")</strong>
+                                </div>
+                                <div class="impuesto-row">
+                                    <span>Costas judiciales</span>
+                                    <strong>+ @CostasPatente.ToString("C2")</strong>
+                                </div>
+                                <div class="impuesto-row">
+                                    <span>Tasa administrativa</span>
+                                    <strong>+ @TasaAdministrativaPatente.ToString("C2")</strong>
+                                </div>
                                 @if (MostrarValorBomberos)
                                 {
                                     <div class="impuesto-row">
@@ -382,22 +385,22 @@
                                     <span>Multa por presentación tardía</span>
                                     <strong>+ @_resumen.Multa15.ToString("C2")</strong>
                                 </div>
-                                    <div class="impuesto-row">
-                                        <span>Interés</span>
-                                        <strong>+ @InteresIat.ToString("C2")</strong>
-                                    </div>
-                                    <div class="impuesto-row">
-                                        <span>Recargo</span>
-                                        <strong>+ @RecargoIat.ToString("C2")</strong>
-                                    </div>
-                                    <div class="impuesto-row">
-                                        <span>Costas judiciales</span>
-                                        <strong>+ @CostasIat.ToString("C2")</strong>
-                                    </div>
-                                    <div class="impuesto-row">
-                                        <span>Tasa administrativa</span>
-                                        <strong>+ @TasaAdministrativaIat.ToString("C2")</strong>
-                                    </div>
+                                <div class="impuesto-row">
+                                    <span>Interés</span>
+                                    <strong>+ @InteresIat.ToString("C2")</strong>
+                                </div>
+                                <div class="impuesto-row">
+                                    <span>Recargo</span>
+                                    <strong>+ @RecargoIat.ToString("C2")</strong>
+                                </div>
+                                <div class="impuesto-row">
+                                    <span>Costas judiciales</span>
+                                    <strong>+ @CostasIat.ToString("C2")</strong>
+                                </div>
+                                <div class="impuesto-row">
+                                    <span>Tasa administrativa</span>
+                                    <strong>+ @TasaAdministrativaIat.ToString("C2")</strong>
+                                </div>
                                 <div class="impuesto-row">
                                     <span>Descuento tercera edad</span>
                                     <strong>- @_resumen.DescuentoTerceraEdad15.ToString("C2")</strong>
@@ -456,7 +459,7 @@
                     </div>
                 }
 
-@*                 @if (_stepActual == 3)
+                @*                 @if (_stepActual == 3)
                 {
                     <div class="step-panel">
                         <div class="panel-title">Pago</div>
@@ -518,17 +521,17 @@
                                         </div>
                                         @if (InteresPatente > 0)
                                         {
-                                        <div class="impuesto-row">
-                                            <span>Interés</span>
-                                            <strong>+ @InteresPatente.ToString("C2")</strong>
-                                        </div>
+                                            <div class="impuesto-row">
+                                                <span>Interés</span>
+                                                <strong>+ @InteresPatente.ToString("C2")</strong>
+                                            </div>
                                         }
                                         @if (RecargoPatente > 0)
                                         {
-                                        <div class="impuesto-row">
-                                            <span>Recargo</span>
-                                            <strong>+ @RecargoPatente.ToString("C2")</strong>
-                                        </div>
+                                            <div class="impuesto-row">
+                                                <span>Recargo</span>
+                                                <strong>+ @RecargoPatente.ToString("C2")</strong>
+                                            </div>
                                         }
                                         @if (CostasPatente > 0)
                                         {
@@ -539,10 +542,10 @@
                                         }
                                         @if (TasaAdministrativaPatente > 0)
                                         {
-                                        <div class="impuesto-row">
-                                            <span>Tasa administrativa</span>
-                                            <strong>+ @TasaAdministrativaPatente.ToString("C2")</strong>
-                                        </div>
+                                            <div class="impuesto-row">
+                                                <span>Tasa administrativa</span>
+                                                <strong>+ @TasaAdministrativaPatente.ToString("C2")</strong>
+                                            </div>
                                         }
                                         @if (MostrarValorBomberos)
                                         {
@@ -579,33 +582,33 @@
                                             <span>Multa por presentación tardía</span>
                                             <strong>+ @_resumen.Multa15.ToString("C2")</strong>
                                         </div>
-                                        @if (InteresIat>0)
+                                        @if (InteresIat > 0)
                                         {
-                                        <div class="impuesto-row">
-                                            <span>Interés</span>
-                                            <strong>+ @InteresIat.ToString("C2")</strong>
-                                        </div>
+                                            <div class="impuesto-row">
+                                                <span>Interés</span>
+                                                <strong>+ @InteresIat.ToString("C2")</strong>
+                                            </div>
                                         }
                                         @if (RecargoIat > 0)
                                         {
-                                        <div class="impuesto-row">
-                                            <span>Recargo</span>
-                                            <strong>+ @RecargoIat.ToString("C2")</strong>
-                                        </div>
+                                            <div class="impuesto-row">
+                                                <span>Recargo</span>
+                                                <strong>+ @RecargoIat.ToString("C2")</strong>
+                                            </div>
                                         }
                                         @if (CostasIat > 0)
                                         {
-                                        <div class="impuesto-row">
-                                            <span>Costas judiciales</span>
-                                            <strong>+ @CostasIat.ToString("C2")</strong>
-                                        </div>
+                                            <div class="impuesto-row">
+                                                <span>Costas judiciales</span>
+                                                <strong>+ @CostasIat.ToString("C2")</strong>
+                                            </div>
                                         }
                                         @if (TasaAdministrativaIat > 0)
                                         {
-                                        <div class="impuesto-row">
-                                            <span>Tasa administrativa</span>
-                                            <strong>+ @TasaAdministrativaIat.ToString("C2")</strong>
-                                        </div>
+                                            <div class="impuesto-row">
+                                                <span>Tasa administrativa</span>
+                                                <strong>+ @TasaAdministrativaIat.ToString("C2")</strong>
+                                            </div>
                                         }
                                         <div class="impuesto-row">
                                             <span>Descuento tercera edad</span>
@@ -657,6 +660,54 @@
     }
 </div>
 
+@if (_mostrarModalPagoOtroCanton)
+{
+    <div class="modal-backdrop-custom">
+        <div class="modal-periodo-card">
+            <div class="modal-periodo-header">
+                <div>
+                    <div class="modal-title-custom">Declaración de pago en otro Cantón</div>
+                    <div class="modal-subtitle-custom">
+                        Para registrar el pago de sus impuestos en otro cantón registre los siguientes datos:
+                    </div>
+                </div>
+
+                <button type="button" class="btn-close-modal" @onclick="CerrarModalPagoOtroCanton">×</button>
+            </div>
+
+            @* CAMBIAR METODO *@
+            <EditForm Model="_periodoSeleccionado" OnValidSubmit="ConfirmarPeriodo">
+                <DataAnnotationsValidator />
+                <div class="modal-periodo-body">
+                    <div class="form-field">
+                        <label>Cantón<span>*</span></label>
+
+                        <InputSelect class="input-form" @bind-Value="insertarTranferenciaIatDto.Canton">
+                            <option value="0">Seleccione el canton donde genero su pago </option>
+                            @foreach (var canton in _cantones.Cantones)
+                            {
+                                <option value="@canton.NombreCanton">
+                                    @canton.NombreCanton
+                                </option>
+                            }
+                        </InputSelect>
+
+                        <ValidationMessage For="@(() => _periodoSeleccionado.AnioDeclaracion)" />
+                    </div>
+                </div>
+
+                <div class="modal-periodo-actions">
+                    <button type="button" class="btn-modal-secondary" @onclick="CerrarModalPagoOtroCanton">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-modal-primary">
+                        Continuar
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
 @if (_mostrarModalPeriodo)
 {
     <div class="modal-backdrop-custom">

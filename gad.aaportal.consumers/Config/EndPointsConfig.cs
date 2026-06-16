@@ -11,6 +11,7 @@ namespace gad.aaportal.consumers.Config
         public string ConsultarDatosContribuyente { get; set; } = null!;
         public string ActualizarDatosContribuyente { get; set; } = null!;
         public string ConsultarTiposMedioContacto { get; set; } = null!;
+        public string ConsultarCantones { get; set; } = null!;
         public string ConsultarPeriodosDeclaracion { get; set; } = string.Empty;
         public string IniciarDeclaracion { get; set; } = string.Empty;
         public string RegistrarDeclaracion { get; set; } = string.Empty;

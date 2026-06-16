@@ -1,4 +1,5 @@
-﻿using gad.aaportal.commons.Dto.DtoMunicipio;
+﻿using gad.aaportal.commons.Dto.Aplicacion;
+using gad.aaportal.commons.Dto.DtoMunicipio;
 using gad.aaportal.commons.Dto.DtoPortal.Declaracion;
 using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.consumers.Interface;
@@ -15,11 +16,12 @@ namespace gad.aaportal.components.Components.Contribuyente
         private PeriodoDeclaracionListResult _periodosDeclaracion = new();
         private IniciarDeclaracionDtoParam _periodoSeleccionado = new();
         private IniciarDeclaracionDtoResult? _declaracionIniciada;
-
+        private InsertarTranferenciaIatDtoParam insertarTranferenciaIatDto;
         private List<ContribuyenteEstablecimientoPago> _establecimientos = new();
         private List<ContribuyenteEstablecimientoPago> _establecimientosBase = new();
 
         private bool _declaracionCalculada;
+        private CantonesResponse _cantones;
 
         private PeriodoDeclaracionDtoResult _valoresDeclaracion = new();
         private PeriodoDeclaracionDtoResult _valoresSugeridos = new();
@@ -42,6 +44,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
         [Inject] private ISessionStorageServices JSSessionStorageServices { get; set; } = null!;
         [Inject] private IContribuyenteConsumers ServicesDeclaracion { get; set; } = null!;
+        [Inject] private IConsultaServices ConsultaServices { get; set; } = null!;
         [Inject] private ConfiguracionesApp Configuraciones { get; set; } = null!;
         [Inject] private ISpMunicipioConsumers SpMunicipioConsumers { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
@@ -52,6 +55,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
         private bool _mostrarModalConfirmarValores;
         private bool _mostrarModalComprobante;
+        private bool _mostrarModalPagoOtroCanton;
         private RegistrarDeclaracionDtoResult? _declaracionRegistrada;
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -487,9 +491,35 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 LoadingBorder?.Open();
 
+                var usuario = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Identificacion);
+                ConsultarRucExoneracionesDtoParam parametros = new ConsultarRucExoneracionesDtoParam { Ruc = _periodoSeleccionado.Identificacion };
+                ConsultarRucExoneracionesDtoResult exoneraciones = await SpMunicipioConsumers.ConsultarRucExoneraciones(parametros);
+
                 #region Calculo valores patente sp municipio
-                await CalcularPatentePorEstablecimientos();
-                await CalcularUnoCincoPorMil();
+                if (exoneraciones.Data.ExoneracionPatente == "SiPaga")
+                {
+                    await CalcularPatentePorEstablecimientos();
+                }
+                else if (exoneraciones.Data.ExoneracionPatente == "NoPaga")
+                {
+                    foreach (var item in _establecimientos)
+                    {
+                        if (item.Porcentaje > 0 || item.EsMunicipioBase)
+                        {
+                            item.Valor = 0;
+                        }
+                    }
+                }
+
+                if (exoneraciones.Data.ExoneracionIat == "SiPaga")
+                {
+                    await CalcularUnoCincoPorMil();
+                }
+                else if (exoneraciones.Data.ExoneracionIat == "NoPaga")
+                {
+                    ValorUnoCincoPorMil = 0;
+                }
+
                 await ConsultarValorBomberos();
                 #endregion
 
@@ -1022,6 +1052,32 @@ namespace gad.aaportal.components.Components.Contribuyente
         private async Task ImprimirComprobante()
         {
             await JSRuntime.InvokeVoidAsync("imprimirComprobante", "comprobanteImprimir");
+        }
+
+        private async Task PagoOtroCanton()
+        {
+            _mostrarModalPagoOtroCanton = true;
+            await ConsultaCantones();
+            insertarTranferenciaIatDto = new InsertarTranferenciaIatDtoParam();
+            await Task.CompletedTask;
+        }
+
+        private async Task CerrarModalPagoOtroCanton()
+        {
+            _mostrarModalPagoOtroCanton = false;
+            await Task.CompletedTask;
+        }
+
+        private async Task ConsultaCantones()
+        {
+            try
+            {
+                _cantones = await ConsultaServices.ConsultaCantones();
+            }
+            catch
+            {
+                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error al consultar los cantones para pago en otro cantón");
+            }
         }
     }
 }

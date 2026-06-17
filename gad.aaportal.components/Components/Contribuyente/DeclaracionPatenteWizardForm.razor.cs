@@ -21,6 +21,8 @@ namespace gad.aaportal.components.Components.Contribuyente
         private List<ContribuyenteEstablecimientoPago> _establecimientosBase = new();
 
         private bool _declaracionCalculada;
+        private string _mensajeValidacionCalculo = string.Empty;
+        private bool TieneMensajeValidacionCalculo => !string.IsNullOrWhiteSpace(_mensajeValidacionCalculo);
         private CantonesResponse _cantones;
 
         private PeriodoDeclaracionDtoResult _valoresDeclaracion = new();
@@ -315,7 +317,54 @@ namespace gad.aaportal.components.Components.Contribuyente
             if (Toast is not null)
                 await Toast.ShowMessage(tipo, codigo, descripcion);
         }
+        private async Task MarcarCalculoNoValido(string codigo, string descripcion)
+        {
+            _declaracionCalculada = false;
+            _mensajeValidacionCalculo = descripcion;
 
+            LoadingBorder?.Close();
+
+            await MostrarMensaje(
+                "error",
+                codigo,
+                descripcion);
+
+            StateHasChanged();
+        }
+
+        private void InvalidarCalculo()
+        {
+            _declaracionCalculada = false;
+            _mensajeValidacionCalculo = string.Empty;
+
+            ValorUnoCincoPorMil = 0;
+            ValorMultaPatente = 0;
+            ValorMultaPorMil = 0;
+            ValorBomberos = 0;
+
+            InteresPatente = 0;
+            RecargoPatente = 0;
+            CostasPatente = 0;
+            TasaAdministrativaPatente = 0;
+
+            InteresIat = 0;
+            RecargoIat = 0;
+            CostasIat = 0;
+            TasaAdministrativaIat = 0;
+
+            ValorExoneradoPatente = 0;
+            ValorExoneradoIAT = 0;
+            PorcentajeDescuentoTerceraEdadPatente = 0;
+            PorcentajeDescuentoTerceraEdadIAT = 0;
+
+            foreach (var item in _establecimientos)
+            {
+                item.Valor = 0;
+                item.BaseImponible = 0;
+            }
+
+            _resumen = new ResumenImpuestoDeclaracionViewModel();
+        }
         private decimal TotalActivo =>
     _valoresDeclaracion.ActivoCorriente + _valoresDeclaracion.ActivoNoCorriente;
 
@@ -362,57 +411,84 @@ namespace gad.aaportal.components.Components.Contribuyente
         private decimal TotalPatentePorEstablecimientos =>
             _establecimientos.Sum(e => e.Valor);
 
-        private async Task CalcularPatentePorEstablecimientos()
+        private async Task<bool> CalcularPatentePorEstablecimientos()
         {
-            // Cálculo local de referencia, solo para pruebas:
             try
             {
                 foreach (var item in _establecimientos)
                 {
                     if (item.Porcentaje > 0 || item.EsMunicipioBase)
                     {
-                        item.BaseImponible = Math.Round(BaseImponible * (item.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
-                        var result = await SpMunicipioConsumers.CalcularImpuestoPatente(new CalcularImpuestoPatenteDtoParam { BaseImponible = item.BaseImponible });
+                        item.BaseImponible = Math.Round(
+                            BaseImponible * (item.Porcentaje / 100),
+                            2,
+                            MidpointRounding.AwayFromZero);
+
+                        var result = await SpMunicipioConsumers.CalcularImpuestoPatente(
+                            new CalcularImpuestoPatenteDtoParam
+                            {
+                                BaseImponible = item.BaseImponible
+                            });
+
+                        if (result?.Data is null)
+                        {
+                            await MarcarCalculoNoValido(
+                                result?.Message?.Code ?? "PATENTE_ERROR",
+                                result?.Message?.Description ?? "No fue posible calcular el impuesto de patente");
+
+                            return false;
+                        }
+
                         item.Valor = result.Data.ValorImpuesto;
                     }
                 }
+
+                return true;
             }
             catch
             {
-                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
-            }
+                await MarcarCalculoNoValido(
+                    "SERVER_ERROR",
+                    "Existe un error al calcular el impuesto de patente");
 
-            await Task.CompletedTask;
+                return false;
+            }
         }
-        private async Task CalcularUnoCincoPorMil()
+        private async Task<bool> CalcularUnoCincoPorMil()
         {
             try
             {
-                if (BaseImponible != 0)
+                ValorUnoCincoPorMil = 0;
+
+                if (BaseImponible == 0)
+                    return true;
+
+                var result = await SpMunicipioConsumers.CalcularImpuestoIat(
+                    new CalcularImpuestoIatDtoParam
+                    {
+                        BaseImponible = BaseImponible
+                    });
+
+                if (result?.Data is null)
                 {
-                    var result = await SpMunicipioConsumers.CalcularImpuestoIat(new CalcularImpuestoIatDtoParam() { BaseImponible = BaseImponible });
-                    if (result != null)
-                    {
-                        if (result.Data != null)
-                        {
-                            ValorUnoCincoPorMil = result.Data.ImpuestoIat;
-                        }
-                        else
-                        {
-                            await MostrarMensaje("error", result.Message.Code, result.Message.Description);
-                        }
-                    }
-                    else
-                    {
-                        await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
-                    }
+                    await MarcarCalculoNoValido(
+                        result?.Message?.Code ?? "IAT_ERROR",
+                        result?.Message?.Description ?? "No fue posible calcular el impuesto 1.5 x 1000");
+
+                    return false;
                 }
+
+                ValorUnoCincoPorMil = result.Data.ImpuestoIat;
+                return true;
             }
             catch
             {
-                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                await MarcarCalculoNoValido(
+                    "SERVER_ERROR",
+                    "Existe un error al calcular el impuesto 1.5 x 1000");
+
+                return false;
             }
-            await Task.CompletedTask;
         }
         private void CargarResumenImpuestos()
         {
@@ -467,11 +543,12 @@ namespace gad.aaportal.components.Components.Contribuyente
         {
             try
             {
+                _declaracionCalculada = false;
+                _mensajeValidacionCalculo = string.Empty;
+
                 if (!_establecimientos.Any())
                 {
-                    _declaracionCalculada = false;
-                    await MostrarMensaje(
-                        "error",
+                    await MarcarCalculoNoValido(
                         "DEC006",
                         "No existen establecimientos para calcular la distribución cantonal");
 
@@ -480,68 +557,88 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 if (SumaPorcentaje != 100)
                 {
-                    _declaracionCalculada = false;
-                    await MostrarMensaje(
-                        "error",
+                    await MarcarCalculoNoValido(
                         "DEC007",
                         "La suma de porcentajes de distribución cantonal debe ser 100%");
 
                     return;
                 }
 
+                if (_declaracionIniciada is null)
+                {
+                    await MarcarCalculoNoValido(
+                        "DEC010",
+                        "No existe una declaración iniciada");
+
+                    return;
+                }
+
                 LoadingBorder?.Open();
 
-                var usuario = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Identificacion);
-                ConsultarRucExoneracionesDtoParam parametros = new ConsultarRucExoneracionesDtoParam { Ruc = _periodoSeleccionado.Identificacion };
-                ConsultarRucExoneracionesDtoResult exoneraciones = await SpMunicipioConsumers.ConsultarRucExoneraciones(parametros);
+                var parametros = new ConsultarRucExoneracionesDtoParam
+                {
+                    Ruc = _periodoSeleccionado.Identificacion
+                };
 
-                #region Calculo valores patente sp municipio
+                var exoneraciones = await SpMunicipioConsumers.ConsultarRucExoneraciones(parametros);
+
+                if (exoneraciones?.Data is null)
+                {
+                    await MarcarCalculoNoValido(
+                        exoneraciones?.Message?.Code ?? "EXONERACION_ERROR",
+                        exoneraciones?.Message?.Description ?? "No fue posible consultar las exoneraciones del contribuyente");
+
+                    return;
+                }
+
                 if (exoneraciones.Data.ExoneracionPatente == "SiPaga")
                 {
-                    await CalcularPatentePorEstablecimientos();
+                    if (!await CalcularPatentePorEstablecimientos())
+                        return;
                 }
                 else if (exoneraciones.Data.ExoneracionPatente == "NoPaga")
                 {
                     foreach (var item in _establecimientos)
                     {
-                        if (item.Porcentaje > 0 || item.EsMunicipioBase)
-                        {
-                            item.Valor = 0;
-                        }
+                        item.Valor = 0;
                     }
                 }
 
                 if (exoneraciones.Data.ExoneracionIat == "SiPaga")
                 {
-                    await CalcularUnoCincoPorMil();
+                    if (!await CalcularUnoCincoPorMil())
+                        return;
                 }
                 else if (exoneraciones.Data.ExoneracionIat == "NoPaga")
                 {
                     ValorUnoCincoPorMil = 0;
                 }
 
-                await ConsultarValorBomberos();
-                #endregion
+                if (!await ConsultarValorBomberos())
+                    return;
 
-                #region Calculo multa sp municipio
-                await CalcularMultaPatente();
-                await CalcularMulta1_5Mil();
-                #endregion
+                if (!await CalcularMultaPatente())
+                    return;
 
-                #region Consulta valores a pagar patente / 1.5x1000
-                await ConsultarValoresPagar();
-                #endregion
+                if (!await CalcularMulta1_5Mil())
+                    return;
 
-                #region Descuentos tercera edad
-                await CalcularValoresTerceraEdadPatente();
-                await CalcularValoresTerceraEdad_1_5Mil();
-                #endregion
+                if (!await ConsultarValoresPagar())
+                    return;
+
+                if (!await CalcularValoresTerceraEdadPatente())
+                    return;
+
+                if (!await CalcularValoresTerceraEdad_1_5Mil())
+                    return;
 
                 CargarResumenImpuestos();
 
                 LoadingBorder?.Close();
 
                 _declaracionCalculada = true;
+                _mensajeValidacionCalculo = string.Empty;
+
                 StateHasChanged();
 
                 await MostrarMensaje(
@@ -551,10 +648,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             }
             catch
             {
-                LoadingBorder?.Close();
-
-                await MostrarMensaje(
-                    "error",
+                await MarcarCalculoNoValido(
                     "SERVER_ERROR",
                     "Existe un error no administrado, por favor informe a Tecnología");
             }
@@ -761,156 +855,198 @@ namespace gad.aaportal.components.Components.Contribuyente
         }
 
         #region Cálculo multas
-        private async Task CalcularMultaPatente()
+        private async Task<bool> CalcularMultaPatente()
         {
             try
             {
+                ValorMultaPatente = 0;
+
                 var fechaActual = DateTime.Today;
-                if (BaseImponible != 0)
+
+                if (BaseImponible == 0)
+                    return true;
+
+                var result = await SpMunicipioConsumers.CalcularMulta(
+                    new CalcularMultaDtoParam
+                    {
+                        PeriodoFin = FechaVencimiento.ToString("yyyy-MM-dd"),
+                        FechaEmision = fechaActual.ToString("yyyy-MM-dd"),
+                        Valor = BaseImponible
+                    });
+
+                if (result?.Data is null)
                 {
-                    var result = await SpMunicipioConsumers.CalcularMulta(
-                        new CalcularMultaDtoParam()
-                        {
-                            PeriodoFin = FechaVencimiento.ToString("yyyy-MM-dd"),
-                            FechaEmision = fechaActual.ToString("yyyy-MM-dd"),
-                            Valor = BaseImponible
-                        });
-                    if (result != null)
-                    {
-                        if (result.Data != null)
-                        {
-                            ValorMultaPatente = result.Data.Multa;
-                        }
-                        else
-                        {
-                            await MostrarMensaje("error", result.Message.Code, result.Message.Description);
-                        }
-                    }
-                    else
-                    {
-                        await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
-                    }
+                    await MarcarCalculoNoValido(
+                        result?.Message?.Code ?? "MULTA_PATENTE_ERROR",
+                        result?.Message?.Description ?? "No fue posible calcular la multa de patente");
+
+                    return false;
                 }
+
+                ValorMultaPatente = result.Data.Multa;
+                return true;
             }
             catch
             {
-                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                await MarcarCalculoNoValido(
+                    "SERVER_ERROR",
+                    "Existe un error al calcular la multa de patente");
+
+                return false;
             }
-            await Task.CompletedTask;
         }
-        private async Task CalcularMulta1_5Mil()
+        private async Task<bool> CalcularMulta1_5Mil()
         {
             try
             {
+                ValorMultaPorMil = 0;
+
                 var fechaActual = DateTime.Today;
-                if (BaseImponible != 0)
+
+                if (BaseImponible == 0)
+                    return true;
+
+                var result = await SpMunicipioConsumers.CalcularMulta(
+                    new CalcularMultaDtoParam
+                    {
+                        PeriodoFin = new DateTime(
+                            _periodoSeleccionado.AnioDeclaracion,
+                            fechaActual.Month,
+                            fechaActual.Day
+                        ).ToString("yyyy-MM-dd"),
+                        FechaEmision = fechaActual.ToString("yyyy-MM-dd"),
+                        Valor = BaseImponible
+                    });
+
+                if (result?.Data is null)
                 {
-                    var result = await SpMunicipioConsumers.CalcularMulta(
-                                          new CalcularMultaDtoParam()
-                                          {
-                                              PeriodoFin = new DateTime(
-                                                  _periodoSeleccionado.AnioDeclaracion,
-                                                  fechaActual.Month,
-                                                  fechaActual.Day
-                                              ).ToString("yyyy-MM-dd"),
-                                              FechaEmision = fechaActual.ToString("yyyy-MM-dd"),
-                                              Valor = BaseImponible
-                                          });
-                    if (result != null)
-                    {
-                        if (result.Data != null)
-                        {
-                            ValorMultaPorMil = result.Data.Multa;
-                        }
-                        else
-                        {
-                            await MostrarMensaje("error", result.Message.Code, result.Message.Description);
-                        }
-                    }
-                    else
-                    {
-                        await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
-                    }
+                    await MarcarCalculoNoValido(
+                        result?.Message?.Code ?? "MULTA_IAT_ERROR",
+                        result?.Message?.Description ?? "No fue posible calcular la multa del 1.5 x 1000");
+
+                    return false;
                 }
+
+                ValorMultaPorMil = result.Data.Multa;
+                return true;
             }
             catch
             {
-                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                await MarcarCalculoNoValido(
+                    "SERVER_ERROR",
+                    "Existe un error al calcular la multa del 1.5 x 1000");
+
+                return false;
             }
-            await Task.CompletedTask;
         }
         #endregion
 
         #region Cálculo tercera edad
-        private async Task CalcularValoresTerceraEdadPatente()
+        private async Task<bool> CalcularValoresTerceraEdadPatente()
         {
             try
             {
-                var fechaActual = DateTime.Today;
-                if (BaseImponible != 0)
+                PorcentajeDescuentoTerceraEdadPatente = 0;
+                ValorExoneradoPatente = 0;
+                ExedentePatente = string.Empty;
+
+                if (BaseImponible == 0)
+                    return true;
+
+                var basePatrimonio =
+                    (_valoresDeclaracion.ActivoCorriente + _valoresDeclaracion.ActivoNoCorriente)
+                    - (_valoresDeclaracion.PasivoCorriente
+                       + _valoresDeclaracion.PasivoNoCorriente
+                       + _valoresDeclaracion.PasivoContingente);
+
+                var result = await SpMunicipioConsumers.CalcularTerceraEdad(
+                    new CalcularTerceraEdadDtoParam
+                    {
+                        BasePatrimonio = basePatrimonio,
+                        Anio = _periodoSeleccionado.AnioDeclaracion,
+                        Ingresos = _valoresDeclaracion.Ingresos,
+                        Ruc = _periodoSeleccionado.Identificacion,
+                        TipoImpuesto = "PMA",
+                        ValorImpuesto = TotalPatentePorEstablecimientos
+                    });
+
+                if (result?.Message?.Code == "OK" && result.Data is not null)
                 {
-                    var result = await SpMunicipioConsumers.CalcularTerceraEdad(new CalcularTerceraEdadDtoParam() { BasePatrimonio = (_valoresDeclaracion.ActivoCorriente + _valoresDeclaracion.ActivoNoCorriente) - (_valoresDeclaracion.PasivoCorriente + _valoresDeclaracion.PasivoNoCorriente + _valoresDeclaracion.PasivoContingente), Anio = _periodoSeleccionado.AnioDeclaracion, Ingresos = _valoresDeclaracion.Ingresos, Ruc = _periodoSeleccionado.Identificacion, TipoImpuesto = "PMA", ValorImpuesto = TotalPatentePorEstablecimientos });
-                    if (result != null)
-                    {
-                        if (result.Message.Code.Equals("OK"))
-                        {
-                            //await MostrarMensaje("success", result.Message.Code, result.Message.Description);
-                            PorcentajeDescuentoTerceraEdadPatente = result.Data.PorcentajeAplicar;
-                            ValorExoneradoPatente = result.Data.ValorDescuento;
-                            ExedentePatente = result.Data.ExedenteAplicado;
-                            PorcentajeIngreso = result.Data.PorcentajeIngresos;
-                        }
-                        else
-                        {
-                            await MostrarMensaje("error", result.Message.Code, result.Message.Description);
-                        }
-                    }
-                    else
-                    {
-                        await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
-                    }
+                    PorcentajeDescuentoTerceraEdadPatente = result.Data.PorcentajeAplicar;
+                    ValorExoneradoPatente = result.Data.ValorDescuento;
+                    ExedentePatente = result.Data.ExedenteAplicado;
+                    PorcentajeIngreso = result.Data.PorcentajeIngresos;
+
+                    return true;
                 }
+
+                await MarcarCalculoNoValido(
+                    result?.Message?.Code ?? "TERCERA_EDAD_PATENTE_ERROR",
+                    result?.Message?.Description ?? "No fue posible calcular el descuento de tercera edad para patente");
+
+                return false;
             }
             catch
             {
-                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                await MarcarCalculoNoValido(
+                    "SERVER_ERROR",
+                    "Existe un error al calcular tercera edad para patente");
+
+                return false;
             }
-            await Task.CompletedTask;
         }
-        private async Task CalcularValoresTerceraEdad_1_5Mil()
+        private async Task<bool> CalcularValoresTerceraEdad_1_5Mil()
         {
             try
             {
-                var fechaActual = DateTime.Today;
-                if (BaseImponible != 0)
+                PorcentajeDescuentoTerceraEdadIAT = 0;
+                ValorExoneradoIAT = 0;
+                ExedenteIAT = string.Empty;
+
+                if (BaseImponible == 0)
+                    return true;
+
+                var basePatrimonio =
+                    (_valoresDeclaracion.ActivoCorriente + _valoresDeclaracion.ActivoNoCorriente)
+                    - (_valoresDeclaracion.PasivoCorriente
+                       + _valoresDeclaracion.PasivoNoCorriente
+                       + _valoresDeclaracion.PasivoContingente);
+
+                var result = await SpMunicipioConsumers.CalcularTerceraEdad(
+                    new CalcularTerceraEdadDtoParam
+                    {
+                        BasePatrimonio = basePatrimonio,
+                        Anio = _periodoSeleccionado.AnioDeclaracion,
+                        Ingresos = _valoresDeclaracion.Ingresos,
+                        Ruc = _periodoSeleccionado.Identificacion,
+                        TipoImpuesto = "IAT",
+                        ValorImpuesto = ValorUnoCincoPorMil
+                    });
+
+                if (result?.Message?.Code == "OK" && result.Data is not null)
                 {
-                    var result = await SpMunicipioConsumers.CalcularTerceraEdad(new CalcularTerceraEdadDtoParam() { BasePatrimonio = (_valoresDeclaracion.ActivoCorriente + _valoresDeclaracion.ActivoNoCorriente) - (_valoresDeclaracion.PasivoCorriente + _valoresDeclaracion.PasivoNoCorriente + _valoresDeclaracion.PasivoContingente), Anio = _periodoSeleccionado.AnioDeclaracion, Ingresos = _valoresDeclaracion.Ingresos, Ruc = _periodoSeleccionado.Identificacion, TipoImpuesto = "IAT", ValorImpuesto = ValorUnoCincoPorMil });
-                    if (result != null)
-                    {
-                        if (result.Message.Code.Equals("OK"))
-                        {
-                            //await MostrarMensaje("success", result.Message.Code, result.Message.Description);
-                            PorcentajeDescuentoTerceraEdadIAT = result.Data.ValorDescuento;
-                            ValorExoneradoIAT = result.Data.ValorDescuento;
-                            ExedenteIAT = result.Data.ExedenteAplicado;
-                            PorcentajeIngreso = result.Data.PorcentajeIngresos;
-                        }
-                        else
-                        {
-                            await MostrarMensaje("error", result.Message.Code, result.Message.Description);
-                        }
-                    }
-                    else
-                    {
-                        await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
-                    }
+                    PorcentajeDescuentoTerceraEdadIAT = result.Data.PorcentajeAplicar;
+                    ValorExoneradoIAT = result.Data.ValorDescuento;
+                    ExedenteIAT = result.Data.ExedenteAplicado;
+                    PorcentajeIngreso = result.Data.PorcentajeIngresos;
+
+                    return true;
                 }
+
+                await MarcarCalculoNoValido(
+                    result?.Message?.Code ?? "TERCERA_EDAD_IAT_ERROR",
+                    result?.Message?.Description ?? "No fue posible calcular el descuento de tercera edad para el 1.5 x 1000");
+
+                return false;
             }
             catch
             {
-                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                await MarcarCalculoNoValido(
+                    "SERVER_ERROR",
+                    "Existe un error al calcular tercera edad para el 1.5 x 1000");
+
+                return false;
             }
-            await Task.CompletedTask;
         }
         #endregion
 
@@ -941,7 +1077,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         #endregion
 
         #region Valores Bomberos
-        private async Task ConsultarValorBomberos()
+        private async Task<bool> ConsultarValorBomberos()
         {
             try
             {
@@ -949,7 +1085,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 if (_declaracionIniciada is null ||
                     string.IsNullOrWhiteSpace(_declaracionIniciada.Identificacion))
-                    return;
+                    return true;
 
                 var result = await SpMunicipioConsumers.ConsultarValorBomberos(
                     new ConsultarValorBomberosDtoParam
@@ -960,27 +1096,30 @@ namespace gad.aaportal.components.Components.Contribuyente
                 if (result?.Data is not null)
                 {
                     ValorBomberos = Convert.ToDecimal(result.Data.ValorBomberos);
-                    return;
+                    return true;
                 }
 
-                if (result?.Message is not null)
-                {
-                    await MostrarMensaje(
-                        "error",
-                        result.Message.Code,
-                        result.Message.Description);
-                }
+                await MarcarCalculoNoValido(
+                    result?.Message?.Code ?? "BOMBEROS_ERROR",
+                    result?.Message?.Description ?? "No fue posible consultar el valor de Bomberos");
+
+                return false;
             }
             catch
             {
                 ValorBomberos = 0;
-                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error al consultar el valor de Bomberos");
+
+                await MarcarCalculoNoValido(
+                    "SERVER_ERROR",
+                    "Existe un error al consultar el valor de Bomberos");
+
+                return false;
             }
         }
         #endregion
 
         #region Calcular valores municipio
-        private async Task ConsultarValoresPagar()
+        private async Task<bool> ConsultarValoresPagar()
         {
             try
             {
@@ -996,7 +1135,13 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 if (_declaracionIniciada is null ||
                     string.IsNullOrWhiteSpace(_declaracionIniciada.Identificacion))
-                    return;
+                {
+                    await MarcarCalculoNoValido(
+                        "DEC010",
+                        "No existe una declaración iniciada para consultar valores a pagar");
+
+                    return false;
+                }
 
                 var resultPatente = await SpMunicipioConsumers.ConsultaValorP(
                     new ConsultaValorPDtoParam
@@ -1015,9 +1160,13 @@ namespace gad.aaportal.components.Components.Contribuyente
                     CostasPatente = Convert.ToDecimal(resultPatente.Data.CostaJ);
                     TasaAdministrativaPatente = Convert.ToDecimal(resultPatente.Data.TasaAdministrativa);
                 }
-                else if (resultPatente?.Message is not null && !string.IsNullOrWhiteSpace(resultPatente.Message.Code))
+                else
                 {
-                    await MostrarMensaje("error", resultPatente.Message.Code, resultPatente.Message.Description);
+                    await MarcarCalculoNoValido(
+                        resultPatente?.Message?.Code ?? "VALORES_PATENTE_ERROR",
+                        resultPatente?.Message?.Description ?? "No fue posible consultar los valores a pagar de patente");
+
+                    return false;
                 }
 
                 var resultIat = await SpMunicipioConsumers.ConsultaValorP(
@@ -1037,14 +1186,24 @@ namespace gad.aaportal.components.Components.Contribuyente
                     CostasIat = Convert.ToDecimal(resultIat.Data.CostaJ);
                     TasaAdministrativaIat = Convert.ToDecimal(resultIat.Data.TasaAdministrativa);
                 }
-                else if (resultIat?.Message is not null && !string.IsNullOrWhiteSpace(resultIat.Message.Code))
+                else
                 {
-                    await MostrarMensaje("error", resultIat.Message.Code, resultIat.Message.Description);
+                    await MarcarCalculoNoValido(
+                        resultIat?.Message?.Code ?? "VALORES_IAT_ERROR",
+                        resultIat?.Message?.Description ?? "No fue posible consultar los valores a pagar del 1.5 x 1000");
+
+                    return false;
                 }
+
+                return true;
             }
             catch
             {
-                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error al consultar los valores a pagar Municipio");
+                await MarcarCalculoNoValido(
+                    "SERVER_ERROR",
+                    "Existe un error al consultar los valores a pagar Municipio");
+
+                return false;
             }
         }
         #endregion

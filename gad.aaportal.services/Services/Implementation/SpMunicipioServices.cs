@@ -39,6 +39,20 @@ namespace gad.aaportal.services.Services.Implementation
 
             return connection;
         }
+        private SystemExceptionCustomized CrearErrorSp(
+     Exception ex,
+     string codigo,
+     string mensajeUsuario,
+     string nombreSp)
+        {
+            logger.LogError(ex, "{Codigo} - Error al ejecutar {Sp}: {MensajeUsuario}",
+                codigo,
+                nombreSp,
+                mensajeUsuario);
+
+            return SystemExceptionCustomized.CreateException(codigo, mensajeUsuario);
+        }
+
         public async Task<CalcularImpuestoPatenteDtoResult> CalcularImpuestoPatente(CalcularImpuestoPatenteDtoParam parametro)
         {
             CalcularImpuestoPatenteDtoResult result = new();
@@ -78,12 +92,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "PAT001",
+                    "No se pudo calcular el impuesto de patente. Verifique la base imponible o intente nuevamente.",
+                    "dbo.SP_Pat_CalcularImpuestoPatente");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "PAT999",
+                    "Ocurrió un error inesperado al calcular el impuesto de patente.",
+                    "dbo.SP_Pat_CalcularImpuestoPatente");
             }
 
             return result;
         }
+
         public async Task<CalcularImpuestoIatDtoResult> CalcularImpuestoIat(CalcularImpuestoIatDtoParam parametro)
         {
             CalcularImpuestoIatDtoResult result = new();
@@ -120,12 +151,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "IAT001",
+                    "No se pudo calcular el impuesto 1.5 x mil. Verifique la base imponible o intente nuevamente.",
+                    "dbo.SP_Pat_CalcularImpuestoIAT");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "IAT999",
+                    "Ocurrió un error inesperado al calcular el impuesto 1.5 x mil.",
+                    "dbo.SP_Pat_CalcularImpuestoIAT");
             }
 
             return result;
         }
+
         public async Task<CalcularMultaDtoResult> CalcularMulta(CalcularMultaDtoParam parametro)
         {
             CalcularMultaDtoResult result = new();
@@ -137,22 +185,22 @@ namespace gad.aaportal.services.Services.Implementation
                 command.CommandText = "dbo.SP_Pat_CalcularMulta";
                 command.CommandType = CommandType.StoredProcedure;
 
-                var parametroPeriodoFin = new SqlParameter("@PeriodoFin", SqlDbType.VarChar)
+                command.Parameters.Add(new SqlParameter("@PeriodoFin", SqlDbType.VarChar)
                 {
                     Value = parametro.PeriodoFin
-                };
+                });
 
-                var parametroFechaEmision = new SqlParameter("@FechaEmision", SqlDbType.VarChar)
+                command.Parameters.Add(new SqlParameter("@FechaEmision", SqlDbType.VarChar)
                 {
                     Value = parametro.FechaEmision
-                };
+                });
 
-                var parametroValor = new SqlParameter("@Valor", SqlDbType.Decimal)
+                command.Parameters.Add(new SqlParameter("@Valor", SqlDbType.Decimal)
                 {
                     Precision = 18,
                     Scale = 2,
                     Value = parametro.Valor
-                };
+                });
 
                 var parametroMeses = new SqlParameter("@Meses", SqlDbType.Int)
                 {
@@ -166,9 +214,6 @@ namespace gad.aaportal.services.Services.Implementation
                     Direction = ParameterDirection.Output
                 };
 
-                command.Parameters.Add(parametroPeriodoFin);
-                command.Parameters.Add(parametroFechaEmision);
-                command.Parameters.Add(parametroValor);
                 command.Parameters.Add(parametroMeses);
                 command.Parameters.Add(parametroMulta);
 
@@ -184,12 +229,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "MUL001",
+                    "No se pudo calcular la multa correspondiente. Verifique las fechas y valores ingresados.",
+                    "dbo.SP_Pat_CalcularMulta");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "MUL999",
+                    "Ocurrió un error inesperado al calcular la multa.",
+                    "dbo.SP_Pat_CalcularMulta");
             }
 
             return result;
         }
+
         public async Task<CalcularTerceraEdadDtoResult> CalcularTerceraEdad(CalcularTerceraEdadDtoParam parametro)
         {
             CalcularTerceraEdadDtoResult result = new();
@@ -256,12 +318,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "TER001",
+                    "No se pudo calcular el descuento de tercera edad. Verifique la información ingresada.",
+                    "dbo.SP_Pat_CalcularTerceraEdad");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "TER999",
+                    "Ocurrió un error inesperado al calcular el descuento de tercera edad.",
+                    "dbo.SP_Pat_CalcularTerceraEdad");
             }
 
             return result;
         }
+
         public async Task<InsertActividadAnualDtoResult> InsertActividadAnual(InsertActividadAnualDtoParam parametro)
         {
             InsertActividadAnualDtoResult result = new();
@@ -305,14 +384,30 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "ACT001",
+                    "No se pudo registrar la actividad anual del contribuyente.",
+                    "dbo.SP_Pat_InsertActividadAnual");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "ACT999",
+                    "Ocurrió un error inesperado al registrar la actividad anual.",
+                    "dbo.SP_Pat_InsertActividadAnual");
             }
 
             return result;
         }
-        public async Task<InsertTerceraEdadDtoResult> InsertTerceraEdad(
-    InsertTerceraEdadDtoParam parametro)
+
+        public async Task<InsertTerceraEdadDtoResult> InsertTerceraEdad(InsertTerceraEdadDtoParam parametro)
         {
             InsertTerceraEdadDtoResult result = new();
 
@@ -343,12 +438,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "ITE001",
+                    "No se pudo registrar el cálculo de tercera edad.",
+                    "dbo.SP_Pat_InsertTerceraEdad");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "ITE999",
+                    "Ocurrió un error inesperado al registrar el cálculo de tercera edad.",
+                    "dbo.SP_Pat_InsertTerceraEdad");
             }
 
             return result;
         }
+
         public async Task<InsertPagoPorTituloDtoResult> InsertPagoPorTitulo(InsertPagoPorTituloDtoParam parametro)
         {
             InsertPagoPorTituloDtoResult result = new();
@@ -383,12 +495,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "PAG001",
+                    "No se pudo generar el título de pago.",
+                    "dbo.SP_Pat_InsertPagoPorTitulo");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "PAG999",
+                    "Ocurrió un error inesperado al generar el título de pago.",
+                    "dbo.SP_Pat_InsertPagoPorTitulo");
             }
 
             return result;
         }
+
         public async Task<ActualizarCodigoIngresoDtoResult> ActualizarCodigoIngreso(ActualizarCodigoIngresoDtoParam parametro)
         {
             ActualizarCodigoIngresoDtoResult result = new();
@@ -409,12 +538,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "ACI001",
+                    "No se pudo actualizar el código de ingreso de la declaración.",
+                    "dbo.SP_Pat_ActualizarCodigoIngreso");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "ACI999",
+                    "Ocurrió un error inesperado al actualizar el código de ingreso.",
+                    "dbo.SP_Pat_ActualizarCodigoIngreso");
             }
 
             return result;
         }
+
         public async Task<ConsultarValoresPagarDtoResult> ConsultarValoresPagar(ConsultarValoresPagarDtoParam parametro)
         {
             ConsultarValoresPagarDtoResult result = new();
@@ -459,12 +605,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "CVP001",
+                    "No se pudieron consultar los valores a pagar.",
+                    "dbo.SP_Pat_ConsultarValoresPagar");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "CVP999",
+                    "Ocurrió un error inesperado al consultar los valores a pagar.",
+                    "dbo.SP_Pat_ConsultarValoresPagar");
             }
 
             return result;
         }
+
         public async Task<ValidadorPermisosDtoResult> ValidadorPermisos(ValidadorPermisosDtoParam parametro)
         {
             ValidadorPermisosDtoResult result = new();
@@ -495,12 +658,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "PER001",
+                    "No se pudo validar si el contribuyente tiene permisos pendientes.",
+                    "dbo.SP_Pat_ValidadorPermisos");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "PER999",
+                    "Ocurrió un error inesperado al validar permisos del contribuyente.",
+                    "dbo.SP_Pat_ValidadorPermisos");
             }
 
             return result;
         }
+
         public async Task<ConsultarValorBomberosDtoResult> ConsultarValorBomberos(ConsultarValorBomberosDtoParam parametro)
         {
             ConsultarValorBomberosDtoResult result = new();
@@ -532,12 +712,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "BOM001",
+                    "No se pudo consultar el valor correspondiente a bomberos.",
+                    "dbo.SP_Pat_ConsultarValorBomberos");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "BOM999",
+                    "Ocurrió un error inesperado al consultar el valor de bomberos.",
+                    "dbo.SP_Pat_ConsultarValorBomberos");
             }
 
             return result;
         }
+
         public async Task<ConsultarRucExoneracionesDtoResult> ConsultarRucExoneraciones(ConsultarRucExoneracionesDtoParam parametro)
         {
             ConsultarRucExoneracionesDtoResult result = new();
@@ -569,12 +766,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "EXO001",
+                    "No se pudo consultar si el contribuyente posee exoneraciones.",
+                    "dbo.SP_Pat_ConsultarRucExoneraciones");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "EXO999",
+                    "Ocurrió un error inesperado al consultar exoneraciones del contribuyente.",
+                    "dbo.SP_Pat_ConsultarRucExoneraciones");
             }
 
             return result;
         }
+
         public async Task<InsertarTranferenciaIatDtoResult> InsertarTranferenciaIat(InsertarTranferenciaIatDtoParam parametro)
         {
             InsertarTranferenciaIatDtoResult result = new();
@@ -599,12 +813,29 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "TRI001",
+                    "No se pudo registrar la transferencia del impuesto 1.5 x mil.",
+                    "dbo.SP_Pat_InsertarTranferenciaIAT");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "TRI999",
+                    "Ocurrió un error inesperado al registrar la transferencia del impuesto 1.5 x mil.",
+                    "dbo.SP_Pat_InsertarTranferenciaIAT");
             }
 
             return result;
         }
+
         public async Task<ConsultarAnioAdeudaDtoResult> ConsultarAnioAdeuda(ConsultarAnioAdeudaDtoParam parametro)
         {
             ConsultarAnioAdeudaDtoResult result = new();
@@ -632,8 +863,24 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "ADE001",
+                    "No se pudo consultar el año pendiente de declaración.",
+                    "dbo.SP_Pat_ConsultarAnioAdeuda");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "ADE999",
+                    "Ocurrió un error inesperado al consultar el año pendiente de declaración.",
+                    "dbo.SP_Pat_ConsultarAnioAdeuda");
             }
 
             return result;
@@ -642,6 +889,7 @@ namespace gad.aaportal.services.Services.Implementation
         public async Task<AnioVencimientoDtoResult> ConsultarFechaVencimiento(ConsultaAnioVencimientoDtoParam parametro)
         {
             AnioVencimientoDtoResult result = new();
+
             try
             {
                 var connection = await ObtenerConexionAbiertaAsync();
@@ -664,25 +912,43 @@ namespace gad.aaportal.services.Services.Implementation
                 if (await reader.ReadAsync())
                 {
                     result.Data.Id = reader["Id"] != DBNull.Value
-                         ? reader["Id"].ToString()!
-                         : string.Empty;
+                        ? reader["Id"].ToString()!
+                        : string.Empty;
 
                     result.Data.Parametro = reader["Parametro"] != DBNull.Value
-                         ? reader["Parametro"].ToString()!
-                         : string.Empty;
+                        ? reader["Parametro"].ToString()!
+                        : string.Empty;
 
                     result.Data.Descripcion = reader["Descripcion"] != DBNull.Value
-                         ? reader["Descripcion"].ToString()!
-                         : string.Empty;
+                        ? reader["Descripcion"].ToString()!
+                        : string.Empty;
                 }
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
             }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "VEN001",
+                    "No se pudo consultar la fecha de vencimiento de la declaración.",
+                    "dbo.SP_Pat_FechaVencimiento");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "VEN999",
+                    "Ocurrió un error inesperado al consultar la fecha de vencimiento.",
+                    "dbo.SP_Pat_FechaVencimiento");
+            }
+
             return result;
         }
+
         public async Task<ConsultaValorPDtoResult> ConsultaValorP(ConsultaValorPDtoParam parametro)
         {
             ConsultaValorPDtoResult result = new();
@@ -712,8 +978,24 @@ namespace gad.aaportal.services.Services.Implementation
             }
             catch (SystemExceptionCustomized sex)
             {
-                logger.LogError(sex, sex.Description, sex.Code);
+                logger.LogError(sex, "{Codigo} - {Mensaje}", sex.Code, sex.Description);
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "VAL001",
+                    "No se pudieron consultar los valores adicionales de la obligación.",
+                    "dbo.SP_Pat_ConsultaValorP");
+            }
+            catch (Exception ex)
+            {
+                throw CrearErrorSp(
+                    ex,
+                    "VAL999",
+                    "Ocurrió un error inesperado al consultar los valores adicionales de la obligación.",
+                    "dbo.SP_Pat_ConsultaValorP");
             }
 
             return result;

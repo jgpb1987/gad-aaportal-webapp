@@ -82,7 +82,7 @@
                             <div class="valores-grid">
                                 <div class="valor-row">
                                     <label>Activo Corriente <span>*</span></label>
-                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoCorriente" />
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoCorriente" @bind-Value:after="InvalidarCalculo" />
                                     <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.ActivoCorriente = _valoresSugeridos.ActivoCorriente">
                                         @_valoresSugeridos.ActivoCorriente.ToString("N2")
                                     </a>
@@ -90,7 +90,7 @@
 
                                 <div class="valor-row">
                                     <label>Activo No Corriente <span>*</span></label>
-                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoNoCorriente" />
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoNoCorriente" @bind-Value:after="InvalidarCalculo" />
                                     <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.ActivoNoCorriente = _valoresSugeridos.ActivoNoCorriente">
                                         @_valoresSugeridos.ActivoNoCorriente.ToString("N2")
                                     </a>
@@ -110,7 +110,7 @@
                             <div class="valores-grid">
                                 <div class="valor-row">
                                     <label>Pasivo Corriente <span>*</span></label>
-                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoCorriente" />
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoCorriente" @bind-Value:after="InvalidarCalculo" />
                                     <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.PasivoCorriente = _valoresSugeridos.PasivoCorriente">
                                         @_valoresSugeridos.PasivoCorriente.ToString("N2")
                                     </a>
@@ -118,7 +118,7 @@
 
                                 <div class="valor-row">
                                     <label>Pasivo No Corriente <span>*</span></label>
-                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoNoCorriente" />
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoNoCorriente" @bind-Value:after="InvalidarCalculo" />
                                     <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.PasivoNoCorriente = _valoresSugeridos.PasivoNoCorriente">
                                         @_valoresSugeridos.PasivoNoCorriente.ToString("N2")
                                     </a>
@@ -126,7 +126,7 @@
 
                                 <div class="valor-row">
                                     <label>Pasivo Contingente <span>*</span></label>
-                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoContingente" />
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoContingente" @bind-Value:after="InvalidarCalculo" />
                                     <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.PasivoContingente = _valoresSugeridos.PasivoContingente">
                                         @_valoresSugeridos.PasivoContingente.ToString("N2")
                                     </a>
@@ -164,7 +164,7 @@
                             <div class="valores-grid">
                                 <div class="valor-row">
                                     <label>Ingresos <span>*</span></label>
-                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.Ingresos" />
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.Ingresos" @bind-Value:after="InvalidarCalculo" />
                                     <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.Ingresos = _valoresSugeridos.Ingresos">
                                         @_valoresSugeridos.Ingresos.ToString("N2")
                                     </a>
@@ -172,7 +172,7 @@
 
                                 <div class="valor-row">
                                     <label>Costos y Gastos <span>*</span></label>
-                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.CostosGastos" />
+                                    <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.CostosGastos" @bind-Value:after="InvalidarCalculo" />
                                     <a href="javascript:void(0)" @onclick="() => _valoresDeclaracion.CostosGastos = _valoresSugeridos.CostosGastos">
                                         @_valoresSugeridos.CostosGastos.ToString("N2")
                                     </a>
@@ -231,13 +231,13 @@
                                                 </td>
 
                                                 <td>
-                                                    <InputNumber class="input-form text-end input-disabled"
+                                                    <InputNumber class="input-form text-end input-disabled" 
                                                                  @bind-Value="item.BaseImponible"
                                                                  disabled />
                                                 </td>
 
                                                 <td>
-                                                    <InputNumber class="input-form text-end" @bind-Value="item.Porcentaje" />
+                                                    <InputNumber class="input-form text-end" @bind-Value="item.Porcentaje" @bind-Value:after="InvalidarCalculo" />
                                                 </td>
 
                                                 <td class="text-end table-money">
@@ -245,7 +245,7 @@
                                                 </td>
 
                                                 <td class="text-center">
-                                                    <InputCheckbox @bind-Value="item.AplicaPago" />
+                                                    <InputCheckbox @bind-Value="item.AplicaPago" @bind-Value:after="InvalidarCalculo" />
                                                 </td>
                                             </tr>
                                         }
@@ -294,7 +294,18 @@
                                 </div>
                             </div>
                         </div>
-
+                        @if (TieneMensajeValidacionCalculo)
+                        {
+                            <div class="restriccion-municipal-alert">
+                                <div class="restriccion-icon">!</div>
+                                <div>
+                                    <div class="restriccion-title">No puede continuar la declaración</div>
+                                    <div class="restriccion-message">
+                                        @_mensajeValidacionCalculo
+                                    </div>
+                                </div>
+                            </div>
+                        }
                         <div class="wizard-actions">
                             <button type="button" class="btn btn-lg btn-color-per btn-wizard" @onclick="CalcularDeclaracion">
                                 Calcular

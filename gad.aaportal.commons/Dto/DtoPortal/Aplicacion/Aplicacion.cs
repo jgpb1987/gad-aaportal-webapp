@@ -53,7 +53,7 @@ namespace gad.aaportal.commons.Dto.Aplicacion
 
     public class CantonesResponse : BaseResult
     {
-        public List<Canton> Cantones { get; set; }
+        public List<Canton> Cantones { get; set; } = new List<Canton>();
     }
 
     public class TarifaImpositiva

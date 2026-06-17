@@ -37,8 +37,8 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
 
     public class CalcularMultaDtoParam
     {
-        public string PeriodoFin { get; set; } = null!;
-        public string FechaEmision { get; set; } = null!;
+        public string Ruc { get; set; } = null!;
+        public int AnioDeclaracion { get; set; }
         public decimal Valor { get; set; }
     }
 
@@ -267,7 +267,7 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
         public string FormaPago { get; set; } = null!;
         public string NroDocumento { get; set; } = null!;
         public double Valor { get; set; }
-        public string UsuarioIngreso { get; set; } = null!;
+        public string UsuarioIngreso { get; set; } = "PATWEB";
         public string Banco { get; set; } = null!;
     }
 

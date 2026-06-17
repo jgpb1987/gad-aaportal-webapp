@@ -324,7 +324,7 @@ namespace gad.aaportal.services.Services.Implementation
                             ActivoNoCorriente = Math.Round(form102.TotActivoNoCorriente812 ?? 0, 2, MidpointRounding.AwayFromZero),
                             CostosGastos = Math.Round(form102.TotalCostosGastos2760 ?? 0, 2, MidpointRounding.AwayFromZero),
                             Ingresos = Math.Round(form102.TotalIngresos1440 ?? 0, 2, MidpointRounding.AwayFromZero),
-                            PasivoContingente = Math.Round(form102.TotalPasivo1310 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            PasivoContingente = 0,
                             PasivoCorriente = Math.Round(form102.TotPasivoCorriente1030 ?? 0, 2, MidpointRounding.AwayFromZero),
                             PasivoNoCorriente = Math.Round(form102.TotalPasivo1310 ?? 0, 2, MidpointRounding.AwayFromZero) - Math.Round(form102.TotPasivoCorriente1030 ?? 0, 2, MidpointRounding.AwayFromZero)
                         });
@@ -347,7 +347,7 @@ namespace gad.aaportal.services.Services.Implementation
                             ActivoNoCorriente = Math.Round(form101.TotActivoNoCorriente1077 ?? 0, 2, MidpointRounding.AwayFromZero),
                             CostosGastos = Math.Round(form101.TotasCostosGastos3380 ?? 0, 2, MidpointRounding.AwayFromZero),
                             Ingresos = Math.Round(form101.TotalIngresos1930 ?? 0, 2, MidpointRounding.AwayFromZero),
-                            PasivoContingente = Math.Round(form101.ProNoctePasCtgComNeg1577 ?? 0, 2, MidpointRounding.AwayFromZero),
+                            PasivoContingente = 0,
                             PasivoCorriente = Math.Round(form101.TotPasivosCorrientes1340 ?? 0, 2, MidpointRounding.AwayFromZero),
                             PasivoNoCorriente = Math.Round(form101.TotalPasivosLargoPlazo1590 ?? 0, 2, MidpointRounding.AwayFromZero)
                         });
@@ -598,7 +598,7 @@ namespace gad.aaportal.services.Services.Implementation
                     InteresIat = parametro.InteresIat,
                     RecargoIat = parametro.RecargoIat,
                     CostasIat = parametro.CostasIat,
-                    TasaAdministrativaIat = parametro.TasaAdministrativaIat,                    
+                    TasaAdministrativaIat = parametro.TasaAdministrativaIat,
                     Estado = true
                 };
 
@@ -714,7 +714,7 @@ namespace gad.aaportal.services.Services.Implementation
                     Valor = (double)parametro.UnoCincoXMil,
                     AnioDeclaracion = parametro.Anio,
                     ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
-                    Multa=0
+                    Multa = 0
                 };
                 var tituloIAT = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
 
@@ -815,18 +815,18 @@ namespace gad.aaportal.services.Services.Implementation
                         ValorBomberos = d.ValorBomberos,
                         UnoCincoXMil = d._15XMil,
                         Patente = d.Patente,
-                        CostasIat=d.CostasIat,
-                        CostasPatente=d.CostasPatente,
-                        DescuentoTerceraEdadIat=d.DescuentoTerceraEdadIat,
-                        DescuentoTerceraEdadPatente=d.DescuentoTerceraEdadPatente,
-                        InteresIat=d.InteresIat,
-                        InteresPatente=d.InteresPatente,
-                        MultaIat=d.MultaIat,
-                        MultaPatente=d.MultaPatente,
-                        RecargoIat=d.RecargoIat,
-                        RecargoPatente=d.RecargoPatente,
-                        TasaAdministrativaIat=d.TasaAdministrativaIat,
-                        TasaAdministrativaPatente=d.TasaAdministrativaPatente,
+                        CostasIat = d.CostasIat,
+                        CostasPatente = d.CostasPatente,
+                        DescuentoTerceraEdadIat = d.DescuentoTerceraEdadIat,
+                        DescuentoTerceraEdadPatente = d.DescuentoTerceraEdadPatente,
+                        InteresIat = d.InteresIat,
+                        InteresPatente = d.InteresPatente,
+                        MultaIat = d.MultaIat,
+                        MultaPatente = d.MultaPatente,
+                        RecargoIat = d.RecargoIat,
+                        RecargoPatente = d.RecargoPatente,
+                        TasaAdministrativaIat = d.TasaAdministrativaIat,
+                        TasaAdministrativaPatente = d.TasaAdministrativaPatente,
                         Estado = d.Estado
                     })
                     .ToListAsync();
@@ -855,7 +855,7 @@ namespace gad.aaportal.services.Services.Implementation
                 throw;
             }
         }
-        public async Task<SubirDeclaracionArchivoDtoResult> SubirArchivoDeclaracion(AaportalContext contexto, long idContribuyenteDeclaracion,  IFormFile archivo)
+        public async Task<SubirDeclaracionArchivoDtoResult> SubirArchivoDeclaracion(AaportalContext contexto, long idContribuyenteDeclaracion, IFormFile archivo)
         {
             SubirDeclaracionArchivoDtoResult result = new();
 
@@ -984,7 +984,7 @@ namespace gad.aaportal.services.Services.Implementation
             }
         }
 
-        public async Task<ConsultarDeclaracionArchivoDataResult> ConsultarArchivosDeclaracion(AaportalContext contexto,    ConsultarDeclaracionArchivoDtoParam parametro)
+        public async Task<ConsultarDeclaracionArchivoDataResult> ConsultarArchivosDeclaracion(AaportalContext contexto, ConsultarDeclaracionArchivoDtoParam parametro)
         {
             ConsultarDeclaracionArchivoDataResult result = new();
 

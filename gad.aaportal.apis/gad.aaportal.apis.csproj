@@ -25,4 +25,10 @@
     <ProjectReference Include="..\gad.aaportal.services\gad.aaportal.services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Templates\template_email.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

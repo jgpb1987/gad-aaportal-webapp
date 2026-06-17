@@ -51,9 +51,13 @@ builder.Services.AddSingleton(provider =>
 });
 
 // 📌 Fijar cultura global (punto decimal, 0.00)
-var culture = new CultureInfo("en-US");
+var culture = new CultureInfo("es-EC");
+// Forzar símbolo dólar
+culture.NumberFormat.CurrencySymbol = "$";
 CultureInfo.DefaultThreadCurrentCulture = culture;
 CultureInfo.DefaultThreadCurrentUICulture = culture;
+CultureInfo.CurrentCulture = culture;
+CultureInfo.CurrentUICulture = culture;
 //Fin config
 
 await builder.Build().RunAsync();

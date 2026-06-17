@@ -705,6 +705,43 @@
 
                         <ValidationMessage For="@(() => _periodoSeleccionado.AnioDeclaracion)" />
                     </div>
+
+                    <div class="form-field">
+                        <label>Forma de pago<span>*</span></label>
+
+                        <InputSelect class="input-form" @bind-Value="insertarTranferenciaIatDto.FormaPago">
+                            <option value="0">Seleccione su forma de pago</option>
+                            @foreach (var forma in formaPago)
+                            {
+                                <option value="@forma">
+                                    @forma
+                                </option>
+                            }
+                        </InputSelect>
+
+                        <ValidationMessage For="@(() => _periodoSeleccionado.AnioDeclaracion)" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Nro de Documento<span>*</span></label>
+
+                        <InputText class="input-form" @bind-Value="insertarTranferenciaIatDto.NroDocumento" />
+                        <ValidationMessage For="@(() => _periodoSeleccionado.AnioDeclaracion)" />
+                    </div>
+                    
+                    <div class="form-field">
+                        <label>Valor Pagado<span>*</span></label>
+
+                        <InputNumber class="input-form" @bind-Value="insertarTranferenciaIatDto.Valor" />
+                        <ValidationMessage For="@(() => _periodoSeleccionado.AnioDeclaracion)" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Banco<span>*</span></label>
+
+                        <InputText class="input-form" @bind-Value="insertarTranferenciaIatDto.Banco" />
+                        <ValidationMessage For="@(() => _periodoSeleccionado.AnioDeclaracion)" />
+                    </div>
                 </div>
 
                 <div class="modal-periodo-actions">

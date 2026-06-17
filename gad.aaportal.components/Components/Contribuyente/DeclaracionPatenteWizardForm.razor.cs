@@ -16,14 +16,15 @@ namespace gad.aaportal.components.Components.Contribuyente
         private PeriodoDeclaracionListResult _periodosDeclaracion = new();
         private IniciarDeclaracionDtoParam _periodoSeleccionado = new();
         private IniciarDeclaracionDtoResult? _declaracionIniciada;
-        private InsertarTranferenciaIatDtoParam insertarTranferenciaIatDto;
+        private InsertarTranferenciaIatDtoParam insertarTranferenciaIatDto = new();
         private List<ContribuyenteEstablecimientoPago> _establecimientos = new();
         private List<ContribuyenteEstablecimientoPago> _establecimientosBase = new();
+        private string[] formaPago = new[] { "Depósito", "Transferencia", "Efectivo" };
 
         private bool _declaracionCalculada;
         private string _mensajeValidacionCalculo = string.Empty;
         private bool TieneMensajeValidacionCalculo => !string.IsNullOrWhiteSpace(_mensajeValidacionCalculo);
-        private CantonesResponse _cantones;
+        private CantonesResponse _cantones = new();
 
         private PeriodoDeclaracionDtoResult _valoresDeclaracion = new();
         private PeriodoDeclaracionDtoResult _valoresSugeridos = new();
@@ -869,9 +870,9 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var result = await SpMunicipioConsumers.CalcularMulta(
                     new CalcularMultaDtoParam
                     {
-                        PeriodoFin = FechaVencimiento.ToString("yyyy-MM-dd"),
-                        FechaEmision = fechaActual.ToString("yyyy-MM-dd"),
-                        Valor = BaseImponible
+                        Ruc = _periodoSeleccionado.Identificacion,
+                        AnioDeclaracion = FechaVencimiento.Year,
+                        Valor = TotalPatentePorEstablecimientos
                     });
 
                 if (result?.Data is null)
@@ -909,13 +910,9 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var result = await SpMunicipioConsumers.CalcularMulta(
                     new CalcularMultaDtoParam
                     {
-                        PeriodoFin = new DateTime(
-                            _periodoSeleccionado.AnioDeclaracion,
-                            fechaActual.Month,
-                            fechaActual.Day
-                        ).ToString("yyyy-MM-dd"),
-                        FechaEmision = fechaActual.ToString("yyyy-MM-dd"),
-                        Valor = BaseImponible
+                        Ruc = _periodoSeleccionado.Identificacion,
+                        AnioDeclaracion = _periodoSeleccionado.AnioDeclaracion,
+                        Valor = ValorUnoCincoPorMil
                     });
 
                 if (result?.Data is null)

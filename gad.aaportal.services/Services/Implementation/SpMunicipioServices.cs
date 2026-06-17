@@ -185,15 +185,15 @@ namespace gad.aaportal.services.Services.Implementation
                 command.CommandText = "dbo.SP_Pat_CalcularMulta";
                 command.CommandType = CommandType.StoredProcedure;
 
-                command.Parameters.Add(new SqlParameter("@PeriodoFin", SqlDbType.VarChar)
+                var parametroRuc = new SqlParameter("@Ruc", SqlDbType.VarChar)
                 {
-                    Value = parametro.PeriodoFin
-                });
-
-                command.Parameters.Add(new SqlParameter("@FechaEmision", SqlDbType.VarChar)
+                    Value = parametro.Ruc
+                };
+                
+                var parametroAnioDeclaracion = new SqlParameter("@AnioDeclaracion", SqlDbType.Int)
                 {
-                    Value = parametro.FechaEmision
-                });
+                    Value = parametro.AnioDeclaracion
+                };
 
                 command.Parameters.Add(new SqlParameter("@Valor", SqlDbType.Decimal)
                 {
@@ -214,6 +214,9 @@ namespace gad.aaportal.services.Services.Implementation
                     Direction = ParameterDirection.Output
                 };
 
+                command.Parameters.Add(parametroRuc);
+                command.Parameters.Add(parametroAnioDeclaracion);
+                command.Parameters.Add(parametroValor);
                 command.Parameters.Add(parametroMeses);
                 command.Parameters.Add(parametroMulta);
 

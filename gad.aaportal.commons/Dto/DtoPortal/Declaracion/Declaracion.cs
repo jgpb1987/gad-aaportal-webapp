@@ -158,7 +158,8 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
         public decimal RecargoIat { get; set; }
         public decimal CostasIat { get; set; }
         public decimal TasaAdministrativaIat { get; set; }
-        public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos + MultaPatente + MultaIat  + InteresPatente + RecargoPatente + CostasPatente + TasaAdministrativaPatente + InteresIat + RecargoIat + CostasIat + TasaAdministrativaIat - (DescuentoTerceraEdadPatente + DescuentoTerceraEdadIat);
+        public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos + MultaPatente + MultaIat + InteresPatente + RecargoPatente + CostasPatente + TasaAdministrativaPatente + InteresIat + RecargoIat + CostasIat + TasaAdministrativaIat - (DescuentoTerceraEdadPatente + DescuentoTerceraEdadIat);
+        public int ActividadGenerada { get; set; }
     }
 
     public class RegistrarDeclaracionDataResult : BaseResult

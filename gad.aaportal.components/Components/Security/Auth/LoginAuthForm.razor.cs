@@ -87,7 +87,8 @@ namespace gad.aaportal.components.Components.Security.Auth
                     {
                         LoadingBorder!.Close();
                         _view = LoginView.Login;
-                        await Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
+                        Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
+                        ShowLogin();
                     }
                     else
                     {
@@ -112,58 +113,59 @@ namespace gad.aaportal.components.Components.Security.Auth
             try
             {
                 LoadingBorder!.Open();
-                            var dataDispositivo = await JSSessionStorageServices.GetInfoDispositivoUsuario();
-                            var userRegistrationRequest = new UserRegistrationDtoParam()
-                            {
-                                Browser = dataDispositivo.Browser == null ? string.Empty : dataDispositivo.Browser,
-                                Geolocation = dataDispositivo.Geolocation == null ? string.Empty : dataDispositivo.Geolocation,
-                                Ip = dataDispositivo.Ip == null ? string.Empty : dataDispositivo.Ip,
-                                Language = dataDispositivo.Language == null ? string.Empty : dataDispositivo.Language,
-                                OperatingSystem = dataDispositivo.OperatingSystem == null ? string.Empty : dataDispositivo.OperatingSystem,
-                                Plugins = dataDispositivo.Plugins == null ? string.Empty : dataDispositivo.Plugins,
-                                TimeZone = dataDispositivo.TimeZone == null ? string.Empty : dataDispositivo.TimeZone,
-                                UserAgent = dataDispositivo.UserAgent == null ? string.Empty : dataDispositivo.UserAgent,
-                                User = _userRegistrationParam.User,
-                                Email = _userRegistrationParam.Email,
-                                Nombres = _userRegistrationParam.Nombres,
-                                Identificacion = _userRegistrationParam.Identificacion,
-                                RazonSocial = _userRegistrationParam.RazonSocial,
-                                EstadoContribuyenteRuc = _userRegistrationParam.EstadoContribuyenteRuc,
-                                ActividadEconomicaPrincipal = _userRegistrationParam.ActividadEconomicaPrincipal,
-                                TipoContribuyente = _userRegistrationParam.TipoContribuyente,
-                                Regimen = _userRegistrationParam.Regimen,
-                                ObligadoLlevarContabilidad = _userRegistrationParam.ObligadoLlevarContabilidad,
-                                AgenteRetencion = _userRegistrationParam.AgenteRetencion,
-                                ContribuyenteEspecial = _userRegistrationParam.ContribuyenteEspecial,
-                                FechaInicioActividades = _userRegistrationParam.FechaInicioActividades,
-                                FechaReinicioActividades = _userRegistrationParam.FechaReinicioActividades,
-                                FechaActualizacion = _userRegistrationParam.FechaActualizacion,
-                                TransaccionesInexistente = _userRegistrationParam.TransaccionesInexistente,
-                                ContribuyenteFantasma = _userRegistrationParam.ContribuyenteFantasma,
-                                Establecimientos = _userRegistrationParam.Establecimientos,
-                                AceptaPoliticasTratamientoDatos=_userRegistrationParam.AceptaPoliticasTratamientoDatos,
-                                PoliticasTratamientoDatos=_userRegistrationParam.PoliticasTratamientoDatos 
-                            };
-                            var urResponse = await SeguridadConsumers.UserRegistration(userRegistrationRequest);
-                            if (urResponse != null)
-                            {
-                                if (urResponse.Message.Code.Equals("OK"))
-                                {
-                                    LoadingBorder!.Close();
-                                    _view = LoginView.Login;
-                                    await Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
-                                }
-                                else
-                                {
-                                    LoadingBorder!.Close();
-                                    await Toast!.ShowMessage("error", urResponse.Message.Code, urResponse.Message.Description);
-                                }
-                            }
-                            else
-                            {
-                                LoadingBorder!.Close();
-                                await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
-                            }
+                var dataDispositivo = await JSSessionStorageServices.GetInfoDispositivoUsuario();
+                var userRegistrationRequest = new UserRegistrationDtoParam()
+                {
+                    Browser = dataDispositivo.Browser == null ? string.Empty : dataDispositivo.Browser,
+                    Geolocation = dataDispositivo.Geolocation == null ? string.Empty : dataDispositivo.Geolocation,
+                    Ip = dataDispositivo.Ip == null ? string.Empty : dataDispositivo.Ip,
+                    Language = dataDispositivo.Language == null ? string.Empty : dataDispositivo.Language,
+                    OperatingSystem = dataDispositivo.OperatingSystem == null ? string.Empty : dataDispositivo.OperatingSystem,
+                    Plugins = dataDispositivo.Plugins == null ? string.Empty : dataDispositivo.Plugins,
+                    TimeZone = dataDispositivo.TimeZone == null ? string.Empty : dataDispositivo.TimeZone,
+                    UserAgent = dataDispositivo.UserAgent == null ? string.Empty : dataDispositivo.UserAgent,
+                    User = _userRegistrationParam.User,
+                    Email = _userRegistrationParam.Email,
+                    Nombres = _userRegistrationParam.Nombres,
+                    Identificacion = _userRegistrationParam.Identificacion,
+                    RazonSocial = _userRegistrationParam.RazonSocial,
+                    EstadoContribuyenteRuc = _userRegistrationParam.EstadoContribuyenteRuc,
+                    ActividadEconomicaPrincipal = _userRegistrationParam.ActividadEconomicaPrincipal,
+                    TipoContribuyente = _userRegistrationParam.TipoContribuyente,
+                    Regimen = _userRegistrationParam.Regimen,
+                    ObligadoLlevarContabilidad = _userRegistrationParam.ObligadoLlevarContabilidad,
+                    AgenteRetencion = _userRegistrationParam.AgenteRetencion,
+                    ContribuyenteEspecial = _userRegistrationParam.ContribuyenteEspecial,
+                    FechaInicioActividades = _userRegistrationParam.FechaInicioActividades,
+                    FechaReinicioActividades = _userRegistrationParam.FechaReinicioActividades,
+                    FechaActualizacion = _userRegistrationParam.FechaActualizacion,
+                    TransaccionesInexistente = _userRegistrationParam.TransaccionesInexistente,
+                    ContribuyenteFantasma = _userRegistrationParam.ContribuyenteFantasma,
+                    Establecimientos = _userRegistrationParam.Establecimientos,
+                    AceptaPoliticasTratamientoDatos = _userRegistrationParam.AceptaPoliticasTratamientoDatos,
+                    PoliticasTratamientoDatos = _userRegistrationParam.PoliticasTratamientoDatos
+                };
+                var urResponse = await SeguridadConsumers.UserRegistration(userRegistrationRequest);
+                if (urResponse != null)
+                {
+                    if (urResponse.Message.Code.Equals("OK"))
+                    {
+                        LoadingBorder!.Close();
+                        _view = LoginView.Login;
+                        Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
+                        ShowLogin();
+                    }
+                    else
+                    {
+                        LoadingBorder!.Close();
+                        await Toast!.ShowMessage("error", urResponse.Message.Code, urResponse.Message.Description);
+                    }
+                }
+                else
+                {
+                    LoadingBorder!.Close();
+                    await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                }
 
             }
             catch (Exception ex)
@@ -222,7 +224,7 @@ namespace gad.aaportal.components.Components.Security.Auth
                         LoadingBorder!.Close();
                         await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
                     }
-                    else 
+                    else
                     {
                         LoadingBorder!.Close();
                         await Toast!.ShowMessage("error", loginResponse.Message.Code, loginResponse.Message.Description);
@@ -285,9 +287,9 @@ namespace gad.aaportal.components.Components.Security.Auth
                                         Estado = establecimiento.Estado,
                                         NumeroEstablecimiento = establecimiento.NumeroEstablecimiento,
                                         Matriz = establecimiento.Matriz,
-                                        Calles= direccionParts[3].ToString().Trim(),
-                                        Canton= direccionParts[1].ToString().Trim(),
-                                        Parroquia= direccionParts[2].ToString().Trim(),
+                                        Calles = direccionParts[3].ToString().Trim(),
+                                        Canton = direccionParts[1].ToString().Trim(),
+                                        Parroquia = direccionParts[2].ToString().Trim(),
                                         Provincia = direccionParts[0].ToString().Trim()
                                     });
                                 }
@@ -354,7 +356,7 @@ namespace gad.aaportal.components.Components.Security.Auth
         private async Task ConsultaDinardap()
         {
             using var http = new HttpClient { BaseAddress = new Uri("https://localhost:7003/") };
-            var parametros = new { Identificacion = "asd", Paquete = "6281", Usuario = "ccabrera"};
+            var parametros = new { Identificacion = "asd", Paquete = "6281", Usuario = "ccabrera" };
             var resp = await http.PostAsJsonAsync("api/Dinardap/PaqueteIndividual", parametros);
             resp.EnsureSuccessStatusCode();
             var result = await resp.Content.ReadFromJsonAsync<ConsumoDinardapResult>();

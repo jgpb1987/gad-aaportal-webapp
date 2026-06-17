@@ -1143,11 +1143,11 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var resultPatente = await SpMunicipioConsumers.ConsultaValorP(
                     new ConsultaValorPDtoParam
                     {
-                        ValorImpuesto = Patrimonio,
+                        ValorImpuesto = TotalPatentePorEstablecimientos,
                         ValorMulta = ValorMultaPatente,
                         TipoImpuesto = "PMA",
                         Ruc = _declaracionIniciada.Identificacion,
-                        AnioDeclaracion = _declaracionIniciada.AnioDeclaracion
+                        AnioDeclaracion = _periodoSeleccionado.EjercicioFiscal
                     });
 
                 if (resultPatente?.Data is not null)
@@ -1169,11 +1169,11 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var resultIat = await SpMunicipioConsumers.ConsultaValorP(
                     new ConsultaValorPDtoParam
                     {
-                        ValorImpuesto = BaseImponible,
+                        ValorImpuesto = ValorUnoCincoPorMil,
                         ValorMulta = ValorMultaPorMil,
                         TipoImpuesto = "IAT",
                         Ruc = _declaracionIniciada.Identificacion,
-                        AnioDeclaracion = _declaracionIniciada.AnioDeclaracion
+                        AnioDeclaracion = _periodoSeleccionado.EjercicioFiscal
                     });
 
                 if (resultIat?.Data is not null)

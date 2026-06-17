@@ -1,7 +1,7 @@
 ﻿<ToastsServices @ref="Toast" Time="5000" />
 <LoadingBorderModalServices @ref="LoadingBorder" />
 <section class="container-fluid ">
-    <div class="row d-flex justify-content-center heigth-full-screen">
+    <div class="row d-flex justify-content-center align-items-center heigth-full-screen">
         <div class="col-12 col-md-7 col-lg-7 col-xl-7">
                     @switch (_view)
                     {
@@ -27,7 +27,7 @@
                             break;
                     }
         </div>
-        <div class="col-12 col-md-5 col-lg-5 col-xl-5 background-color-parte-derecha posicion-politicas">
+        <div class="col-12 col-md-5 col-lg-5 col-xl-5 background-color-parte-derecha posicion-politicas" hidden>
             <div class="login-politicas-seguridad text-color-login-texto-politicas-seguridad color-parte-derecha background-color-parte-derecha">
                 <h3>Consejos de Seguridad</h3>
                 <ul>
@@ -40,3 +40,12 @@
         </div>
     </div>
 </section>
+
+<footer class="footer-login">
+    <div class="footer-content">
+        <div class="footer-left">
+            <span class="footer-title">GAD MUNICIPAL ANTONIO ANTE</span>
+            <span class="footer-subtitle">Sistema de Declaración en Línea</span>
+        </div>
+    </div>
+</footer>

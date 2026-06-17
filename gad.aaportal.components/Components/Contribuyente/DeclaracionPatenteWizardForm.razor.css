@@ -169,11 +169,13 @@
 }
 
 .declaracion-form-section {
-    margin-bottom: 14px;
-    padding: 14px;
-    background: #f9fafb;
-    border: 1px solid #edf2f7;
-    border-radius: 0.75rem;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden; /* 🔥 evita que nada se salga */
 }
 
 .section-title {
@@ -413,7 +415,7 @@
 
 .valor-row {
     display: grid;
-    grid-template-columns: 260px 180px 160px;
+    grid-template-columns: 200px 180px 160px;
     gap: 14px;
     align-items: center;
 }
@@ -869,6 +871,7 @@
             padding: 8px 7px;
         }
 }
+
 .confirmacion-valores-grid,
 .comprobante-resumen-grid {
     display: grid;
@@ -1308,6 +1311,7 @@
         transform: none;
         box-shadow: none;
     }
+
 .restriccion-municipal-alert {
     display: flex;
     align-items: flex-start;
@@ -1348,9 +1352,11 @@
     font-weight: 700;
     line-height: 1.35;
 }
+
 .confirmacion-item.full-row {
     grid-column: 1 / -1;
 }
+
 .finalizacion-resumen-secciones {
     display: flex;
     flex-direction: column;
@@ -1379,6 +1385,7 @@
 .finalizacion-section .comprobante-resumen-grid {
     padding: 12px;
 }
+
 .comprobante-section-title {
     padding: 10px 14px;
     background: #f9fafb;
@@ -1399,3 +1406,44 @@
     .comprobante-subtotal strong {
         font-weight: 900;
     }
+
+
+.declaracion-grid-2cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 40px;
+    row-gap: 30px; /* 🔥 más aire entre filas */
+}
+
+/* responsive */
+@media (max-width: 768px) {
+    .declaracion-grid-2cols {
+        grid-template-columns: 1fr;
+    }
+}
+
+.declaracion-form-row {
+    display: grid;
+    grid-template-columns: 1fr 130px; /* 🔥 tamaño controlado */
+    align-items: center;
+    gap: 8px; /* 🔥 menos espacio entre label e input */
+}
+
+.declaracion-form-section input {
+    width: 100%;
+    max-width: 130px; /* 🔥 nunca más grandes que esto */
+    box-sizing: border-box;
+    text-align: right;
+}
+
+.declaracion-form-row label {
+    margin: 0;
+}
+
+.distribucion-cantonal {
+    margin-top: 30px; /* 🔥 misma separación visual */
+}
+
+.declaracion-grid-2cols + div {
+    margin-top: 30px;
+}

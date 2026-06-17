@@ -195,12 +195,13 @@ namespace gad.aaportal.services.Services.Implementation
                     Value = parametro.AnioDeclaracion
                 };
 
-                command.Parameters.Add(new SqlParameter("@Valor", SqlDbType.Decimal)
+
+                var parametroValor = new SqlParameter("@Valor", SqlDbType.Decimal)
                 {
                     Precision = 18,
                     Scale = 2,
                     Value = parametro.Valor
-                });
+                };
 
                 var parametroMeses = new SqlParameter("@Meses", SqlDbType.Int)
                 {

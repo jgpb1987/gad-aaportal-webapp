@@ -342,7 +342,7 @@ namespace gad.aaportal.services.Services.Implementation
                         periodosDeclaracion.Add(new PeriodoDeclaracionDtoResult
                         {
                             AnioEjercicioFiscal = form101.AnioFiscal,
-                            Descripcion = $"Ejercicio Fiscal {form101.AnioFiscal}",
+                            Descripcion = $"Ejercicio Fiscal {form101.AnioFiscal})",
                             ActivoCorriente = Math.Round(form101.TotalActivoCorriente470 ?? 0, 2, MidpointRounding.AwayFromZero),
                             ActivoNoCorriente = Math.Round(form101.TotActivoNoCorriente1077 ?? 0, 2, MidpointRounding.AwayFromZero),
                             CostosGastos = Math.Round(form101.TotasCostosGastos3380 ?? 0, 2, MidpointRounding.AwayFromZero),
@@ -760,7 +760,8 @@ namespace gad.aaportal.services.Services.Implementation
                         RecargoIat = entity.RecargoIat,
                         RecargoPatente = entity.RecargoPatente,
                         TasaAdministrativaIat = entity.TasaAdministrativaIat,
-                        TasaAdministrativaPatente = entity.TasaAdministrativaPatente
+                        TasaAdministrativaPatente = entity.TasaAdministrativaPatente,
+                        ActividadGenerada = actividadGenerada
                     },
                     Message = new MessageResult
                     {

@@ -16,7 +16,11 @@
 }
 
 .card-login {
-    position: relative;
+    border-top: 5px solid #1f4d3a; /* verde institucional */
+    border-radius: 10px;
+    background: white;
+    padding: 20px;
+    position: static;
     flex: auto;
     top: 5rem;
     width: 60%;

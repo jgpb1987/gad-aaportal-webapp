@@ -3,7 +3,7 @@ html, body {
     font-family: 'Montserrat', sans-serif;
 }
 
-:root {
+/*:root {
     --pro-background-color: #1a75cc;
     --pro-button-background-color: #1a75cc;
     --pro-button-background-color-hover: #005eb8;
@@ -15,7 +15,7 @@ html, body {
     --pro-text-sidebar-color: #ced4da;
     --pro-text-sidebar-color-hover: #ffffff;
     --pro-li-sidebar-hover: #1a75cc;
-}
+}*/
 /*:root {
     --pro-background-color: rgba(228, 34, 27, 1);
     --pro-button-background-color: rgba(228, 34, 27, 1);
@@ -29,7 +29,7 @@ html, body {
     --pro-text-sidebar-color-hover: #ffffff;
     --pro-li-sidebar-hover: rgba(228, 34, 27, 1);
 }
-*//*:root {
+*/ /*:root {
     --pro-background-color: #333333;
     --pro-button-background-color: #333333;
     --pro-button-background-color-hover: #4d4d4d;
@@ -42,3 +42,16 @@ html, body {
     --pro-text-sidebar-color-hover: #ffffff;
     --pro-li-sidebar-hover: #333333;
 }*/
+:root {
+    --pro-background-color: rgba(60, 84, 67, 1);
+    --pro-button-background-color: #3b5342;
+    --pro-button-background-color-hover: rgba(60, 84, 67, 1);
+    --pro-button-text-color: #ffffff;
+    --pro-text-background-color-login: #ffffff;
+    --pro-sidebar-background-color: #ffffff;
+    --pro-button-sidebar-color: #ffffff;
+    --pro-button-sidebar-color-hover: #ffffff;
+    --pro-text-sidebar-color: #ffffff;
+    --pro-text-sidebar-color-hover: #ffffff;
+    --pro-li-sidebar-hover: rgba(60, 84, 67, 1);
+}

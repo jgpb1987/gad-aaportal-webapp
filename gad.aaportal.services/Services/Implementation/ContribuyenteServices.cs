@@ -318,8 +318,9 @@ namespace gad.aaportal.services.Services.Implementation
                     {
                         periodosDeclaracion.Add(new PeriodoDeclaracionDtoResult
                         {
+                            AnioPatente= form102.AnioFiscal + 1,
                             AnioEjercicioFiscal = form102.AnioFiscal,
-                            Descripcion = $"Ejercicio Fiscal {form102.AnioFiscal}",
+                            Descripcion = $"Patente {form102.AnioFiscal + 1} - Ejercicio Fiscal I.R. {form102.AnioFiscal}",
                             ActivoCorriente = Math.Round(form102.TotActCorriente410 ?? 0, 2, MidpointRounding.AwayFromZero),
                             ActivoNoCorriente = Math.Round(form102.TotActivoNoCorriente812 ?? 0, 2, MidpointRounding.AwayFromZero),
                             CostosGastos = Math.Round(form102.TotalCostosGastos2760 ?? 0, 2, MidpointRounding.AwayFromZero),
@@ -341,8 +342,9 @@ namespace gad.aaportal.services.Services.Implementation
                     {
                         periodosDeclaracion.Add(new PeriodoDeclaracionDtoResult
                         {
+                            AnioPatente= form101.AnioFiscal + 1,
                             AnioEjercicioFiscal = form101.AnioFiscal,
-                            Descripcion = $"Ejercicio Fiscal {form101.AnioFiscal})",
+                            Descripcion = $"Patente {form101.AnioFiscal + 1} - Ejercicio Fiscal I.R. {form101.AnioFiscal}",
                             ActivoCorriente = Math.Round(form101.TotalActivoCorriente470 ?? 0, 2, MidpointRounding.AwayFromZero),
                             ActivoNoCorriente = Math.Round(form101.TotActivoNoCorriente1077 ?? 0, 2, MidpointRounding.AwayFromZero),
                             CostosGastos = Math.Round(form101.TotasCostosGastos3380 ?? 0, 2, MidpointRounding.AwayFromZero),
@@ -419,6 +421,7 @@ namespace gad.aaportal.services.Services.Implementation
                     {
                         periodosDeclaracion.Add(new PeriodoDeclaracionDtoResult
                         {
+                            AnioPatente= form102.AnioFiscal + 1,
                             AnioEjercicioFiscal = form102.AnioFiscal,
                             Descripcion = $"Ejercicio Fiscal {form102.AnioFiscal}",
                             ActivoCorriente = Math.Round(form102.TotActCorriente410 ?? 0, 2, MidpointRounding.AwayFromZero),
@@ -441,6 +444,7 @@ namespace gad.aaportal.services.Services.Implementation
                     {
                         periodosDeclaracion.Add(new PeriodoDeclaracionDtoResult
                         {
+                            AnioPatente= form101.AnioFiscal + 1,
                             AnioEjercicioFiscal = form101.AnioFiscal,
                             Descripcion = $"Ejercicio Fiscal {form101.AnioFiscal}",
                             ActivoCorriente = Math.Round(form101.TotalActivoCorriente470 ?? 0, 2, MidpointRounding.AwayFromZero),
@@ -566,44 +570,6 @@ namespace gad.aaportal.services.Services.Implementation
                         $"Ya existe una declaración registrada para el año {parametro.Anio}");
 
                 var fechaActual = DateTime.Now;
-                var codigoUnicoPago = await GenerarCodigoUnicoPago(contexto, fechaActual);
-
-                var entity = new ContribuyenteDeclaracion
-                {
-                    Identificacion = parametro.Identificacion,
-                    FechaRegistro = fechaActual,
-                    Fecha = fechaActual.Date,
-                    Anio = parametro.Anio,
-                    CodigoUnicoPago = codigoUnicoPago,
-
-                    ActivoCorriente = parametro.ActivoCorriente,
-                    ActivoNoCorriente = parametro.ActivoNoCorriente,
-                    PasivoCorriente = parametro.PasivoCorriente,
-                    PasivoNoCorriente = parametro.PasivoNoCorriente,
-                    PasivoContingente = parametro.PasivoContingente,
-                    Ingresos = parametro.Ingresos,
-                    CostosGastos = parametro.CostosGastos,
-
-                    _15XMil = parametro.UnoCincoXMil,
-                    Patente = parametro.Patente,
-                    ValorBomberos = parametro.ValorBomberos,
-                    MultaPatente = parametro.MultaPatente,
-                    MultaIat = parametro.MultaIat,
-                    DescuentoTerceraEdadPatente = parametro.PorcentajeDescuentoTerceraEdadPatente,
-                    DescuentoTerceraEdadIat = parametro.PorcentajeDescuentoTerceraEdadIAT,
-                    InteresPatente = parametro.InteresPatente,
-                    RecargoPatente = parametro.RecargoPatente,
-                    CostasPatente = parametro.CostasPatente,
-                    TasaAdministrativaPatente = parametro.TasaAdministrativaPatente,
-                    InteresIat = parametro.InteresIat,
-                    RecargoIat = parametro.RecargoIat,
-                    CostasIat = parametro.CostasIat,
-                    TasaAdministrativaIat = parametro.TasaAdministrativaIat,
-                    Estado = true
-                };
-
-                await contexto.ContribuyenteDeclaracions.AddAsync(entity);
-
 
                 InsertActividadAnualDtoParam insert = new InsertActividadAnualDtoParam
                 {
@@ -725,6 +691,44 @@ namespace gad.aaportal.services.Services.Implementation
                     CodTitulo = "IAT"
                 };
                 await spMunicipioServices.ActualizarCodigoIngreso(codIngreso);
+
+                //var codigoUnicoPago = await GenerarCodigoUnicoPago(contexto, fechaActual);
+                var codigoUnicoPago = resultActividadAnual.Data.IdActividadGenerada.ToString();
+                var entity = new ContribuyenteDeclaracion
+                {
+                    Identificacion = parametro.Identificacion,
+                    FechaRegistro = fechaActual,
+                    Fecha = fechaActual.Date,
+                    Anio = parametro.Anio,
+                    CodigoUnicoPago = codigoUnicoPago,
+
+                    ActivoCorriente = parametro.ActivoCorriente,
+                    ActivoNoCorriente = parametro.ActivoNoCorriente,
+                    PasivoCorriente = parametro.PasivoCorriente,
+                    PasivoNoCorriente = parametro.PasivoNoCorriente,
+                    PasivoContingente = parametro.PasivoContingente,
+                    Ingresos = parametro.Ingresos,
+                    CostosGastos = parametro.CostosGastos,
+
+                    _15XMil = parametro.UnoCincoXMil,
+                    Patente = parametro.Patente,
+                    ValorBomberos = parametro.ValorBomberos,
+                    MultaPatente = parametro.MultaPatente,
+                    MultaIat = parametro.MultaIat,
+                    DescuentoTerceraEdadPatente = parametro.PorcentajeDescuentoTerceraEdadPatente,
+                    DescuentoTerceraEdadIat = parametro.PorcentajeDescuentoTerceraEdadIAT,
+                    InteresPatente = parametro.InteresPatente,
+                    RecargoPatente = parametro.RecargoPatente,
+                    CostasPatente = parametro.CostasPatente,
+                    TasaAdministrativaPatente = parametro.TasaAdministrativaPatente,
+                    InteresIat = parametro.InteresIat,
+                    RecargoIat = parametro.RecargoIat,
+                    CostasIat = parametro.CostasIat,
+                    TasaAdministrativaIat = parametro.TasaAdministrativaIat,
+                    Estado = true
+                };
+
+                await contexto.ContribuyenteDeclaracions.AddAsync(entity);
 
                 await contexto.SaveChangesAsync();
 

@@ -776,7 +776,7 @@
                             <option value="0">Seleccione el año de declaración</option>
                             @foreach (var periodo in _periodosDeclaracion.PeriodosDeclaracion)
                             {
-                                <option value="@periodo.AnioEjercicioFiscal">
+                                <option value="@periodo.AnioPatente">
                                     @periodo.Descripcion
                                 </option>
                             }
@@ -906,7 +906,7 @@
                             <div><span>Código único de pago</span><strong>@_declaracionRegistrada.CodigoUnicoPago</strong></div>
                             <div><span>Identificación</span><strong>@_declaracionRegistrada.Identificacion</strong></div>
                             <div><span>Fecha emisión</span><strong>@_declaracionRegistrada.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</strong></div>
-                            <div><span>Ejercicio fiscal</span><strong>@_declaracionRegistrada.Anio</strong></div>
+                            <div><span>Declaración Patente / Ejercicio fiscal I.R.</span><strong>@_declaracionRegistrada.Anio / @(_declaracionRegistrada.Anio - 1)</strong></div>
                         </div>
                     </div>
 

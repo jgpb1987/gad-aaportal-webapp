@@ -98,8 +98,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                 {
                     if (resultaAnioDeclaracion?.Data is not null)
                     {
-                        result.Data.PeriodosDeclaracion = result.Data.PeriodosDeclaracion.Where(p => p.AnioEjercicioFiscal == resultaAnioDeclaracion.Data.Anio).ToList();
-                        _periodosDeclaracion = result.Data;
+                        result.Data.PeriodosDeclaracion = result.Data.PeriodosDeclaracion.Where(p => p.AnioPatente == resultaAnioDeclaracion.Data.Anio).ToList();                      
+                        _periodosDeclaracion = result.Data;                       
                         _establecimientosBase = ClonarEstablecimientos(_periodosDeclaracion.Establecimientos ?? new List<ContribuyenteEstablecimientoPago>());
                         StateHasChanged();
                     }
@@ -162,7 +162,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             try
             {
                 var periodo = _periodosDeclaracion.PeriodosDeclaracion
-                    .FirstOrDefault(p => p.AnioEjercicioFiscal == _periodoSeleccionado.AnioDeclaracion);
+                    .FirstOrDefault(p => p.AnioPatente == _periodoSeleccionado.AnioDeclaracion);
 
                 if (periodo == null)
                 {
@@ -186,8 +186,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                     return;
                 }
 
-                var consultaFechaVencimiento = await SpMunicipioConsumers.ConsultarFechaVencimiento(new ConsultaAnioVencimientoDtoParam() { Anio = periodo.AnioEjercicioFiscal, Ruc = identificacion });
-                string fechaStr = $"{consultaFechaVencimiento.Data.Parametro}{periodo.AnioEjercicioFiscal}";
+                var consultaFechaVencimiento = await SpMunicipioConsumers.ConsultarFechaVencimiento(new ConsultaAnioVencimientoDtoParam() { Anio = periodo.AnioPatente, Ruc = identificacion });
+                string fechaStr = $"{consultaFechaVencimiento.Data.Parametro}{periodo.AnioPatente}";
                 DateTime fecha = DateTime.ParseExact(fechaStr, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 FechaVencimiento = fecha;
 
@@ -195,6 +195,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 _valoresDeclaracion = new PeriodoDeclaracionDtoResult
                 {
+                    AnioPatente = periodo.AnioPatente,
                     AnioEjercicioFiscal = periodo.AnioEjercicioFiscal,
                     Descripcion = periodo.Descripcion,
                     ActivoCorriente = periodo.ActivoCorriente,
@@ -209,14 +210,14 @@ namespace gad.aaportal.components.Components.Contribuyente
                 _periodoSeleccionado = new IniciarDeclaracionDtoParam
                 {
                     Identificacion = identificacion,
-                    AnioDeclaracion = periodo.AnioEjercicioFiscal + 1,
+                    AnioDeclaracion = periodo.AnioPatente,
                     EjercicioFiscal = periodo.AnioEjercicioFiscal
                 };
 
                 _declaracionIniciada = new IniciarDeclaracionDtoResult
                 {
                     Identificacion = identificacion,
-                    AnioDeclaracion = periodo.AnioEjercicioFiscal + 1,
+                    AnioDeclaracion = periodo.AnioPatente,
                     EjercicioFiscal = periodo.AnioEjercicioFiscal,
                     DescripcionPeriodo = periodo.Descripcion
                 };
@@ -259,11 +260,11 @@ namespace gad.aaportal.components.Components.Contribuyente
                 return false;
             }
 
-            var ejercicioFiscalSeleccionado = _declaracionIniciada.EjercicioFiscal;
+            var ejercicioFiscalSeleccionado = _declaracionIniciada.AnioDeclaracion;
 
             var ejercicioFiscalPendienteMenor = _periodosDeclaracion.PeriodosDeclaracion
-                .Where(p => p.AnioEjercicioFiscal < ejercicioFiscalSeleccionado)
-                .OrderBy(p => p.AnioEjercicioFiscal)
+                .Where(p => p.AnioPatente < ejercicioFiscalSeleccionado)
+                .OrderBy(p => p.AnioPatente)
                 .FirstOrDefault();
 
             if (ejercicioFiscalPendienteMenor is not null)
@@ -705,7 +706,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var parametro = new RegistrarDeclaracionDtoParam
                 {
                     Identificacion = _declaracionIniciada.Identificacion,
-                    Anio = _declaracionIniciada.EjercicioFiscal,
+                    Anio = _declaracionIniciada.AnioDeclaracion,
 
                     ActivoCorriente = _valoresDeclaracion.ActivoCorriente,
                     ActivoNoCorriente = _valoresDeclaracion.ActivoNoCorriente,
@@ -960,7 +961,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                     new CalcularTerceraEdadDtoParam
                     {
                         BasePatrimonio = basePatrimonio,
-                        Anio = _periodoSeleccionado.AnioDeclaracion,
+                        Anio = _periodoSeleccionado.AnioDeclaracion, //confirmar con Municipio
+                        //Anio = _periodoSeleccionado.EjercicioFiscal,
                         Ingresos = _valoresDeclaracion.Ingresos,
                         Ruc = _periodoSeleccionado.Identificacion,
                         TipoImpuesto = "PMA",
@@ -1013,7 +1015,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                     new CalcularTerceraEdadDtoParam
                     {
                         BasePatrimonio = basePatrimonio,
-                        Anio = _periodoSeleccionado.AnioDeclaracion,
+                        Anio = _periodoSeleccionado.AnioDeclaracion,//confirmar con Municipio
+                        //Anio= _periodoSeleccionado.EjercicioFiscal,
                         Ingresos = _valoresDeclaracion.Ingresos,
                         Ruc = _periodoSeleccionado.Identificacion,
                         TipoImpuesto = "IAT",
@@ -1147,7 +1150,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                         ValorMulta = ValorMultaPatente,
                         TipoImpuesto = "PMA",
                         Ruc = _declaracionIniciada.Identificacion,
-                        AnioDeclaracion = _periodoSeleccionado.EjercicioFiscal
+                        AnioDeclaracion = _periodoSeleccionado.AnioDeclaracion
                     });
 
                 if (resultPatente?.Data is not null)
@@ -1173,7 +1176,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                         ValorMulta = ValorMultaPorMil,
                         TipoImpuesto = "IAT",
                         Ruc = _declaracionIniciada.Identificacion,
-                        AnioDeclaracion = _periodoSeleccionado.EjercicioFiscal
+                        AnioDeclaracion = _periodoSeleccionado.AnioDeclaracion
                     });
 
                 if (resultIat?.Data is not null)

@@ -23,6 +23,72 @@
                 <DataAnnotationsValidator />
 
                 <div class="actualizar-section">
+                    <div class="section-header">
+                        <div>
+                            <div class="section-title">Medios de contacto</div>
+                            <div class="section-subtitle">
+                                Agregue correos, teléfonos o celulares asociados al contribuyente.
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-add-contacto" @onclick="AbrirModalContacto">
+                            + Agregar contacto
+                        </button>
+                    </div>
+
+                    <div class="contactos-table-wrapper">
+                        <table class="contactos-table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Valor</th>
+                                    <th>Principal</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.MediosContacto.Any())
+                                {
+                                    @foreach (var item in Model.MediosContacto)
+                                    {
+                                        <tr>
+                                            <td>@item.NombreTipoMedioContacto</td>
+                                            <td>@item.Valor</td>
+                                            <td>
+                                                @if (item.EsPrincipal)
+                                                {
+                                                    <span class="badge-principal">Sí</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge-secundario">No</span>
+                                                }
+                                            </td>
+                                            <td class="table-actions">
+                                                <button type="button" class="btn-table-edit" @onclick="() => EditarContacto(item)">
+                                                    Editar
+                                                </button>
+                                                <button type="button" class="btn-table-delete" @onclick="() => EliminarContacto(item)">
+                                                    Eliminar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="empty-table">
+                                            No existen medios de contacto registrados.
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="actualizar-section">
                     <div class="section-title">Dirección contribuyente</div>
 
                     <div class="form-grid">
@@ -131,71 +197,6 @@
                                     <tr>
                                         <td colspan="6" class="empty-table">
                                             No existen establecimientos registrados.
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="actualizar-section">
-                    <div class="section-header">
-                        <div>
-                            <div class="section-title">Medios de contacto</div>
-                            <div class="section-subtitle">
-                                Agregue correos, teléfonos o celulares asociados al contribuyente.
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn-add-contacto" @onclick="AbrirModalContacto">
-                            + Agregar contacto
-                        </button>
-                    </div>
-
-                    <div class="contactos-table-wrapper">
-                        <table class="contactos-table">
-                            <thead>
-                                <tr>
-                                    <th>Tipo</th>
-                                    <th>Valor</th>
-                                    <th>Principal</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.MediosContacto.Any())
-                                {
-                                    @foreach (var item in Model.MediosContacto)
-                                    {
-                                        <tr>
-                                            <td>@item.NombreTipoMedioContacto</td>
-                                            <td>@item.Valor</td>
-                                            <td>
-                                                @if (item.EsPrincipal)
-                                                {
-                                                    <span class="badge-principal">Sí</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge-secundario">No</span>
-                                                }
-                                            </td>
-                                            <td class="table-actions">
-                                                <button type="button" class="btn-table-edit" @onclick="() => EditarContacto(item)">
-                                                    Editar
-                                                </button>
-                                                <button type="button" class="btn-table-delete" @onclick="() => EliminarContacto(item)">
-                                                    Eliminar
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="4" class="empty-table">
-                                            No existen medios de contacto registrados.
                                         </td>
                                     </tr>
                                 }

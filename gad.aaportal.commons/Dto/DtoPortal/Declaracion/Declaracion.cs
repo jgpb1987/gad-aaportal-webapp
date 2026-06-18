@@ -25,6 +25,7 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
     }
     public class PeriodoDeclaracionDtoResult
     {
+        public int AnioPatente { get; set; }
         public int AnioEjercicioFiscal { get; set; }
         public string Descripcion { get; set; } = string.Empty;
         public decimal ActivoCorriente { get; set; }

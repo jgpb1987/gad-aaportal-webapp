@@ -308,7 +308,7 @@ namespace gad.aaportal.services.Services.Implementation
                 if (await reader.ReadAsync())
                 {
                     result.Data.PorcentajePatrimonio = reader["PorcentajePatrimonio"] != DBNull.Value ? Convert.ToDecimal(reader["PorcentajePatrimonio"]) : 0;
-                    result.Data.PorcentajeIngresos = reader["PorcentajeIngresos"] != DBNull.Value ? Convert.ToDecimal(reader["PorcentajeIngresos"]) : 0;
+                    result.Data.PorcentajeIngresos = reader["PorcentajeIngreso"] != DBNull.Value ? Convert.ToDecimal(reader["PorcentajeIngreso"]) : 0;
                     result.Data.PorcentajeAplicar = reader["PorcentajeAplicar"] != DBNull.Value ? Convert.ToDecimal(reader["PorcentajeAplicar"]) : 0;
                     result.Data.ValorDescuento = reader["ValorDescuento"] != DBNull.Value ? Convert.ToDecimal(reader["ValorDescuento"]) : 0;
                     result.Data.ExedenteAplicado = reader["ExedenteAplicado"] != DBNull.Value ? reader["ExedenteAplicado"].ToString()! : string.Empty;

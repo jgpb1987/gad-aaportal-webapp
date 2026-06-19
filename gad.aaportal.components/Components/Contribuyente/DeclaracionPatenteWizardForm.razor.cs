@@ -7,6 +7,7 @@ using gad.aaportal.consumers.Js;
 using gad.generic.components.Components.Several;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System.Diagnostics.Metrics;
 using System.Globalization;
 
 namespace gad.aaportal.components.Components.Contribuyente
@@ -19,7 +20,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         private InsertarTranferenciaIatDtoParam insertarTranferenciaIatDto = new();
         private List<ContribuyenteEstablecimientoPago> _establecimientos = new();
         private List<ContribuyenteEstablecimientoPago> _establecimientosBase = new();
-        private string[] formaPago = new[] { "Depósito", "Transferencia", "Efectivo" };
+        private string[] formaPago = new[] { "Depósito", "Transferencia", "Efectivo", "Cheque" };
 
         private bool _declaracionCalculada;
         private string _mensajeValidacionCalculo = string.Empty;
@@ -1225,6 +1226,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         private async Task CerrarModalPagoOtroCanton()
         {
             _mostrarModalPagoOtroCanton = false;
+            insertarTranferenciaIatDto = new();
             await Task.CompletedTask;
         }
 
@@ -1238,6 +1240,14 @@ namespace gad.aaportal.components.Components.Contribuyente
             {
                 await MostrarMensaje("error", "SERVER_ERROR", "Existe un error al consultar los cantones para pago en otro cantón");
             }
+        }
+
+        private async Task ConfirmarPagoOtroCanton()
+        {
+
+
+            _mostrarModalPagoOtroCanton = true;
+            await Task.CompletedTask;
         }
     }
 }

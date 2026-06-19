@@ -274,6 +274,9 @@
                                 <div class="calculo-impuesto-item uno-cinco-card">
                                     <div class="calculo-impuesto-header">
                                         <span>Impuesto 1.5 x 1000</span>
+                                        <button type="button" class="btn btn-color-per btn-wizard" @onclick="PagoOtroCanton">
+                                            Registrar pago
+                                        </button>
                                     </div>
 
                                     <div class="calculo-impuesto-row">
@@ -323,9 +326,6 @@
                             <div class="impuesto-card">
                                 <div class="impuesto-card-title d-flex justify-content-between align-items-center">
                                     <span>Patente</span>
-                                    @* <button type="button" class="btn btn-color-per btn-wizard" @onclick="PagoOtroCanton">
-                                        Registrar pago
-                                    </button> *@
                                 </div>
                                 <div class="impuesto-row impuesto-total">
                                     <span>Patrimonio</span>
@@ -376,7 +376,9 @@
                             </div>
 
                             <div class="impuesto-card">
-                                <div class="impuesto-card-title">1.5 por mil</div>
+                                <div class="impuesto-card-title d-flex justify-content-between align-items-center">
+                                    1.5 por mil
+                                </div>
 
                                 <div class="impuesto-row impuesto-total">
                                     <span>Base Imponible 1.5 x mil</span>
@@ -681,7 +683,7 @@
             </div>
 
             @* CAMBIAR METODO *@
-            <EditForm Model="_periodoSeleccionado" OnValidSubmit="ConfirmarPeriodo">
+            <EditForm Model="_periodoSeleccionado" OnValidSubmit="ConfirmarPagoOtroCanton">
                 <DataAnnotationsValidator />
                 <div class="modal-periodo-body">
                     <div class="form-field">

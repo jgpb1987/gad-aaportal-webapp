@@ -422,7 +422,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                     if (item.Porcentaje > 0 || item.EsMunicipioBase)
                     {
                         item.BaseImponible = Math.Round(
-                            BaseImponible * (item.Porcentaje / 100),
+                            Patrimonio * (item.Porcentaje / 100),
                             2,
                             MidpointRounding.AwayFromZero);
 

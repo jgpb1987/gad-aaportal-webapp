@@ -1,6 +1,7 @@
 ﻿using gad.aaportal.commons.Base;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -262,12 +263,16 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     }
     public class InsertarTranferenciaIatDtoParam
     {
+        [Required(ErrorMessage = "Seleccione el cantón donde realizó el pago.")]
         public string Canton { get; set; } = null!;
         public DateTime FechaPago { get; set; }
+        [Required(ErrorMessage = "Seleccione su forma de pago.")]
         public string FormaPago { get; set; } = null!;
         public string NroDocumento { get; set; } = null!;
+        [Range(0.01, double.MaxValue, ErrorMessage = "El valor debe ser mayor a cero.")]
         public double Valor { get; set; }
         public string UsuarioIngreso { get; set; } = "PATWEB";
+        [Required(ErrorMessage = "El BANCO es obligatorio.")]
         public string Banco { get; set; } = null!;
     }
 

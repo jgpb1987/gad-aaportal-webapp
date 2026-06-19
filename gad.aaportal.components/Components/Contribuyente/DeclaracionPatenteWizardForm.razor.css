@@ -721,7 +721,16 @@
     padding: 10px 14px;
     background: #f9fafb;
     border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
+
+    .calculo-impuesto-header label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
 
     .calculo-impuesto-header span {
         color: var(--pro-button-background-color);

@@ -7,7 +7,6 @@ using gad.aaportal.consumers.Js;
 using gad.generic.components.Components.Several;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System.Diagnostics.Metrics;
 using System.Globalization;
 
 namespace gad.aaportal.components.Components.Contribuyente
@@ -25,6 +24,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         private bool _declaracionCalculada;
         private string _mensajeValidacionCalculo = string.Empty;
         private bool TieneMensajeValidacionCalculo => !string.IsNullOrWhiteSpace(_mensajeValidacionCalculo);
+        private bool registraPagoIAT = false;
         private CantonesResponse _cantones = new();
 
         private PeriodoDeclaracionDtoResult _valoresDeclaracion = new();
@@ -99,8 +99,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                 {
                     if (resultaAnioDeclaracion?.Data is not null)
                     {
-                        result.Data.PeriodosDeclaracion = result.Data.PeriodosDeclaracion.Where(p => p.AnioPatente == resultaAnioDeclaracion.Data.Anio).ToList();                      
-                        _periodosDeclaracion = result.Data;                       
+                        result.Data.PeriodosDeclaracion = result.Data.PeriodosDeclaracion.Where(p => p.AnioPatente == resultaAnioDeclaracion.Data.Anio).ToList();
+                        _periodosDeclaracion = result.Data;
                         _establecimientosBase = ClonarEstablecimientos(_periodosDeclaracion.Establecimientos ?? new List<ContribuyenteEstablecimientoPago>());
                         StateHasChanged();
                     }
@@ -608,12 +608,12 @@ namespace gad.aaportal.components.Components.Contribuyente
                     }
                 }
 
-                if (exoneraciones.Data.ExoneracionIat == "SiPaga")
+                if (exoneraciones.Data.ExoneracionIat == "SiPaga" && !registraPagoIAT)
                 {
                     if (!await CalcularUnoCincoPorMil())
                         return;
                 }
-                else if (exoneraciones.Data.ExoneracionIat == "NoPaga")
+                else //if (exoneraciones.Data.ExoneracionIat == "NoPaga")
                 {
                     ValorUnoCincoPorMil = 0;
                 }
@@ -1217,8 +1217,11 @@ namespace gad.aaportal.components.Components.Contribuyente
 
         private async Task PagoOtroCanton()
         {
-            _mostrarModalPagoOtroCanton = true;
-            await ConsultaCantones();
+            if (registraPagoIAT)
+            {
+                _mostrarModalPagoOtroCanton = true;
+                await ConsultaCantones();
+            }
             insertarTranferenciaIatDto = new InsertarTranferenciaIatDtoParam();
             await Task.CompletedTask;
         }
@@ -1226,6 +1229,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         private async Task CerrarModalPagoOtroCanton()
         {
             _mostrarModalPagoOtroCanton = false;
+            registraPagoIAT = false;
             insertarTranferenciaIatDto = new();
             await Task.CompletedTask;
         }
@@ -1244,9 +1248,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
         private async Task ConfirmarPagoOtroCanton()
         {
-
-
-            _mostrarModalPagoOtroCanton = true;
+            _mostrarModalPagoOtroCanton = false;
             await Task.CompletedTask;
         }
     }

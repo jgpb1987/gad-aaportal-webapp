@@ -704,6 +704,13 @@
                     </div>
 
                     <div class="form-field">
+                        <label>Fecha Pago<span>*</span></label>
+
+                        <InputDate class="input-form" @bind-Value="insertarTranferenciaIatDto.FechaPago" />
+                        <ValidationMessage For="@(() => insertarTranferenciaIatDto.FechaPago)" />
+                    </div>
+
+                    <div class="form-field">
                         <label>Forma de pago<span>*</span></label>
 
                         <InputSelect class="input-form" @bind-Value="insertarTranferenciaIatDto.FormaPago">

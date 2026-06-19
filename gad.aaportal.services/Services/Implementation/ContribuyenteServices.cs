@@ -320,7 +320,7 @@ namespace gad.aaportal.services.Services.Implementation
                     {
                         periodosDeclaracion.Add(new PeriodoDeclaracionDtoResult
                         {
-                            AnioPatente= form102.AnioFiscal + 1,
+                            AnioPatente = form102.AnioFiscal + 1,
                             AnioEjercicioFiscal = form102.AnioFiscal,
                             Descripcion = $"Patente {form102.AnioFiscal + 1} - Ejercicio Fiscal I.R. {form102.AnioFiscal}",
                             ActivoCorriente = Math.Round(form102.TotActCorriente410 ?? 0, 2, MidpointRounding.AwayFromZero),
@@ -344,7 +344,7 @@ namespace gad.aaportal.services.Services.Implementation
                     {
                         periodosDeclaracion.Add(new PeriodoDeclaracionDtoResult
                         {
-                            AnioPatente= form101.AnioFiscal + 1,
+                            AnioPatente = form101.AnioFiscal + 1,
                             AnioEjercicioFiscal = form101.AnioFiscal,
                             Descripcion = $"Patente {form101.AnioFiscal + 1} - Ejercicio Fiscal I.R. {form101.AnioFiscal}",
                             ActivoCorriente = Math.Round(form101.TotalActivoCorriente470 ?? 0, 2, MidpointRounding.AwayFromZero),
@@ -423,7 +423,7 @@ namespace gad.aaportal.services.Services.Implementation
                     {
                         periodosDeclaracion.Add(new PeriodoDeclaracionDtoResult
                         {
-                            AnioPatente= form102.AnioFiscal + 1,
+                            AnioPatente = form102.AnioFiscal + 1,
                             AnioEjercicioFiscal = form102.AnioFiscal,
                             Descripcion = $"Ejercicio Fiscal {form102.AnioFiscal}",
                             ActivoCorriente = Math.Round(form102.TotActCorriente410 ?? 0, 2, MidpointRounding.AwayFromZero),
@@ -446,7 +446,7 @@ namespace gad.aaportal.services.Services.Implementation
                     {
                         periodosDeclaracion.Add(new PeriodoDeclaracionDtoResult
                         {
-                            AnioPatente= form101.AnioFiscal + 1,
+                            AnioPatente = form101.AnioFiscal + 1,
                             AnioEjercicioFiscal = form101.AnioFiscal,
                             Descripcion = $"Ejercicio Fiscal {form101.AnioFiscal}",
                             ActivoCorriente = Math.Round(form101.TotalActivoCorriente470 ?? 0, 2, MidpointRounding.AwayFromZero),
@@ -670,29 +670,46 @@ namespace gad.aaportal.services.Services.Implementation
                 };
                 await spMunicipioServices.ActualizarCodigoIngreso(codIngreso);
 
-                insertPPT = new InsertPagoPorTituloDtoParam
+                if (!parametro.RegistraPagoOtroCanton)
                 {
-                    Ruc = parametro.Identificacion,
-                    CodTituloDatos = "IAT",
-                    FechaIngreso = DateTime.Now,
-                    FechaVencimiento = parametro.FechaVencimiento,
-                    FechaVencInteres = parametro.FechaVencimiento,
-                    UserIngreso = "PATWEB",
-                    BaseImponible = (double)parametro.BaseImponibleIAT,
-                    Valor = (double)parametro.UnoCincoXMil,
-                    AnioDeclaracion = parametro.Anio,
-                    ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
-                    Multa = 0
-                };
-                var tituloIAT = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
+                    insertPPT = new InsertPagoPorTituloDtoParam
+                    {
+                        Ruc = parametro.Identificacion,
+                        CodTituloDatos = "IAT",
+                        FechaIngreso = DateTime.Now,
+                        FechaVencimiento = parametro.FechaVencimiento,
+                        FechaVencInteres = parametro.FechaVencimiento,
+                        UserIngreso = "PATWEB",
+                        BaseImponible = (double)parametro.BaseImponibleIAT,
+                        Valor = (double)parametro.UnoCincoXMil,
+                        AnioDeclaracion = parametro.Anio,
+                        ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
+                        Multa = 0
+                    };
+                    var tituloIAT = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
 
-                codIngreso = new ActualizarCodigoIngresoDtoParam
+                    codIngreso = new ActualizarCodigoIngresoDtoParam
+                    {
+                        CodigoIngreso = tituloIAT.Data.CodigoIngreso,
+                        IdDeclaracionAnual = actividadGenerada,
+                        CodTitulo = "IAT"
+                    };
+                    await spMunicipioServices.ActualizarCodigoIngreso(codIngreso);
+                }
+                else
                 {
-                    CodigoIngreso = tituloIAT.Data.CodigoIngreso,
-                    IdDeclaracionAnual = actividadGenerada,
-                    CodTitulo = "IAT"
-                };
-                await spMunicipioServices.ActualizarCodigoIngreso(codIngreso);
+                    InsertarTranferenciaIatDtoParam insertarTranferenciaIatDto = new InsertarTranferenciaIatDtoParam
+                    {
+                        Banco = parametro.PagoOtroCanton.Banco,
+                        Canton = parametro.PagoOtroCanton.Canton,
+                        FormaPago = parametro.PagoOtroCanton.FormaPago,
+                        NroDocumento = parametro.PagoOtroCanton.NroDocumento,
+                        UsuarioIngreso = parametro.PagoOtroCanton.UsuarioIngreso,
+                        Valor = parametro.PagoOtroCanton.Valor,
+                        FechaPago = parametro.PagoOtroCanton.FechaPago
+                    };
+                    await spMunicipioServices.InsertarTranferenciaIat(insertarTranferenciaIatDto);
+                }
 
                 //var codigoUnicoPago = await GenerarCodigoUnicoPago(contexto, fechaActual);
                 var codigoUnicoPago = resultActividadAnual.Data.IdActividadGenerada.ToString();

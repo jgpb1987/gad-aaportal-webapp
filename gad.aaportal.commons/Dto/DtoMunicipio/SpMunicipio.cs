@@ -265,7 +265,8 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     {
         [Required(ErrorMessage = "Seleccione el cantón donde realizó el pago.")]
         public string Canton { get; set; } = null!;
-        public DateTime FechaPago { get; set; }
+        [Required(ErrorMessage = "Debe ingresar la fecha de pago.")]
+        public DateTime FechaPago { get; set; } = DateTime.Now;
         [Required(ErrorMessage = "Seleccione su forma de pago.")]
         public string FormaPago { get; set; } = null!;
         public string NroDocumento { get; set; } = null!;

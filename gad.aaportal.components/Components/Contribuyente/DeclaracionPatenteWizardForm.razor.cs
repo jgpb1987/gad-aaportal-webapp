@@ -744,7 +744,10 @@ namespace gad.aaportal.components.Components.Contribuyente
                     ValorExoneradoIAT = ValorExoneradoIAT,
                     ExedentePatente = ExedentePatente,
                     ExedenteIAT = ExedenteIAT,
-                    PorcentajeIngreso = PorcentajeIngreso
+                    PorcentajeIngreso = PorcentajeIngreso,
+
+                    RegistraPagoOtroCanton = registraPagoIAT,
+                    PagoOtroCanton = insertarTranferenciaIatDto
                 };
 
                 var result = await ServicesDeclaracion.RegistrarDeclaracion(parametro);
@@ -1222,7 +1225,12 @@ namespace gad.aaportal.components.Components.Contribuyente
                 _mostrarModalPagoOtroCanton = true;
                 await ConsultaCantones();
             }
+            else
+            {
+                _declaracionCalculada = false;
+            }
             insertarTranferenciaIatDto = new InsertarTranferenciaIatDtoParam();
+            StateHasChanged();
             await Task.CompletedTask;
         }
 

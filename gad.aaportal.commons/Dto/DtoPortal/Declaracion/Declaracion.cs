@@ -1,4 +1,5 @@
 ﻿using gad.aaportal.commons.Base;
+using gad.aaportal.commons.Dto.DtoMunicipio;
 using gad.aaportal.commons.Dto.Seguridad;
 using System;
 using System.Collections.Generic;
@@ -123,135 +124,138 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
         public decimal RecargoIat { get; set; }
         public decimal CostasIat { get; set; }
         public decimal TasaAdministrativaIat { get; set; }
+
+        public bool RegistraPagoOtroCanton { get; set; }
+        public InsertarTranferenciaIatDtoParam PagoOtroCanton { get; set; } = new();
     }
+}
 
-    public class RegistrarDeclaracionDtoResult
-    {
-        public long Id { get; set; }
-        public string Identificacion { get; set; } = string.Empty;
-        public DateTime FechaRegistro { get; set; }
-        public DateTime Fecha { get; set; }
-        public int Anio { get; set; }
-        public string CodigoUnicoPago { get; set; } = string.Empty;
+public class RegistrarDeclaracionDtoResult
+{
+    public long Id { get; set; }
+    public string Identificacion { get; set; } = string.Empty;
+    public DateTime FechaRegistro { get; set; }
+    public DateTime Fecha { get; set; }
+    public int Anio { get; set; }
+    public string CodigoUnicoPago { get; set; } = string.Empty;
 
-        public decimal ActivoCorriente { get; set; }
-        public decimal ActivoNoCorriente { get; set; }
-        public decimal PasivoCorriente { get; set; }
-        public decimal PasivoNoCorriente { get; set; }
-        public decimal PasivoContingente { get; set; }
-        public decimal Ingresos { get; set; }
-        public decimal CostosGastos { get; set; }
+    public decimal ActivoCorriente { get; set; }
+    public decimal ActivoNoCorriente { get; set; }
+    public decimal PasivoCorriente { get; set; }
+    public decimal PasivoNoCorriente { get; set; }
+    public decimal PasivoContingente { get; set; }
+    public decimal Ingresos { get; set; }
+    public decimal CostosGastos { get; set; }
 
-        public decimal UnoCincoXMil { get; set; }
-        public decimal Patente { get; set; }
-        public decimal ValorBomberos { get; set; }
-        public decimal MultaPatente { get; set; }
-        public decimal MultaIat { get; set; }
-        public decimal DescuentoTerceraEdadPatente { get; set; }
-        public decimal DescuentoTerceraEdadIat { get; set; }
+    public decimal UnoCincoXMil { get; set; }
+    public decimal Patente { get; set; }
+    public decimal ValorBomberos { get; set; }
+    public decimal MultaPatente { get; set; }
+    public decimal MultaIat { get; set; }
+    public decimal DescuentoTerceraEdadPatente { get; set; }
+    public decimal DescuentoTerceraEdadIat { get; set; }
 
-        public decimal InteresPatente { get; set; }
-        public decimal RecargoPatente { get; set; }
-        public decimal CostasPatente { get; set; }
-        public decimal TasaAdministrativaPatente { get; set; }
+    public decimal InteresPatente { get; set; }
+    public decimal RecargoPatente { get; set; }
+    public decimal CostasPatente { get; set; }
+    public decimal TasaAdministrativaPatente { get; set; }
 
-        public decimal InteresIat { get; set; }
-        public decimal RecargoIat { get; set; }
-        public decimal CostasIat { get; set; }
-        public decimal TasaAdministrativaIat { get; set; }
-        public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos + MultaPatente + MultaIat + InteresPatente + RecargoPatente + CostasPatente + TasaAdministrativaPatente + InteresIat + RecargoIat + CostasIat + TasaAdministrativaIat - (DescuentoTerceraEdadPatente + DescuentoTerceraEdadIat);
-        public int ActividadGenerada { get; set; }
-    }
+    public decimal InteresIat { get; set; }
+    public decimal RecargoIat { get; set; }
+    public decimal CostasIat { get; set; }
+    public decimal TasaAdministrativaIat { get; set; }
+    public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos + MultaPatente + MultaIat + InteresPatente + RecargoPatente + CostasPatente + TasaAdministrativaPatente + InteresIat + RecargoIat + CostasIat + TasaAdministrativaIat - (DescuentoTerceraEdadPatente + DescuentoTerceraEdadIat);
+    public int ActividadGenerada { get; set; }
+}
 
-    public class RegistrarDeclaracionDataResult : BaseResult
-    {
-        public RegistrarDeclaracionDtoResult? Data { get; set; }
-    }
+public class RegistrarDeclaracionDataResult : BaseResult
+{
+    public RegistrarDeclaracionDtoResult? Data { get; set; }
+}
 
-    public class ConsultarDeclaracionContribuyenteDtoParam
-    {
-        public string Identificacion { get; set; } = string.Empty;
-    }
+public class ConsultarDeclaracionContribuyenteDtoParam
+{
+    public string Identificacion { get; set; } = string.Empty;
+}
 
-    public class ConsultarDeclaracionContribuyenteDtoResult
-    {
-        public long Id { get; set; }
-        public string Identificacion { get; set; } = string.Empty;
-        public DateTime FechaRegistro { get; set; }
-        public DateTime Fecha { get; set; }
-        public int Anio { get; set; }
-        public string CodigoUnicoPago { get; set; } = string.Empty;
+public class ConsultarDeclaracionContribuyenteDtoResult
+{
+    public long Id { get; set; }
+    public string Identificacion { get; set; } = string.Empty;
+    public DateTime FechaRegistro { get; set; }
+    public DateTime Fecha { get; set; }
+    public int Anio { get; set; }
+    public string CodigoUnicoPago { get; set; } = string.Empty;
 
-        public decimal ActivoCorriente { get; set; }
-        public decimal ActivoNoCorriente { get; set; }
-        public decimal PasivoCorriente { get; set; }
-        public decimal PasivoNoCorriente { get; set; }
-        public decimal PasivoContingente { get; set; }
-        public decimal Ingresos { get; set; }
-        public decimal CostosGastos { get; set; }
+    public decimal ActivoCorriente { get; set; }
+    public decimal ActivoNoCorriente { get; set; }
+    public decimal PasivoCorriente { get; set; }
+    public decimal PasivoNoCorriente { get; set; }
+    public decimal PasivoContingente { get; set; }
+    public decimal Ingresos { get; set; }
+    public decimal CostosGastos { get; set; }
 
-        public decimal UnoCincoXMil { get; set; }
-        public decimal Patente { get; set; }
-        public decimal ValorBomberos { get; set; }
-        public decimal MultaPatente { get; set; }
-        public decimal MultaIat { get; set; }
-        public decimal DescuentoTerceraEdadPatente { get; set; }
-        public decimal DescuentoTerceraEdadIat { get; set; }
+    public decimal UnoCincoXMil { get; set; }
+    public decimal Patente { get; set; }
+    public decimal ValorBomberos { get; set; }
+    public decimal MultaPatente { get; set; }
+    public decimal MultaIat { get; set; }
+    public decimal DescuentoTerceraEdadPatente { get; set; }
+    public decimal DescuentoTerceraEdadIat { get; set; }
 
-        public decimal InteresPatente { get; set; }
-        public decimal RecargoPatente { get; set; }
-        public decimal CostasPatente { get; set; }
-        public decimal TasaAdministrativaPatente { get; set; }
+    public decimal InteresPatente { get; set; }
+    public decimal RecargoPatente { get; set; }
+    public decimal CostasPatente { get; set; }
+    public decimal TasaAdministrativaPatente { get; set; }
 
-        public decimal InteresIat { get; set; }
-        public decimal RecargoIat { get; set; }
-        public decimal CostasIat { get; set; }
-        public decimal TasaAdministrativaIat { get; set; }
-        public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos + MultaPatente + MultaIat + InteresPatente + RecargoPatente + CostasPatente + TasaAdministrativaPatente + InteresIat + RecargoIat + CostasIat + TasaAdministrativaIat - (DescuentoTerceraEdadPatente + DescuentoTerceraEdadIat);
+    public decimal InteresIat { get; set; }
+    public decimal RecargoIat { get; set; }
+    public decimal CostasIat { get; set; }
+    public decimal TasaAdministrativaIat { get; set; }
+    public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos + MultaPatente + MultaIat + InteresPatente + RecargoPatente + CostasPatente + TasaAdministrativaPatente + InteresIat + RecargoIat + CostasIat + TasaAdministrativaIat - (DescuentoTerceraEdadPatente + DescuentoTerceraEdadIat);
 
-        public bool Estado { get; set; }
-    }
+    public bool Estado { get; set; }
+}
 
-    public class ConsultarDeclaracionContribuyenteListResult
-    {
-        public List<ConsultarDeclaracionContribuyenteDtoResult> Declaraciones { get; set; } = new();
-    }
+public class ConsultarDeclaracionContribuyenteListResult
+{
+    public List<ConsultarDeclaracionContribuyenteDtoResult> Declaraciones { get; set; } = new();
+}
 
-    public class ConsultarDeclaracionContribuyenteDataResult : BaseResult
-    {
-        public ConsultarDeclaracionContribuyenteListResult? Data { get; set; }
-    }
+public class ConsultarDeclaracionContribuyenteDataResult : BaseResult
+{
+    public ConsultarDeclaracionContribuyenteListResult? Data { get; set; }
+}
 
-    public class DeclaracionArchivoDtoResult
-    {
-        public long Id { get; set; }
-        public long IdContribuyenteDeclaracion { get; set; }
-        public DateTime FechaHora { get; set; }
-        public string NombreArchivo { get; set; } = string.Empty;
-        public string ExtensionArchivo { get; set; } = string.Empty;
-        public bool Estado { get; set; }
-    }
-    public class ConsultarDeclaracionArchivoDtoParam
-    {
-        public long IdContribuyenteDeclaracion { get; set; }
-    }
-    public class ConsultarDeclaracionArchivoListResult
-    {
-        public List<DeclaracionArchivoDtoResult> Archivos { get; set; } = new();
-    }
-    public class ConsultarDeclaracionArchivoDataResult : BaseResult
-    {
-        public ConsultarDeclaracionArchivoListResult? Data { get; set; }
-    }
-    public class SubirDeclaracionArchivoDtoResult : BaseResult
-    {
-        public DeclaracionArchivoDtoResult? Data { get; set; }
-    }
-    public class DescargarDeclaracionArchivoDtoResult
-    {
-        public long Id { get; set; }
-        public string NombreArchivo { get; set; } = string.Empty;
-        public string ExtensionArchivo { get; set; } = string.Empty;
-        public string UbicacionArchivo { get; set; } = string.Empty;
-    }
+public class DeclaracionArchivoDtoResult
+{
+    public long Id { get; set; }
+    public long IdContribuyenteDeclaracion { get; set; }
+    public DateTime FechaHora { get; set; }
+    public string NombreArchivo { get; set; } = string.Empty;
+    public string ExtensionArchivo { get; set; } = string.Empty;
+    public bool Estado { get; set; }
+}
+public class ConsultarDeclaracionArchivoDtoParam
+{
+    public long IdContribuyenteDeclaracion { get; set; }
+}
+public class ConsultarDeclaracionArchivoListResult
+{
+    public List<DeclaracionArchivoDtoResult> Archivos { get; set; } = new();
+}
+public class ConsultarDeclaracionArchivoDataResult : BaseResult
+{
+    public ConsultarDeclaracionArchivoListResult? Data { get; set; }
+}
+public class SubirDeclaracionArchivoDtoResult : BaseResult
+{
+    public DeclaracionArchivoDtoResult? Data { get; set; }
+}
+public class DescargarDeclaracionArchivoDtoResult
+{
+    public long Id { get; set; }
+    public string NombreArchivo { get; set; } = string.Empty;
+    public string ExtensionArchivo { get; set; } = string.Empty;
+    public string UbicacionArchivo { get; set; } = string.Empty;
 }

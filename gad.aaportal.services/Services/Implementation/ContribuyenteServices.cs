@@ -305,8 +305,10 @@ namespace gad.aaportal.services.Services.Implementation
                     throw SystemExceptionCustomized.CreateException("CPD002", "No se encontró información de establecimientos activos para el contribuyente");
 
                 var aniosDeclarados = await contexto.ContribuyenteDeclaracions
-                    .AsNoTracking().Where(d => d.Identificacion == parametro.Identificacion && d.Estado)
-                    .Select(d => d.Anio).ToListAsync();
+                    .AsNoTracking()
+                    .Where(d => d.Identificacion == parametro.Identificacion && d.Estado)
+                    .Select(d => d.Anio - 1)
+                    .ToListAsync();
 
                 if (contribuyente.TipoContribuyente.Equals("PERSONA NATURAL"))
                 {

@@ -429,7 +429,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                         var result = await SpMunicipioConsumers.CalcularImpuestoPatente(
                             new CalcularImpuestoPatenteDtoParam
                             {
-                                BaseImponible = item.BaseImponible
+                                BaseImponible = item.BaseImponible,
+                                Ingresos = _valoresDeclaracion.Ingresos
                             });
 
                         if (result?.Data is null)

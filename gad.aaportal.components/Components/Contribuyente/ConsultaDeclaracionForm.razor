@@ -36,8 +36,11 @@
                                         Declaración @item.Anio
                                     </div>
                                     <div class="declaracion-card-subtitle">
-                                        Código: @item.CodigoUnicoPago
+                                        Ejercicio Fiscal I.R. @(item.Anio - 1)
                                     </div>
+@*                                     <div class="declaracion-card-subtitle">
+                                        Código: @item.CodigoUnicoPago
+                                    </div> *@
                                 </div>
 
                                 <span class="declaracion-estado">
@@ -46,6 +49,10 @@
                             </div>
 
                             <div class="declaracion-card-info">
+                                <div class="declaracion-info-item">
+                                    <span>Código Único Pago (CUP)</span>
+                                    <strong>@item.CodigoUnicoPago</strong>
+                                </div>
                                 <div class="declaracion-info-item">
                                     <span>Fecha registro</span>
                                     <strong>@item.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</strong>

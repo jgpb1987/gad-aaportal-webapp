@@ -10,6 +10,7 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     public class CalcularImpuestoPatenteDtoParam
     {
         public decimal BaseImponible { get; set; }
+        public decimal Ingresos { get; set; }
     }
     public class CalcularImpuestoPatenteDtoDataResult
     {

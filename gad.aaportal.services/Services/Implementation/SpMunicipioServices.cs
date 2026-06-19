@@ -70,6 +70,12 @@ namespace gad.aaportal.services.Services.Implementation
                     Scale = 2,
                     Value = parametro.BaseImponible
                 };
+                var parametroIngresos = new SqlParameter("@Ingresos", SqlDbType.Decimal)
+                {
+                    Precision = 18,
+                    Scale = 2,
+                    Value = parametro.Ingresos
+                };
 
                 var parametroValorImpuesto = new SqlParameter("@ValorImpuesto", SqlDbType.Decimal)
                 {
@@ -79,6 +85,7 @@ namespace gad.aaportal.services.Services.Implementation
                 };
 
                 command.Parameters.Add(parametroBaseImponible);
+                command.Parameters.Add(parametroIngresos);
                 command.Parameters.Add(parametroValorImpuesto);
 
                 await command.ExecuteNonQueryAsync();

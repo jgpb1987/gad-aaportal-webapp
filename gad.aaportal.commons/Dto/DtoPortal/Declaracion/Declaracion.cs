@@ -138,7 +138,8 @@ public class RegistrarDeclaracionDtoResult
     public DateTime Fecha { get; set; }
     public int Anio { get; set; }
     public string CodigoUnicoPago { get; set; } = string.Empty;
-
+    public string CodigoIat { get; set; } = string.Empty;
+    public string CodigoPatente { get; set; } = string.Empty;
     public decimal ActivoCorriente { get; set; }
     public decimal ActivoNoCorriente { get; set; }
     public decimal PasivoCorriente { get; set; }
@@ -186,7 +187,8 @@ public class ConsultarDeclaracionContribuyenteDtoResult
     public DateTime Fecha { get; set; }
     public int Anio { get; set; }
     public string CodigoUnicoPago { get; set; } = string.Empty;
-
+    public string CodigoPatente { get; set; } = string.Empty;
+    public string CodigoIat { get; set; } = string.Empty;
     public decimal ActivoCorriente { get; set; }
     public decimal ActivoNoCorriente { get; set; }
     public decimal PasivoCorriente { get; set; }

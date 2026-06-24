@@ -369,14 +369,17 @@ public class SeguridadServices : ISeguridadServices
             if (appJwt == null)
                 throw SystemExceptionCustomized.CreateException("FPAOO2", "Error al obtener configuracion de token.");
 
-            var user = await contexto.Usuarios.FirstOrDefaultAsync(u => u.User == parametro.User && u.Email == parametro.Email);
+            var user = await contexto.Usuarios.FirstOrDefaultAsync(u => u.User == parametro.User);
 
             if (user == null)
                 throw SystemExceptionCustomized.CreateException("FPAOO3", "Usuario no existe");
 
+            if(!user.Email.Equals(parametro.Email, StringComparison.OrdinalIgnoreCase))
+                throw SystemExceptionCustomized.CreateException("FPAOO4", "Email incorrecto");
+
             var configMail = await contexto.ConfiguracionEmails.Where(p => p.Estado).FirstOrDefaultAsync();
             if (configMail == null)
-                throw SystemExceptionCustomized.CreateException("FPAOO4", "No existe configuración para envío de credenciales");
+                throw SystemExceptionCustomized.CreateException("FPAOO5", "No existe configuración para envío de credenciales");
 
             var claveRandom = await securityAlgorithmServices.GetRandomEncoder(new RandomDtoParam() { Encoder = "b32", Size = 4 });
 

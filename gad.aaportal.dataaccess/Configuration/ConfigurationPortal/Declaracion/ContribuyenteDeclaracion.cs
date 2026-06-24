@@ -20,6 +20,8 @@ namespace gad.aaportal.dataaccess.Configuration
             entity.Property(e => e.ActivoNoCorriente).HasColumnType("decimal(18, 6)");
 
             entity.Property(e => e.CodigoUnicoPago).HasMaxLength(20);
+            entity.Property(e => e.CodigoPatente).HasMaxLength(20);
+            entity.Property(e => e.CodigoIat).HasMaxLength(20);
 
             entity.Property(e => e.CostosGastos).HasColumnType("decimal(18, 6)");
 

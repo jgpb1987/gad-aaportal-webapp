@@ -17,6 +17,8 @@ namespace gad.aaportal.models.Entity.Declaracion
         public DateTime Fecha { get; set; }
         public int Anio { get; set; }
         public string CodigoUnicoPago { get; set; } = null!;
+        public string CodigoPatente { get; set; } = null!;
+        public string CodigoIat { get; set; } = null!;
         public decimal ActivoCorriente { get; set; }
         public decimal ActivoNoCorriente { get; set; }
         public decimal PasivoCorriente { get; set; }

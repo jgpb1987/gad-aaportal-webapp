@@ -541,6 +541,8 @@ namespace gad.aaportal.services.Services.Implementation
         }
         public async Task<RegistrarDeclaracionDataResult> RegistrarDeclaracion(AaportalContext contexto, RegistrarDeclaracionDtoParam parametro)
         {
+            InsertPagoPorTituloDtoResult tituloIAT = new();
+            InsertPagoPorTituloDtoResult tituloPatente = new();
             try
             {
                 if (parametro == null)
@@ -599,6 +601,7 @@ namespace gad.aaportal.services.Services.Implementation
 
                 var resultActividadAnual = await spMunicipioServices.InsertActividadAnual(insert);
                 var actividadGenerada = resultActividadAnual.Data.IdActividadGenerada;//TRATAR CODIGO DE ACTIVIDAD GENERADO Y VER QUE SE HACE CON EL
+
 
                 if (parametro.PorcentajeDescuentoTerceraEdadPatente > 0)
                 {
@@ -660,7 +663,7 @@ namespace gad.aaportal.services.Services.Implementation
                     ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
                     Multa = 0
                 };
-                var tituloPatente = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
+                tituloPatente = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
 
                 ActualizarCodigoIngresoDtoParam codIngreso = new ActualizarCodigoIngresoDtoParam
                 {
@@ -686,7 +689,7 @@ namespace gad.aaportal.services.Services.Implementation
                         ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
                         Multa = 0
                     };
-                    var tituloIAT = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
+                     tituloIAT = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
 
                     codIngreso = new ActualizarCodigoIngresoDtoParam
                     {
@@ -720,7 +723,8 @@ namespace gad.aaportal.services.Services.Implementation
                     Fecha = fechaActual.Date,
                     Anio = parametro.Anio,
                     CodigoUnicoPago = codigoUnicoPago,
-
+                    CodigoIat = tituloIAT.Data!=null ? tituloIAT.Data.CodigoIngreso.ToString() : string.Empty,
+                    CodigoPatente = tituloPatente.Data!=null ? tituloPatente.Data.CodigoIngreso.ToString() : string.Empty,
                     ActivoCorriente = parametro.ActivoCorriente,
                     ActivoNoCorriente = parametro.ActivoNoCorriente,
                     PasivoCorriente = parametro.PasivoCorriente,
@@ -761,7 +765,8 @@ namespace gad.aaportal.services.Services.Implementation
                         Fecha = entity.Fecha,
                         Anio = entity.Anio,
                         CodigoUnicoPago = entity.CodigoUnicoPago,
-
+                        CodigoIat=entity.CodigoIat,
+                        CodigoPatente=entity.CodigoPatente,
                         ActivoCorriente = entity.ActivoCorriente,
                         ActivoNoCorriente = entity.ActivoNoCorriente,
                         PasivoCorriente = entity.PasivoCorriente,
@@ -828,7 +833,8 @@ namespace gad.aaportal.services.Services.Implementation
                         Fecha = d.Fecha,
                         Anio = d.Anio,
                         CodigoUnicoPago = d.CodigoUnicoPago,
-
+                        CodigoPatente=d.CodigoPatente,
+                        CodigoIat=d.CodigoIat,
                         ActivoCorriente = d.ActivoCorriente,
                         ActivoNoCorriente = d.ActivoNoCorriente,
                         PasivoCorriente = d.PasivoCorriente,

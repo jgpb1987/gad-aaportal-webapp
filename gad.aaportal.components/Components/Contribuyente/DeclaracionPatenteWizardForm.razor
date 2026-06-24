@@ -511,6 +511,14 @@
                                     Código único de pago:
                                     <strong>@_declaracionRegistrada.ActividadGenerada</strong>
                                 </div>
+                                <div class="finalizacion-subtitle">
+                                    Código IAT:
+                                    <strong>@_declaracionRegistrada.CodigoIat</strong>
+                                </div>
+                                <div class="finalizacion-subtitle">
+                                    Código Patente:
+                                    <strong>@_declaracionRegistrada.CodigoPatente</strong>
+                                </div>
                                 <!-- AQUÍ VA EL NUEVO RESUMEN EN 4 SECCIONES -->
                                 <div class="resumen-impuestos-grid">
                                     <div class="impuesto-card">
@@ -700,14 +708,14 @@
                             }
                         </InputSelect>
 
-                        <ValidationMessage For="@(() => insertarTranferenciaIatDto.Canton)" />
+@*                         <ValidationMessage For="@(() => insertarTranferenciaIatDto.Canton)" /> *@
                     </div>
 
                     <div class="form-field">
                         <label>Fecha Pago<span>*</span></label>
 
                         <InputDate class="input-form" @bind-Value="insertarTranferenciaIatDto.FechaPago" />
-                        <ValidationMessage For="@(() => insertarTranferenciaIatDto.FechaPago)" />
+            @*             <ValidationMessage For="@(() => insertarTranferenciaIatDto.FechaPago)" /> *@
                     </div>
 
                     <div class="form-field">
@@ -722,29 +730,29 @@
                                 </option>
                             }
                         </InputSelect>
-
-                        <ValidationMessage For="@(() => insertarTranferenciaIatDto.FormaPago)" />
+@* 
+                        <ValidationMessage For="@(() => insertarTranferenciaIatDto.FormaPago)" /> *@
                     </div>
 
                     <div class="form-field">
                         <label>Nro de Documento<span>*</span></label>
 
                         <InputText class="input-form" @bind-Value="insertarTranferenciaIatDto.NroDocumento" />
-                        <ValidationMessage For="@(() => insertarTranferenciaIatDto.NroDocumento)" />
+@*                         <ValidationMessage For="@(() => insertarTranferenciaIatDto.NroDocumento)" /> *@
                     </div>
 
                     <div class="form-field">
                         <label>Valor Pagado<span>*</span></label>
 
                         <InputNumber class="input-form" @bind-Value="insertarTranferenciaIatDto.Valor" />
-                        <ValidationMessage For="@(() => insertarTranferenciaIatDto.Valor)" />
+    @*                     <ValidationMessage For="@(() => insertarTranferenciaIatDto.Valor)" /> *@
                     </div>
 
                     <div class="form-field">
                         <label>Banco<span>*</span></label>
 
                         <InputText class="input-form" @bind-Value="insertarTranferenciaIatDto.Banco" />
-                        <ValidationMessage For="@(() => insertarTranferenciaIatDto.Banco)" />
+   @*                      <ValidationMessage For="@(() => insertarTranferenciaIatDto.Banco)" /> *@
                     </div>
                 </div>
 
@@ -913,7 +921,7 @@
                         <div class="comprobante-simple-section-title">Datos de la declaración</div>
 
                         <div class="comprobante-simple-grid">
-                            <div><span>Código único de pago</span><strong>@_declaracionRegistrada.CodigoUnicoPago</strong></div>
+                            <div><span>Código único de pago</span><strong>@_declaracionRegistrada.CodigoUnicoPago / @_declaracionRegistrada.CodigoPatente - @_declaracionRegistrada.CodigoIat</strong></div>
                             <div><span>Identificación</span><strong>@_declaracionRegistrada.Identificacion</strong></div>
                             <div><span>Fecha emisión</span><strong>@_declaracionRegistrada.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</strong></div>
                             <div><span>Declaración Patente / Ejercicio fiscal I.R.</span><strong>@_declaracionRegistrada.Anio / @(_declaracionRegistrada.Anio - 1)</strong></div>

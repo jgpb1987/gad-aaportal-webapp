@@ -23,6 +23,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         [Inject] private ConfiguracionesApp Configuraciones { get; set; } = null!;
         [Inject] private ISecurityAlgorithmConsumers SecurityAlgorithm { get; set; } = null!;
         [Inject] private IJSRuntime Js { get; set; } = null!;
+        [Inject] private NavigationManager UriHelper { get; set; } = null!;
 
         public ToastsServices? Toast { get; set; }
         private LoadingBorderModalServices? LoadingBorder { get; set; }
@@ -80,8 +81,6 @@ namespace gad.aaportal.components.Components.Contribuyente
                 Model.PasswordNuevaConfirmacion = userRsaNewCPA;
                 var result = await ServicesUsuario.CambiarClave(Model);
 
-                LoadingBorder?.Close();
-
                 if (result?.Data is not null && result.Data.CambioCorrecto)
                 {
                     LimpiarFormulario();
@@ -93,6 +92,9 @@ namespace gad.aaportal.components.Components.Contribuyente
                             result.Message.Code,
                             result.Message.Description);
                     }
+                    StateHasChanged();
+                    LoadingBorder?.Close();
+                    UriHelper.NavigateTo("/");
                 }
                 else
                 {
@@ -103,6 +105,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                     {
                         await Toast.ShowMessage("error", code, description);
                     }
+                    StateHasChanged();
+                    LoadingBorder?.Close();
                 }
             }
             catch (Exception)

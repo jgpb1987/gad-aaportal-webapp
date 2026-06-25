@@ -19,6 +19,7 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
         public string Provincia { get; set; } = null!;
         public string Canton { get; set; } = null!;
         public decimal BaseImponible { get; set; }
+        public decimal BaseImponibleIat { get; set; }
         public decimal Porcentaje { get; set; }
         public decimal Valor { get; set; }
         public bool AplicaPago { get; set; }

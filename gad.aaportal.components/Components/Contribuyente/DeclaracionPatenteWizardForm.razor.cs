@@ -360,10 +360,13 @@ namespace gad.aaportal.components.Components.Contribuyente
             PorcentajeDescuentoTerceraEdadPatente = 0;
             PorcentajeDescuentoTerceraEdadIAT = 0;
 
+            BaseImponiblePatentePorcentaje = 0;
+            BaseImponibleIatPorcentaje = 0;
             foreach (var item in _establecimientos)
             {
                 item.Valor = 0;
                 item.BaseImponible = 0;
+                item.BaseImponibleIat = 0;
             }
 
             _resumen = new ResumenImpuestoDeclaracionViewModel();
@@ -411,8 +414,13 @@ namespace gad.aaportal.components.Components.Contribuyente
         private decimal RecargoIat { get; set; }
         private decimal CostasIat { get; set; }
         private decimal TasaAdministrativaIat { get; set; }
+        private decimal BaseImponiblePatentePorcentaje { get; set; }
+        private decimal BaseImponibleIatPorcentaje { get; set; }
+
+        //private decimal TotalPatentePorEstablecimientos =>
+        //    _establecimientos.Sum(e => e.Valor);
         private decimal TotalPatentePorEstablecimientos =>
-            _establecimientos.Sum(e => e.Valor);
+            _establecimientos.Where(p=> p.EsMunicipioBase).FirstOrDefault()!.Valor;
 
         private async Task<bool> CalcularPatentePorEstablecimientos()
         {
@@ -427,6 +435,10 @@ namespace gad.aaportal.components.Components.Contribuyente
                             2,
                             MidpointRounding.AwayFromZero);
 
+                        item.BaseImponibleIat = Math.Round(
+                            BaseImponible * (item.Porcentaje / 100),
+                            2,
+                            MidpointRounding.AwayFromZero);
                         var result = await SpMunicipioConsumers.CalcularImpuestoPatente(
                             new CalcularImpuestoPatenteDtoParam
                             {
@@ -442,8 +454,12 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                             return false;
                         }
-
                         item.Valor = result.Data.ValorImpuesto;
+                        if (item.EsMunicipioBase)
+                        {
+                            BaseImponiblePatentePorcentaje = item.BaseImponible;
+                            BaseImponibleIatPorcentaje = item.BaseImponibleIat;
+                        }                    
                     }
                 }
 
@@ -513,7 +529,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
             _resumen = new ResumenImpuestoDeclaracionViewModel
             {
-                Patrimonio = Patrimonio,
+                Patrimonio = BaseImponiblePatentePorcentaje,
 
                 DerechoPatenteAnual = TotalPatentePorEstablecimientos,
                 ValoresBomberosPatente = ValorBomberos,
@@ -527,7 +543,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                     totalAdicionalesPatente -
                     totalDescuentoPatente,
 
-                BaseImponible1_5_x_1000 = BaseImponible,
+                BaseImponible1_5_x_1000 = BaseImponibleIatPorcentaje,
                 ImpuestoActivos = ValorUnoCincoPorMil,
                 Multa15 = ValorMultaPorMil,
                 DescuentoTerceraEdad15 = totalDescuentoIat,
@@ -616,6 +632,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                 else //if (exoneraciones.Data.ExoneracionIat == "NoPaga")
                 {
                     ValorUnoCincoPorMil = 0;
+                    BaseImponibleIatPorcentaje = 0;
                 }
 
                 if (!await ConsultarValorBomberos())
@@ -723,7 +740,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                     ValorBomberos = ValorBomberos,
 
                     MultaPatente = ValorMultaPatente,
-                    BaseImponiblePatente = BaseImponible,
+                    BaseImponiblePatente = BaseImponiblePatentePorcentaje,
                     MultaIat = ValorMultaPorMil,
                     FechaVencimiento = FechaVencimiento,
 

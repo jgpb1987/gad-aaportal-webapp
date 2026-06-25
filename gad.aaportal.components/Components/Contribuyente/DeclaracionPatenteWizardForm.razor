@@ -86,12 +86,14 @@
                                 <div class="valores-grid">
                                     <div class="valor-row">
                                         <label>Activo Corriente <span>*</span></label>
-                                        <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoCorriente" readonly />
+                                        <div class="valor-total">@_valoresDeclaracion.ActivoCorriente.ToString("N2")</div>
+                                        @* <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoCorriente" readonly /> *@
                                     </div>
 
                                     <div class="valor-row">
                                         <label>Activo No Corriente <span>*</span></label>
-                                        <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoNoCorriente" readonly />
+                                        <div class="valor-total">@_valoresDeclaracion.ActivoNoCorriente.ToString("N2")</div>
+                                        @* <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.ActivoNoCorriente" readonly /> *@
                                     </div>
 
                                     <div class="valor-row total-row">
@@ -109,17 +111,20 @@
                                 <div class="valores-grid">
                                     <div class="valor-row">
                                         <label>Pasivo Corriente <span>*</span></label>
-                                        <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoCorriente" readonly />
+                                        <div class="valor-total">@_valoresDeclaracion.PasivoCorriente.ToString("N2")</div>
+                                        @* <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoCorriente" readonly /> *@
                                     </div>
 
                                     <div class="valor-row">
                                         <label>Pasivo No Corriente <span>*</span></label>
-                                        <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoNoCorriente" readonly />
+                                        <div class="valor-total">@_valoresDeclaracion.PasivoNoCorriente.ToString("N2")</div>
+                                        @* <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoNoCorriente" readonly /> *@
                                     </div>
 
                                     <div class="valor-row">
                                         <label>Pasivo Contingente <span>*</span></label>
-                                        <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoContingente" readonly />
+                                        <div class="valor-total">@_valoresDeclaracion.PasivoContingente.ToString("N2")</div>
+                                        @* <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.PasivoContingente" readonly /> *@
                                     </div>
 
                                     <div class="valor-row total-row">
@@ -143,7 +148,8 @@
 
                                     <div class="valor-row">
                                         <label>Ingresos <span>*</span></label>
-                                        <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.Ingresos" readonly />
+                                        <div class="valor-total">@_valoresDeclaracion.Ingresos.ToString("N2")</div>
+                                        @* <InputNumber class="input-form text-end" @bind-Value="_valoresDeclaracion.Ingresos" readonly /> *@
                                     </div>
 
                                     <div class="valor-row total-row" hidden>
@@ -201,9 +207,10 @@
                                     <thead>
                                         <tr>
                                             <th>Cantón</th>
-                                            <th>Base Imponible</th>
+                                            <th>Base Imponible Patente</th>
+                                            <th>Base Imponible IAT</th>
                                             <th>Porcentaje</th>
-                                            <th>Valor</th>
+                                            <th hidden>Valor</th>
                                             <th hidden>Paga impuesto aquí</th>
                                         </tr>
                                     </thead>
@@ -225,16 +232,24 @@
                                                 </td>
 
                                                 <td>
-                                                    <InputNumber class="input-form text-end input-disabled"
+                                                    <div class="valor-total">@item.BaseImponible.ToString("N2")</div>
+            @*                                         <InputNumber class="input-form text-end input-disabled"
                                                                  @bind-Value="item.BaseImponible"
-                                                                 disabled />
+                                                                 disabled /> *@
                                                 </td>
+                                                <td>
+                                                    <div class="valor-total">@item.BaseImponibleIat.ToString("N2")</div>
+                           @*                          <InputNumber class="input-form text-end input-disabled"
+                                                                 @bind-Value="item.BaseImponibleIat"
+                                                                 disabled /> *@
+                                                </td>
+
 
                                                 <td>
                                                     <InputNumber class="input-form text-end" @bind-Value="item.Porcentaje" @bind-Value:after="InvalidarCalculo" />
                                                 </td>
 
-                                                <td class="text-end table-money">
+                                                <td class="text-end table-money" hidden>
                                                     @item.Valor.ToString("N2")
                                                 </td>
 
@@ -245,7 +260,7 @@
                                         }
                                     </tbody>
                                     <tfoot>
-                                        <tr>
+                                        <tr hidden>
                                             <td colspan="2"><strong>Suma Desglose</strong></td>
                                             <td class="text-end"><strong>@SumaPorcentaje.ToString("N2") %</strong></td>
                                             <td class="text-end"><strong>@TotalPatentePorEstablecimientos.ToString("N2")</strong></td>
@@ -262,7 +277,7 @@
 
                                     <div class="calculo-impuesto-row">
                                         <span>Base Imponible Patente</span>
-                                        <strong>@Patrimonio.ToString("N2")</strong>
+                                        <strong>@BaseImponiblePatentePorcentaje.ToString("N2")</strong>
                                     </div>
 
                                     <div class="calculo-impuesto-row total">
@@ -282,7 +297,7 @@
 
                                     <div class="calculo-impuesto-row">
                                         <span>Base Imponible 1.5 x 1000</span>
-                                        <strong>@BaseImponible.ToString("N2")</strong>
+                                        <strong>@BaseImponibleIatPorcentaje.ToString("N2")</strong>
                                     </div>
 
                                     <div class="calculo-impuesto-row total">
@@ -435,9 +450,10 @@
                                     <thead>
                                         <tr>
                                             <th>Cantón</th>
-                                            <th>Base Imponible</th>
+                                            <th>Base Imponible Patente</th>
+                                            <th>Base Imponible Iat</th>
                                             <th>Porcentaje</th>
-                                            <th>Valor</th>
+                                            <th hidden>Valor</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -446,8 +462,9 @@
                                             <tr>
                                                 <td>@item.Provincia - @item.Canton</td>
                                                 <td class="text-end">@item.BaseImponible.ToString("C2")</td>
+                                                <td class="text-end">@item.BaseImponibleIat.ToString("C2")</td>
                                                 <td class="text-end">@item.Porcentaje.ToString("N2") %</td>
-                                                <td class="text-end">@item.Valor.ToString("C2")</td>
+                                                <td hidden class="text-end">@item.Valor.ToString("C2")</td>
                                             </tr>
                                         }
                                     </tbody>
@@ -845,7 +862,7 @@
 
                     <div class="confirmacion-item">
                         <span>Patrimonio</span>
-                        <strong>@Patrimonio.ToString("N2")</strong>
+                        <strong>@BaseImponiblePatentePorcentaje.ToString("N2")</strong>
                     </div>
 
                     <div class="confirmacion-item">
@@ -855,7 +872,7 @@
 
                     <div class="confirmacion-item">
                         <span>Base imponible 1.5 x mil</span>
-                        <strong>@BaseImponible.ToString("N2")</strong>
+                        <strong>@BaseImponibleIatPorcentaje.ToString("N2")</strong>
                     </div>
 
                     <div class="confirmacion-item">

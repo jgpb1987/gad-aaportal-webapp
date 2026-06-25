@@ -661,7 +661,7 @@ namespace gad.aaportal.services.Services.Implementation
                     Valor = (double)parametro.Patente,
                     AnioDeclaracion = parametro.Anio,
                     ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
-                    Multa = 0
+                    Multa = (double)parametro.MultaPatente
                 };
                 tituloPatente = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
 
@@ -687,7 +687,7 @@ namespace gad.aaportal.services.Services.Implementation
                         Valor = (double)parametro.UnoCincoXMil,
                         AnioDeclaracion = parametro.Anio,
                         ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
-                        Multa = 0
+                        Multa = (double)parametro.MultaIat
                     };
                      tituloIAT = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
 

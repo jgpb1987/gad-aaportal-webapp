@@ -246,7 +246,7 @@
 
 
                                                 <td>
-                                                    <InputNumber class="input-form text-end" @bind-Value="item.Porcentaje" @bind-Value:after="InvalidarCalculo" />
+                                                    <InputNumber class="input-form text-end" @bind-Value="item.Porcentaje" @bind-Value:after="InvalidarCalculo" disabled="@_deshabilitaPorcentajeCantonUnico" />
                                                 </td>
 
                                                 <td class="text-end table-money" hidden>

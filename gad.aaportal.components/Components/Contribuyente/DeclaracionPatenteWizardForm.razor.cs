@@ -61,6 +61,8 @@ namespace gad.aaportal.components.Components.Contribuyente
         private bool _mostrarModalComprobante;
         private bool _mostrarModalPagoOtroCanton;
         private RegistrarDeclaracionDtoResult? _declaracionRegistrada;
+        private bool _deshabilitaPorcentajeCantonUnico=false;
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (!firstRender)
@@ -101,6 +103,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                     {
                         result.Data.PeriodosDeclaracion = result.Data.PeriodosDeclaracion.Where(p => p.AnioPatente == resultaAnioDeclaracion.Data.Anio).ToList();
                         _periodosDeclaracion = result.Data;
+                        _deshabilitaPorcentajeCantonUnico= (_periodosDeclaracion.Establecimientos.Count == 1 && _periodosDeclaracion.Establecimientos.Where(p=> p.EsMunicipioBase).ToList().Count == 1);
                         _establecimientosBase = ClonarEstablecimientos(_periodosDeclaracion.Establecimientos ?? new List<ContribuyenteEstablecimientoPago>());
                         StateHasChanged();
                     }
@@ -480,13 +483,13 @@ namespace gad.aaportal.components.Components.Contribuyente
             {
                 ValorUnoCincoPorMil = 0;
 
-                if (BaseImponible == 0)
+                if (BaseImponibleIatPorcentaje == 0)
                     return true;
 
                 var result = await SpMunicipioConsumers.CalcularImpuestoIat(
                     new CalcularImpuestoIatDtoParam
                     {
-                        BaseImponible = BaseImponible
+                        BaseImponible = BaseImponibleIatPorcentaje
                     });
 
                 if (result?.Data is null)
@@ -862,6 +865,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                 _stepActual = 1;
                 _procesoFinalizado = false;
                 ValorBomberos = 0;
+                _deshabilitaPorcentajeCantonUnico = false;
 
                 await CargarPeriodosDeclaracion();
 

@@ -255,7 +255,7 @@ namespace gad.aaportal.components.Components.Security.Auth
                     if (resultFirst != null)
                     {
                         var resultEstablecimientos = await ServicesExterns.SearchInfoEstablecimientoSri(identificacion);
-                        if (resultEstablecimientos != null)
+                        if (resultEstablecimientos.Any(e=>e.DireccionCompleta.Contains("ANTONIO ANTE")))
                         {
                             var resultEstablecimientosFirst = resultEstablecimientos.FirstOrDefault(p => p.Estado.Equals("ABIERTO"));
                             if (resultEstablecimientosFirst != null)
@@ -307,7 +307,7 @@ namespace gad.aaportal.components.Components.Security.Auth
                         {
                             IsValidButton = false;
                             LoadingBorder!.Close();
-                            await Toast!.ShowMessage("warning", "SRI003", "El Ruc no posee establecimientos");
+                            await Toast!.ShowMessage("error", "SRI003", "No registra Antonio Ante entre sus establecimientos, favor acercarse a la  oficina de rentas del gad municipal");
                         }
                     }
                     else

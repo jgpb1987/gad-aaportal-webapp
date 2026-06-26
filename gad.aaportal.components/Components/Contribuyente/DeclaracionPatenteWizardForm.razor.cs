@@ -62,7 +62,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         private bool _mostrarModalComprobante;
         private bool _mostrarModalPagoOtroCanton;
         private RegistrarDeclaracionDtoResult? _declaracionRegistrada;
-        private bool _deshabilitaPorcentajeCantonUnico=false;
+        private bool _deshabilitaPorcentajeCantonUnico = false;
         private string razSocial;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -108,7 +108,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                     {
                         result.Data.PeriodosDeclaracion = result.Data.PeriodosDeclaracion.Where(p => p.AnioPatente == resultaAnioDeclaracion.Data.Anio).ToList();
                         _periodosDeclaracion = result.Data;
-                        _deshabilitaPorcentajeCantonUnico= (_periodosDeclaracion.Establecimientos.Count == 1 && _periodosDeclaracion.Establecimientos.Where(p=> p.EsMunicipioBase).ToList().Count == 1);
+                        _deshabilitaPorcentajeCantonUnico = (_periodosDeclaracion.Establecimientos.Count == 1 && _periodosDeclaracion.Establecimientos.Where(p => p.EsMunicipioBase).ToList().Count == 1);
                         _establecimientosBase = ClonarEstablecimientos(_periodosDeclaracion.Establecimientos ?? new List<ContribuyenteEstablecimientoPago>());
                         StateHasChanged();
                     }
@@ -428,7 +428,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         //private decimal TotalPatentePorEstablecimientos =>
         //    _establecimientos.Sum(e => e.Valor);
         private decimal TotalPatentePorEstablecimientos =>
-            _establecimientos.Where(p=> p.EsMunicipioBase).FirstOrDefault()!.Valor;
+            _establecimientos.Where(p => p.EsMunicipioBase).FirstOrDefault()!.Valor;
 
         private async Task<bool> CalcularPatentePorEstablecimientos()
         {
@@ -467,7 +467,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                         {
                             BaseImponiblePatentePorcentaje = item.BaseImponible;
                             BaseImponibleIatPorcentaje = item.BaseImponibleIat;
-                        }                    
+                        }
                     }
                 }
 
@@ -643,22 +643,22 @@ namespace gad.aaportal.components.Components.Contribuyente
                     BaseImponibleIatPorcentaje = 0;
                 }
 
-                if (!await ConsultarValorBomberos())
-                    return;
-
                 if (!await CalcularMultaPatente())
                     return;
 
                 if (!await CalcularMulta1_5Mil())
                     return;
 
-                if (!await ConsultarValoresPagar())
-                    return;
-
                 if (!await CalcularValoresTerceraEdadPatente())
                     return;
 
                 if (!await CalcularValoresTerceraEdad_1_5Mil())
+                    return;
+
+                if (!await ConsultarValorBomberos())
+                    return;
+
+                if (!await ConsultarValoresPagar())
                     return;
 
                 CargarResumenImpuestos();
@@ -1177,7 +1177,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var resultPatente = await SpMunicipioConsumers.ConsultaValorP(
                     new ConsultaValorPDtoParam
                     {
-                        ValorImpuesto = TotalPatentePorEstablecimientos,
+                        ValorImpuesto = TotalPatentePorEstablecimientos - PorcentajeDescuentoTerceraEdadPatente,
                         ValorMulta = ValorMultaPatente,
                         TipoImpuesto = "PMA",
                         Ruc = _declaracionIniciada.Identificacion,
@@ -1203,7 +1203,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var resultIat = await SpMunicipioConsumers.ConsultaValorP(
                     new ConsultaValorPDtoParam
                     {
-                        ValorImpuesto = ValorUnoCincoPorMil,
+                        ValorImpuesto = ValorUnoCincoPorMil - PorcentajeDescuentoTerceraEdadIAT,
                         ValorMulta = ValorMultaPorMil,
                         TipoImpuesto = "IAT",
                         Ruc = _declaracionIniciada.Identificacion,

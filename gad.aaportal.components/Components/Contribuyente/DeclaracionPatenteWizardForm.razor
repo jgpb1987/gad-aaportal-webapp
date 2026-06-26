@@ -936,7 +936,10 @@
                 <!-- GRID SUPERIOR -->
                 <div class="grid-2">
                     <div><strong>RUC:</strong> @_declaracionRegistrada.Identificacion</div>
-                    <div><strong>Nro. PATENTE:</strong> @_declaracionRegistrada.CodigoUnicoPago</div>
+                    <div>
+                        <strong>Nro. PATENTE:</strong>
+                        @($"{_declaracionRegistrada.CodigoUnicoPago}-{_declaracionRegistrada.CodigoPatente}-{_declaracionRegistrada.CodigoIat}")
+                    </div>
 
                     <div><strong>AÑO DECLARACIÓN:</strong> @_declaracionRegistrada.FechaRegistro.Year</div>
                     <div><strong>AÑO IMPUESTO RENTA:</strong> @(_declaracionRegistrada.FechaRegistro.Year - 1)</div>

@@ -21,6 +21,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         private List<ContribuyenteEstablecimientoPago> _establecimientosBase = new();
         private string[] formaPago = new[] { "Depósito", "Transferencia", "Efectivo", "Cheque" };
 
+
         private bool _declaracionCalculada;
         private string _mensajeValidacionCalculo = string.Empty;
         private bool TieneMensajeValidacionCalculo => !string.IsNullOrWhiteSpace(_mensajeValidacionCalculo);
@@ -62,6 +63,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         private bool _mostrarModalPagoOtroCanton;
         private RegistrarDeclaracionDtoResult? _declaracionRegistrada;
         private bool _deshabilitaPorcentajeCantonUnico=false;
+        private string razSocial;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -69,6 +71,9 @@ namespace gad.aaportal.components.Components.Contribuyente
                 return;
 
             await CargarPeriodosDeclaracion();
+
+            razSocial = await JSSessionStorageServices
+                    .GetItemAsync(Configuraciones.AppConfig.Nombres);
         }
         private List<ContribuyenteEstablecimientoPago> ClonarEstablecimientos(List<ContribuyenteEstablecimientoPago> establecimientos)
         {

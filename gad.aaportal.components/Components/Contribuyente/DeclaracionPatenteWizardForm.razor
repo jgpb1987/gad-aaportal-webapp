@@ -1,6 +1,4 @@
-﻿@using gad.aaportal.commons.Dto.Declaracion
-
-<ToastsServices @ref="Toast" Time="5000" />
+﻿<ToastsServices @ref="Toast" Time="5000" />
 <LoadingBorderModalServices @ref="LoadingBorder" />
 
 <ResumenEncabezadoContribuyenteForm />
@@ -233,13 +231,13 @@
 
                                                 <td>
                                                     <div class="valor-total">@item.BaseImponible.ToString("N2")</div>
-            @*                                         <InputNumber class="input-form text-end input-disabled"
+                                                    @*                                         <InputNumber class="input-form text-end input-disabled"
                                                                  @bind-Value="item.BaseImponible"
                                                                  disabled /> *@
                                                 </td>
                                                 <td>
                                                     <div class="valor-total">@item.BaseImponibleIat.ToString("N2")</div>
-                           @*                          <InputNumber class="input-form text-end input-disabled"
+                                                    @*                          <InputNumber class="input-form text-end input-disabled"
                                                                  @bind-Value="item.BaseImponibleIat"
                                                                  disabled /> *@
                                                 </td>
@@ -725,14 +723,14 @@
                             }
                         </InputSelect>
 
-@*                         <ValidationMessage For="@(() => insertarTranferenciaIatDto.Canton)" /> *@
+                        @*                         <ValidationMessage For="@(() => insertarTranferenciaIatDto.Canton)" /> *@
                     </div>
 
                     <div class="form-field">
                         <label>Fecha Pago<span>*</span></label>
 
                         <InputDate class="input-form" @bind-Value="insertarTranferenciaIatDto.FechaPago" />
-            @*             <ValidationMessage For="@(() => insertarTranferenciaIatDto.FechaPago)" /> *@
+                        @*             <ValidationMessage For="@(() => insertarTranferenciaIatDto.FechaPago)" /> *@
                     </div>
 
                     <div class="form-field">
@@ -747,7 +745,7 @@
                                 </option>
                             }
                         </InputSelect>
-@* 
+                        @*
                         <ValidationMessage For="@(() => insertarTranferenciaIatDto.FormaPago)" /> *@
                     </div>
 
@@ -755,21 +753,21 @@
                         <label>Nro de Documento<span>*</span></label>
 
                         <InputText class="input-form" @bind-Value="insertarTranferenciaIatDto.NroDocumento" />
-@*                         <ValidationMessage For="@(() => insertarTranferenciaIatDto.NroDocumento)" /> *@
+                        @*                         <ValidationMessage For="@(() => insertarTranferenciaIatDto.NroDocumento)" /> *@
                     </div>
 
                     <div class="form-field">
                         <label>Valor Pagado<span>*</span></label>
 
                         <InputNumber class="input-form" @bind-Value="insertarTranferenciaIatDto.Valor" />
-    @*                     <ValidationMessage For="@(() => insertarTranferenciaIatDto.Valor)" /> *@
+                        @*                     <ValidationMessage For="@(() => insertarTranferenciaIatDto.Valor)" /> *@
                     </div>
 
                     <div class="form-field">
                         <label>Banco<span>*</span></label>
 
                         <InputText class="input-form" @bind-Value="insertarTranferenciaIatDto.Banco" />
-   @*                      <ValidationMessage For="@(() => insertarTranferenciaIatDto.Banco)" /> *@
+                        @*                      <ValidationMessage For="@(() => insertarTranferenciaIatDto.Banco)" /> *@
                     </div>
                 </div>
 
@@ -910,180 +908,152 @@
 @if (_mostrarModalComprobante && _declaracionRegistrada is not null)
 {
     <div class="modal-backdrop-custom">
-        <div class="modal-comprobante-card comprobante-simple-card">
-            <div class="modal-periodo-header comprobante-simple-header-actions">
-                <div>
-                    <div class="modal-title-custom">Comprobante de declaración</div>
-                    <div class="modal-subtitle-custom">
-                        Código único de pago: @_declaracionRegistrada.CodigoUnicoPago
+        <div id="comprobanteImprimir" class="modal-comprobante-card reporte-container">
+
+            <!-- HEADER -->
+            <div class="reporte-header">
+                <div class="reporte-logo">
+                    <img src="img/logoAA4.png" class="logo-img" />
+                </div>
+
+                <div class="reporte-titulo">
+                    <div class="titulo-principal">
+                        DECLARACIÓN DE PATENTE Y DEL 1.5 POR MIL SOBRE LOS ACTIVOS TOTALES
                     </div>
                 </div>
 
-                <button type="button"
-                        class="btn-close-modal"
-                        @onclick="CerrarModalComprobante">
-                    ×
-                </button>
+                <button class="btn-close-modal" @onclick="CerrarModalComprobante">×</button>
             </div>
 
-            <div class="modal-periodo-body comprobante-simple-body">
-                <div id="comprobanteImprimir" class="comprobante-simple-box">
+            <hr />
 
-                    <div class="comprobante-simple-title">
-                        <strong>GAD Municipal Antonio Ante</strong>
-                        <span>Comprobante de declaración de patente</span>
-                    </div>
+            <div class="modal-periodo-body">
 
-                    <div class="comprobante-simple-section">
-                        <div class="comprobante-simple-section-title">Datos de la declaración</div>
-
-                        <div class="comprobante-simple-grid">
-                            <div><span>Código único de pago</span><strong>@_declaracionRegistrada.CodigoUnicoPago / @_declaracionRegistrada.CodigoPatente - @_declaracionRegistrada.CodigoIat</strong></div>
-                            <div><span>Identificación</span><strong>@_declaracionRegistrada.Identificacion</strong></div>
-                            <div><span>Fecha emisión</span><strong>@_declaracionRegistrada.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</strong></div>
-                            <div><span>Declaración Patente / Ejercicio fiscal I.R.</span><strong>@_declaracionRegistrada.Anio / @(_declaracionRegistrada.Anio - 1)</strong></div>
-                        </div>
-                    </div>
-
-                    <div class="comprobante-simple-section">
-                        <div class="comprobante-simple-section-title">Información financiera declarada</div>
-
-                        <div class="comprobante-simple-grid four-cols">
-                            <div><span>Activo corriente</span><strong>@_declaracionRegistrada.ActivoCorriente.ToString("N2")</strong></div>
-                            <div><span>Activo no corriente</span><strong>@_declaracionRegistrada.ActivoNoCorriente.ToString("N2")</strong></div>
-                            <div><span>Total activo</span><strong>@TotalActivo.ToString("N2")</strong></div>
-                            <div><span>Total pasivo</span><strong>@TotalPasivo.ToString("N2")</strong></div>
-
-                            <div><span>Pasivo corriente</span><strong>@_declaracionRegistrada.PasivoCorriente.ToString("N2")</strong></div>
-                            <div><span>Pasivo no corriente</span><strong>@_declaracionRegistrada.PasivoNoCorriente.ToString("N2")</strong></div>
-                            <div><span>Pasivo contingente</span><strong>@_declaracionRegistrada.PasivoContingente.ToString("N2")</strong></div>
-                            <div><span>Patrimonio</span><strong>@Patrimonio.ToString("N2")</strong></div>
-
-                            <div><span>Ingresos</span><strong>@_declaracionRegistrada.Ingresos.ToString("N2")</strong></div>
-                            <div><span>Costos y gastos</span><strong>@_declaracionRegistrada.CostosGastos.ToString("N2")</strong></div>
-                            <div><span>Utilidad</span><strong>@UtilidadEjercicio.ToString("N2")</strong></div>
-                            <div><span>Pérdida</span><strong>@PerdidaEjercicio.ToString("N2")</strong></div>
-                        </div>
-                    </div>
-
-                    <div class="comprobante-simple-two-columns">
-
-                        <div class="comprobante-simple-section">
-                            <div class="comprobante-simple-section-title">Patente municipal</div>
-
-                            <table class="comprobante-simple-table">
-                                <tbody>
-                                    <tr>
-                                        <td>Patrimonio</td>
-                                        <td>@_resumen.Patrimonio.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Valor patente</td>
-                                        <td>@_resumen.DerechoPatenteAnual.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Bomberos</td>
-                                        <td>@_resumen.ValoresBomberosPatente.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Multa patente</td>
-                                        <td>@_resumen.MultaPatente.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Interés patente</td>
-                                        <td>@InteresPatente.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Recargo patente</td>
-                                        <td>@RecargoPatente.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Costas patente</td>
-                                        <td>@CostasPatente.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tasa administrativa</td>
-                                        <td>@TasaAdministrativaPatente.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Descuento tercera edad</td>
-                                        <td>- @_resumen.DescuentoPatenteTerceraEdad.ToString("N2")</td>
-                                    </tr>
-                                    <tr class="comprobante-simple-subtotal">
-                                        <td>Total patente</td>
-                                        <td>@_resumen.TotalPatentePagar.ToString("N2")</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="comprobante-simple-section">
-                            <div class="comprobante-simple-section-title">1.5 x mil</div>
-
-                            <table class="comprobante-simple-table">
-                                <tbody>
-                                    <tr>
-                                        <td>Base imponible</td>
-                                        <td>@_resumen.BaseImponible1_5_x_1000.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Valor 1.5 x mil</td>
-                                        <td>@_resumen.ImpuestoActivos.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Multa 1.5 x mil</td>
-                                        <td>@_resumen.Multa15.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Interés 1.5 x mil</td>
-                                        <td>@InteresIat.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Recargo 1.5 x mil</td>
-                                        <td>@RecargoIat.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Costas 1.5 x mil</td>
-                                        <td>@CostasIat.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tasa administrativa</td>
-                                        <td>@TasaAdministrativaIat.ToString("N2")</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Descuento tercera edad</td>
-                                        <td>- @_resumen.DescuentoTerceraEdad15.ToString("N2")</td>
-                                    </tr>
-                                    <tr class="comprobante-simple-subtotal">
-                                        <td>Total 1.5 x mil</td>
-                                        <td>@_resumen.Total15Pagar.ToString("N2")</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-
-                    <div class="comprobante-simple-total">
-                        <span>Total a pagar</span>
-                        <strong>@_resumen.TotalPagar.ToString("N2")</strong>
-                    </div>
+                <!-- GRID SUPERIOR -->
+                <div class="fila full">
+                    <strong>RAZÓN SOCIAL:</strong> @razSocial
                 </div>
+                <!-- GRID SUPERIOR -->
+                <div class="grid-2">
+                    <div><strong>RUC:</strong> @_declaracionRegistrada.Identificacion</div>
+                    <div><strong>Nro. PATENTE:</strong> @_declaracionRegistrada.CodigoUnicoPago</div>
+
+                    <div><strong>AÑO DECLARACIÓN:</strong> @_declaracionRegistrada.FechaRegistro.Year</div>
+                    <div><strong>AÑO IMPUESTO RENTA:</strong> @(_declaracionRegistrada.FechaRegistro.Year - 1)</div>
+                </div>
+
+                <hr />
+
+                <!-- 🔥 BALANCE (MISMO QUE EL BUENO) -->
+                <div class="balance-grid">
+
+                    <!-- IZQUIERDA -->
+                    <div class="columna">
+                        <div class="item">
+                            <span>ACTIVO CORRIENTE:</span>
+                            <strong>@_declaracionRegistrada.ActivoCorriente.ToString("N2")</strong>
+                        </div>
+
+                        <div class="item">
+                            <span>ACTIVO NO CORRIENTE:</span>
+                            <strong>@_declaracionRegistrada.ActivoNoCorriente.ToString("N2")</strong>
+                        </div>
+
+                        <div class="item total">
+                            <span>TOTAL ACTIVOS:</span>
+                            <strong>@TotalActivo.ToString("N2")</strong>
+                        </div>
+                    </div>
+
+                    <!-- DERECHA -->
+                    <div class="columna">
+                        <div class="item">
+                            <span>PASIVO CORRIENTE:</span>
+                            <strong>@_declaracionRegistrada.PasivoCorriente.ToString("N2")</strong>
+                        </div>
+
+                        <div class="item">
+                            <span>PASIVO NO CORRIENTE:</span>
+                            <strong>@_declaracionRegistrada.PasivoNoCorriente.ToString("N2")</strong>
+                        </div>
+
+                        <div class="item">
+                            <span>PASIVO CONTINGENTE:</span>
+                            <strong>@_declaracionRegistrada.PasivoContingente.ToString("N2")</strong>
+                        </div>
+
+                        <div class="item total">
+                            <span>TOTAL PASIVOS:</span>
+                            <strong>@TotalPasivo.ToString("N2")</strong>
+                        </div>
+
+                        <div class="item total">
+                            <span>PATRIMONIO:</span>
+                            <strong>@Patrimonio.ToString("N2")</strong>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr />
+
+                <!-- TABLAS (MISMO ESTILO) -->
+                <div class="reporte-two-columns">
+
+                    <!-- PATENTE -->
+                    <div class="tabla-box">
+                        <div class="tabla-header">IMPUESTO PATENTE MUNICIPAL</div>
+                        <table class="tabla">
+                            <tr><td>Valor patente</td><td>@_resumen.DerechoPatenteAnual.ToString("N2")</td></tr>
+                            <tr><td>Multa</td><td>@_resumen.MultaPatente.ToString("N2")</td></tr>
+                            <tr><td>Interés</td><td>@InteresPatente.ToString("N2")</td></tr>
+                            <tr><td>Recargo</td><td>@RecargoPatente.ToString("N2")</td></tr>
+                            <tr><td>Costas</td><td>@CostasPatente.ToString("N2")</td></tr>
+                            <tr><td>Tasa adm.</td><td>@TasaAdministrativaPatente.ToString("N2")</td></tr>
+                            <tr class="total-row">
+                                <td>Total patente</td>
+                                <td>@_resumen.TotalPatentePagar.ToString("N2")</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 1.5 -->
+                    <div class="tabla-box">
+                        <div class="tabla-header">IMPUESTO 1.5 POR MIL</div>
+                        <table class="tabla">
+                            <tr><td>Valor</td><td>@_resumen.ImpuestoActivos.ToString("N2")</td></tr>
+                            <tr><td>Multa</td><td>@_resumen.Multa15.ToString("N2")</td></tr>
+                            <tr><td>Interés</td><td>@InteresIat.ToString("N2")</td></tr>
+                            <tr><td>Recargo</td><td>@RecargoIat.ToString("N2")</td></tr>
+                            <tr><td>Costas</td><td>@CostasIat.ToString("N2")</td></tr>
+                            <tr><td>Tasa adm.</td><td>@TasaAdministrativaIat.ToString("N2")</td></tr>
+                            <tr class="total-row">
+                                <td>Total 1.5</td>
+                                <td>@_resumen.Total15Pagar.ToString("N2")</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+
+                <!-- TOTAL -->
+                <div class="total-final">
+                    TOTAL A PAGAR: @_resumen.TotalPagar.ToString("N2")
+                </div>
+
+                <div class="nota-final">
+                    Los valores por intereses de mora, recargos y costas judiciales están sujetos a variación hasta la fecha efectiva de pago;
+                    por tanto, el valor total a cancelar podrá modificarse
+                </div>
+
             </div>
 
-            <div class="modal-periodo-actions comprobante-simple-actions">
-                <button type="button"
-                        class="btn-modal-secondary"
-                        @onclick="CerrarModalComprobante">
-                    Cerrar
-                </button>
-
-                <button type="button"
-                        class="btn-modal-primary"
-                        @onclick="ImprimirComprobante">
-                    Imprimir
-                </button>
+            <!-- BOTONES -->
+            <div class="modal-detalle-actions">
+                <button class="btn-modal-secondary" @onclick="CerrarModalComprobante">Cerrar</button>
+                <button class="btn-modal-primary" @onclick="ImprimirComprobante">Imprimir</button>
             </div>
+
         </div>
     </div>
 }

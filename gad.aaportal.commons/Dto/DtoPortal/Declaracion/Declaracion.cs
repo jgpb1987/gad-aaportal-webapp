@@ -183,6 +183,7 @@ public class ConsultarDeclaracionContribuyenteDtoParam
 public class ConsultarDeclaracionContribuyenteDtoResult
 {
     public long Id { get; set; }
+    public string RazonSocial { get; set; } = string.Empty;
     public string Identificacion { get; set; } = string.Empty;
     public DateTime FechaRegistro { get; set; }
     public DateTime Fecha { get; set; }

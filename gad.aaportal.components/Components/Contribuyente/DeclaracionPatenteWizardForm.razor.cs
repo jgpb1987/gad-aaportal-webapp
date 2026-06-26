@@ -109,14 +109,14 @@ namespace gad.aaportal.components.Components.Contribuyente
                     }
                     else
                     {
-                        await MostrarMensaje("error",
+                        MostrarMensaje("error",
                         result?.Message?.Code ?? "PERIODOS",
                         result?.Message?.Description ?? "No existen periodos a declarar en el Municipio");
                     }
                 }
                 else
                 {
-                    await MostrarMensaje(
+                    MostrarMensaje(
                         "error",
                         result?.Message?.Code ?? "PERIODOS_ERROR",
                         result?.Message?.Description ?? "No fue posible consultar los períodos de declaración");
@@ -125,7 +125,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             catch
             {
                 LoadingBorder?.Close();
-                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
             }
         }
         private async Task AbrirModalPeriodo()
@@ -135,7 +135,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
             if (string.IsNullOrWhiteSpace(identificacion))
             {
-                await MostrarMensaje("error", "IDENTIFICACION_NO_ENCONTRADA", "No se encontró la identificación del contribuyente en sesión");
+                MostrarMensaje("error", "IDENTIFICACION_NO_ENCONTRADA", "No se encontró la identificación del contribuyente en sesión");
                 return;
             }
 
@@ -170,7 +170,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 if (periodo == null)
                 {
-                    await MostrarMensaje("error", "DEC005", "Debe seleccionar un período válido");
+                    MostrarMensaje("error", "DEC005", "Debe seleccionar un período válido");
                     return;
                 }
 
@@ -179,7 +179,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 if (string.IsNullOrWhiteSpace(identificacion))
                 {
-                    await MostrarMensaje("error", "IDENTIFICACION_NO_ENCONTRADA", "No se encontró la identificación del contribuyente en sesión");
+                    MostrarMensaje("error", "IDENTIFICACION_NO_ENCONTRADA", "No se encontró la identificación del contribuyente en sesión");
                     return;
                 }
                 var puedeDeclarar = await ValidarRestriccionesMunicipales(identificacion);
@@ -238,14 +238,14 @@ namespace gad.aaportal.components.Components.Contribuyente
             catch
             {
                 LoadingBorder?.Close();
-                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
             }
         }
         private async Task<bool> ValidarOrdenDeclaracion()
         {
             if (_declaracionIniciada is null)
             {
-                await MostrarMensaje(
+                MostrarMensaje(
                     "error",
                     "DEC009",
                     "No existe una declaración iniciada");
@@ -256,7 +256,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             if (_periodosDeclaracion?.PeriodosDeclaracion is null ||
                 !_periodosDeclaracion.PeriodosDeclaracion.Any())
             {
-                await MostrarMensaje(
+                MostrarMensaje(
                     "error",
                     "DEC010",
                     "No existen períodos disponibles para validar la declaración");
@@ -273,7 +273,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
             if (ejercicioFiscalPendienteMenor is not null)
             {
-                await MostrarMensaje(
+                MostrarMensaje(
                     "error",
                     "DEC011",
                     $"No puede continuar con la declaración del ejercicio fiscal {ejercicioFiscalSeleccionado}. Primero debe declarar el ejercicio fiscal {ejercicioFiscalPendienteMenor.AnioEjercicioFiscal}.");
@@ -330,7 +330,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
             LoadingBorder?.Close();
 
-            await MostrarMensaje(
+            MostrarMensaje(
                 "error",
                 codigo,
                 descripcion);
@@ -665,7 +665,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 StateHasChanged();
 
-                await MostrarMensaje(
+                MostrarMensaje(
                     "success",
                     "DEC008",
                     "Declaración calculada correctamente");
@@ -681,7 +681,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         {
             if (!_declaracionCalculada)
             {
-                await MostrarMensaje(
+                MostrarMensaje(
                     "error",
                     "DEC009",
                     "Primero debe calcular la declaración antes de confirmar los valores");
@@ -691,7 +691,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
             if (_declaracionIniciada is null)
             {
-                await MostrarMensaje(
+                MostrarMensaje(
                     "error",
                     "DEC010",
                     "No existe una declaración iniciada");
@@ -715,7 +715,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 if (_declaracionIniciada is null)
                 {
-                    await MostrarMensaje(
+                    MostrarMensaje(
                         "error",
                         "DEC010",
                         "No existe una declaración iniciada");
@@ -776,7 +776,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 if (result?.Data is null)
                 {
-                    await MostrarMensaje(
+                    MostrarMensaje(
                         "error",
                         result?.Message?.Code ?? "DEC011",
                         result?.Message?.Description ?? "No fue posible registrar la declaración");
@@ -789,7 +789,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                 _procesoFinalizado = true;
                 _stepActual = 3;
                 StateHasChanged();
-                await MostrarMensaje(
+                MostrarMensaje(
                         "success",
                         result.Message.Code,
                         result.Message.Description);
@@ -798,7 +798,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             {
                 LoadingBorder?.Close();
 
-                await MostrarMensaje(
+                MostrarMensaje(
                     "error",
                     "SERVER_ERROR",
                     "Existe un error no administrado, por favor informe a Tecnología");
@@ -875,7 +875,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             {
                 LoadingBorder?.Close();
 
-                await MostrarMensaje(
+                MostrarMensaje(
                     "error",
                     "SERVER_ERROR",
                     "Existe un error no administrado, por favor informe a Tecnología");
@@ -1089,7 +1089,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                     tieneRestricciones.Data.Mensaje ??
                     "Usted mantiene restricciones en el Municipio. Para continuar con la declaración, debe acercarse a las oficinas municipales.";
 
-                await MostrarMensaje("error", "RESTRICCION_MUNICIPAL", _mensajeRestriccionMunicipal);
+                MostrarMensaje("error", "RESTRICCION_MUNICIPAL", _mensajeRestriccionMunicipal);
 
                 StateHasChanged();
                 return false;
@@ -1271,7 +1271,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             }
             catch
             {
-                await MostrarMensaje("error", "SERVER_ERROR", "Existe un error al consultar los cantones para pago en otro cantón");
+                MostrarMensaje("error", "SERVER_ERROR", "Existe un error al consultar los cantones para pago en otro cantón");
             }
         }
 

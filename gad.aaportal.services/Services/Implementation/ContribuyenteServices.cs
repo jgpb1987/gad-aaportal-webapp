@@ -689,7 +689,7 @@ namespace gad.aaportal.services.Services.Implementation
                         ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
                         Multa = (double)parametro.MultaIat
                     };
-                     tituloIAT = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
+                    tituloIAT = await spMunicipioServices.InsertPagoPorTitulo(insertPPT);
 
                     codIngreso = new ActualizarCodigoIngresoDtoParam
                     {
@@ -723,8 +723,8 @@ namespace gad.aaportal.services.Services.Implementation
                     Fecha = fechaActual.Date,
                     Anio = parametro.Anio,
                     CodigoUnicoPago = codigoUnicoPago,
-                    CodigoIat = tituloIAT.Data!=null ? tituloIAT.Data.CodigoIngreso.ToString() : string.Empty,
-                    CodigoPatente = tituloPatente.Data!=null ? tituloPatente.Data.CodigoIngreso.ToString() : string.Empty,
+                    CodigoIat = tituloIAT.Data != null ? tituloIAT.Data.CodigoIngreso.ToString() : string.Empty,
+                    CodigoPatente = tituloPatente.Data != null ? tituloPatente.Data.CodigoIngreso.ToString() : string.Empty,
                     ActivoCorriente = parametro.ActivoCorriente,
                     ActivoNoCorriente = parametro.ActivoNoCorriente,
                     PasivoCorriente = parametro.PasivoCorriente,
@@ -765,8 +765,8 @@ namespace gad.aaportal.services.Services.Implementation
                         Fecha = entity.Fecha,
                         Anio = entity.Anio,
                         CodigoUnicoPago = entity.CodigoUnicoPago,
-                        CodigoIat=entity.CodigoIat,
-                        CodigoPatente=entity.CodigoPatente,
+                        CodigoIat = entity.CodigoIat,
+                        CodigoPatente = entity.CodigoPatente,
                         ActivoCorriente = entity.ActivoCorriente,
                         ActivoNoCorriente = entity.ActivoNoCorriente,
                         PasivoCorriente = entity.PasivoCorriente,
@@ -820,21 +820,27 @@ namespace gad.aaportal.services.Services.Implementation
                 if (string.IsNullOrWhiteSpace(parametro.Identificacion))
                     throw SystemExceptionCustomized.CreateException("CDC002", "La identificación del contribuyente es requerida");
 
-                var declaraciones = await contexto.ContribuyenteDeclaracions
-                    .AsNoTracking().Where(d =>
-                        d.Identificacion == parametro.Identificacion &&
-                        d.Estado)
-                    .OrderByDescending(d => d.FechaRegistro)
-                    .Select(d => new ConsultarDeclaracionContribuyenteDtoResult
+                var declaraciones = await (
+                    from d in contexto.ContribuyenteDeclaracions.AsNoTracking()
+                    join c in contexto.Contribuyentes
+                        on d.Identificacion equals c.Identificacion
+                    where d.Identificacion == parametro.Identificacion
+                          && d.Estado
+                    orderby d.FechaRegistro descending
+                    select new ConsultarDeclaracionContribuyenteDtoResult
                     {
                         Id = d.Id,
                         Identificacion = d.Identificacion,
+
+                        // 👇 NUEVO CAMPO
+                        RazonSocial = c.RazonSocial,
+
                         FechaRegistro = d.FechaRegistro,
                         Fecha = d.Fecha,
                         Anio = d.Anio,
                         CodigoUnicoPago = d.CodigoUnicoPago,
-                        CodigoPatente=d.CodigoPatente,
-                        CodigoIat=d.CodigoIat,
+                        CodigoPatente = d.CodigoPatente,
+                        CodigoIat = d.CodigoIat,
                         ActivoCorriente = d.ActivoCorriente,
                         ActivoNoCorriente = d.ActivoNoCorriente,
                         PasivoCorriente = d.PasivoCorriente,
@@ -858,8 +864,8 @@ namespace gad.aaportal.services.Services.Implementation
                         TasaAdministrativaIat = d.TasaAdministrativaIat,
                         TasaAdministrativaPatente = d.TasaAdministrativaPatente,
                         Estado = d.Estado
-                    })
-                    .ToListAsync();
+                    }
+                ).ToListAsync();
 
                 return new ConsultarDeclaracionContribuyenteDataResult
                 {

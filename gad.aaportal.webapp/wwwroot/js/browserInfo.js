@@ -61,6 +61,7 @@ window.browserInfo.getIp = async function () {
 };
 
 window.imprimirComprobante = function (elementId) {
+
     const contenido = document.getElementById(elementId);
 
     if (!contenido) {
@@ -68,161 +69,15 @@ window.imprimirComprobante = function (elementId) {
         return;
     }
 
-    const ventana = window.open("", "_blank", "width=900,height=700");
+    // Oculta todo menos el comprobante
+    const original = document.body.innerHTML;
 
-    ventana.document.write(`
-        <html>
-        <head>
-            <title>Comprobante de declaración</title>
-            <style>
-                * {
-                    box-sizing: border-box;
-                }
+    document.body.innerHTML = contenido.outerHTML;
 
-                body {
-                    font-family: Arial, sans-serif;
-                    margin: 10mm;
-                    color: #111827;
-                    background: #ffffff;
-                }
+    window.print();
 
-                .comprobante-simple-box {
-                    width: 100%;
-                    border: 1px solid #d1d5db;
-                    border-radius: 8px;
-                    overflow: hidden;
-                }
+    // Restaurar la página
+    document.body.innerHTML = original;
 
-                .comprobante-simple-title {
-                    text-align: center;
-                    padding: 8px 10px;
-                    border-bottom: 1px solid #d1d5db;
-                    background: #f9fafb;
-                }
-
-                .comprobante-simple-title strong {
-                    display: block;
-                    font-size: 15px;
-                    font-weight: 800;
-                }
-
-                .comprobante-simple-title span {
-                    display: block;
-                    margin-top: 2px;
-                    font-size: 11px;
-                    color: #6b7280;
-                }
-
-                .comprobante-simple-section-title {
-                    padding: 6px 8px;
-                    background: #f3f4f6;
-                    border-top: 1px solid #e5e7eb;
-                    border-bottom: 1px solid #e5e7eb;
-                    font-size: 10px;
-                    font-weight: 800;
-                    text-transform: uppercase;
-                }
-
-                .comprobante-simple-grid {
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    border-bottom: 1px solid #e5e7eb;
-                }
-
-                .comprobante-simple-grid div {
-                    padding: 6px 8px;
-                    border-right: 1px solid #e5e7eb;
-                    border-bottom: 1px solid #e5e7eb;
-                    min-height: 36px;
-                }
-
-                .comprobante-simple-grid div:nth-child(4n) {
-                    border-right: none;
-                }
-
-                .comprobante-simple-grid span {
-                    display: block;
-                    font-size: 9px;
-                    color: #6b7280;
-                    font-weight: 700;
-                }
-
-                .comprobante-simple-grid strong {
-                    display: block;
-                    margin-top: 2px;
-                    font-size: 11px;
-                    font-weight: 800;
-                }
-
-                .comprobante-simple-two-columns {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                }
-
-                .comprobante-simple-two-columns > div:first-child {
-                    border-right: 1px solid #e5e7eb;
-                }
-
-                .comprobante-simple-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    font-size: 10px;
-                }
-
-                .comprobante-simple-table td {
-                    padding: 4px 7px;
-                    border-bottom: 1px solid #e5e7eb;
-                }
-
-                .comprobante-simple-table td:last-child {
-                    text-align: right;
-                    font-weight: 800;
-                }
-
-                .comprobante-simple-subtotal td {
-                    background: #f9fafb;
-                    font-weight: 800;
-                }
-
-                .comprobante-simple-total {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 8px 10px;
-                    background: #fff7ed;
-                    color: #c2410c;
-                    font-size: 14px;
-                    font-weight: 800;
-                    border-top: 1px solid #fed7aa;
-                }
-
-                .comprobante-simple-total strong {
-                    font-size: 17px;
-                }
-
-                @page {
-                    size: A4 portrait;
-                    margin: 8mm;
-                }
-
-                @media print {
-                    body {
-                        margin: 0;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-            ${contenido.outerHTML}
-        </body>
-        </html>
-    `);
-
-    ventana.document.close();
-
-    ventana.onload = function () {
-        ventana.focus();
-        ventana.print();
-        ventana.close();
-    };
+    location.reload(); // opcional pero recomendado en Blazor
 };

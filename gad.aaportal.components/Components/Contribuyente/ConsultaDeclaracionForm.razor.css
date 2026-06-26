@@ -519,3 +519,323 @@
             border-right: none;
         }
 }
+
+/*NUEVO DISENIO FORMULARIO*/
+.modal-backdrop-custom {
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reporte-container {
+    background: #fff;
+    padding: 25px;
+    width: 900px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+}
+
+/* HEADER */
+.reporte-header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+/* CONTENEDOR DEL LOGO */
+.reporte-logo {
+    width: 100%;
+    display: flex;
+    justify-content: start; /* 👈 centra horizontal */
+    align-items: center;
+}
+
+/* IMAGEN */
+.logo-img {
+    width: var(--logo-width, 80px); /* 👈 control dinámico */
+    height: auto;
+    object-fit: contain;
+}
+
+.reporte-logo img {
+    width: 25%;
+}
+
+.reporte-titulo {
+    text-align: center;
+}
+
+.titulo-principal {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+/* BOTON CERRAR */
+.btn-close-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* GRID */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 20px;
+}
+
+.fila {
+    margin-bottom: 5px;
+}
+
+.full {
+    width: 100%;
+    font-size: 14px;
+}
+
+/* TABLAS */
+.reporte-two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.tabla-box {
+    border: 1px solid #ccc;
+}
+
+.tabla-header {
+    background: #a9c97f;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .tabla td {
+        border: 1px solid #ccc;
+        padding: 4px 8px;
+    }
+
+        .tabla td:last-child {
+            text-align: right;
+        }
+
+.total-row {
+    font-weight: bold;
+}
+
+/* TOTAL */
+.total-final {
+    margin-top: 15px;
+    text-align: right;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* NOTA */
+.nota-final {
+    margin-top: 10px;
+    font-size: 11px;
+    color: #555;
+}
+
+/* BOTONES */
+.modal-detalle-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-modal-primary {
+    background: #198754;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+}
+
+.btn-modal-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+}
+
+.balance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 10px;
+}
+
+.columna {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* FILA */
+.item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 3px;
+}
+
+    /* LABEL */
+    .item span {
+        font-size: 12px;
+    }
+
+    /* VALOR */
+    .item strong {
+        font-size: 12px;
+        text-align: right;
+    }
+
+    /* TOTALES */
+    .item.total {
+        font-weight: bold;
+        border-top: 1px solid #000;
+        padding-top: 4px;
+    }
+
+@media print {
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    .reporte-container {
+        width: 100%;
+        max-width: 190mm; /* ancho A4 real */
+        margin: 0 auto;
+        padding: 10mm;
+        box-shadow: none;
+        border: none;
+    }
+
+    /* HEADER */
+    .reporte-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo-img {
+        max-width: 120px;
+        height: auto;
+    }
+
+    .reporte-titulo {
+        text-align: center;
+        flex: 1;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    /* GRID SUPERIOR */
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+        font-size: 12px;
+    }
+
+    /* 🔥 BALANCE */
+    .balance-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .columna {
+        width: 100%;
+    }
+
+    .item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        padding: 2px 0;
+    }
+
+        .item.total {
+            font-weight: bold;
+        }
+
+    /* TABLAS */
+    .reporte-two-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .tabla {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+    }
+
+        .tabla td {
+            padding: 4px;
+            border-bottom: 1px solid #ccc;
+        }
+
+            .tabla td:last-child {
+                text-align: right;
+                font-weight: bold;
+            }
+
+    .tabla-header {
+        font-weight: bold;
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+
+    .total-row td {
+        font-weight: bold;
+    }
+
+    /* TOTAL FINAL */
+    .total-final {
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .nota-final {
+        font-size: 10px;
+        margin-top: 5px;
+        text-align: center;
+    }
+
+    /* OCULTAR BOTONES */
+    .btn-close-modal,
+    .modal-detalle-actions {
+        display: none !important;
+    }
+
+    /* EVITAR CORTES FEOS */
+    .tabla-box,
+    .balance-grid,
+    .grid-2 {
+        page-break-inside: avoid;
+    }
+}

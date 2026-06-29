@@ -188,11 +188,12 @@
                             <table class="tabla">
                                 <tr><td>Base imponible</td><td>@Patrimonio(_declaracionSeleccionada).ToString("N2")</td></tr>
                                 <tr><td>Impuesto</td><td>@_declaracionSeleccionada.Patente.ToString("N2")</td></tr>
+                                <tr><td>Tasa Bomberos</td><td>@_declaracionSeleccionada.ValorBomberos.ToString("N2")</td></tr>
                                 <tr><td>Multa</td><td>@_declaracionSeleccionada.MultaPatente.ToString("N2")</td></tr>
-                                <tr><td>Interés</td><td>@_declaracionSeleccionada.InteresPatente.ToString("N2")</td></tr>
+                                <tr><td>Interés por mora</td><td>@_declaracionSeleccionada.InteresPatente.ToString("N2")</td></tr>
                                 <tr><td>Recargos</td><td>@_declaracionSeleccionada.RecargoPatente.ToString("N2")</td></tr>
-                                <tr><td>Costas</td><td>@_declaracionSeleccionada.CostasPatente.ToString("N2")</td></tr>
-                                <tr><td>Tasa adm.</td><td>@_declaracionSeleccionada.TasaAdministrativaPatente.ToString("N2")</td></tr>
+                                <tr><td>Costas judiciales</td><td>@_declaracionSeleccionada.CostasPatente.ToString("N2")</td></tr>
+                                <tr><td>Tasa administrativa</td><td>@_declaracionSeleccionada.TasaAdministrativaPatente.ToString("N2")</td></tr>
                                 <tr class="total-row">
                                     <td>Total patente</td>
                                     <td>@TotalPatente(_declaracionSeleccionada).ToString("N2")</td>
@@ -207,10 +208,10 @@
                                 <tr><td>Base imponible</td><td>@Patrimonio(_declaracionSeleccionada).ToString("N2")</td></tr>
                                 <tr><td>Impuesto</td><td>@_declaracionSeleccionada.UnoCincoXMil.ToString("N2")</td></tr>
                                 <tr><td>Multa</td><td>@_declaracionSeleccionada.MultaIat.ToString("N2")</td></tr>
-                                <tr><td>Interés</td><td>@_declaracionSeleccionada.InteresIat.ToString("N2")</td></tr>
+                                <tr><td>Interés por mora</td><td>@_declaracionSeleccionada.InteresIat.ToString("N2")</td></tr>
                                 <tr><td>Recargos</td><td>@_declaracionSeleccionada.RecargoIat.ToString("N2")</td></tr>
-                                <tr><td>Costas</td><td>@_declaracionSeleccionada.CostasIat.ToString("N2")</td></tr>
-                                <tr><td>Tasa adm.</td><td>@_declaracionSeleccionada.TasaAdministrativaIat.ToString("N2")</td></tr>
+                                <tr><td>Costas judiciales</td><td>@_declaracionSeleccionada.CostasIat.ToString("N2")</td></tr>
+                                <tr><td>Tasa administrativa</td><td>@_declaracionSeleccionada.TasaAdministrativaIat.ToString("N2")</td></tr>
                                 <tr class="total-row">
                                     <td>Total 1.5 por mil</td>
                                     <td>@TotalIat(_declaracionSeleccionada).ToString("N2")</td>

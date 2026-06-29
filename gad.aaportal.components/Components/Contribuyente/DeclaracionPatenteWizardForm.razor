@@ -1007,12 +1007,14 @@
                     <div class="tabla-box">
                         <div class="tabla-header">IMPUESTO PATENTE MUNICIPAL</div>
                         <table class="tabla">
-                            <tr><td>Valor patente</td><td>@_resumen.DerechoPatenteAnual.ToString("N2")</td></tr>
+                            <tr><td>Base imponible</td><td>@BaseImponiblePatentePorcentaje.ToString("N2")</td></tr>
+                            <tr><td>Impuesto</td><td>@_resumen.DerechoPatenteAnual.ToString("N2")</td></tr>
+                            <tr><td>Tasa Bomberos</td><td>@_resumen.ValoresBomberosPatente.ToString("N2")</td></tr>
                             <tr><td>Multa</td><td>@_resumen.MultaPatente.ToString("N2")</td></tr>
-                            <tr><td>Interés</td><td>@InteresPatente.ToString("N2")</td></tr>
-                            <tr><td>Recargo</td><td>@RecargoPatente.ToString("N2")</td></tr>
-                            <tr><td>Costas</td><td>@CostasPatente.ToString("N2")</td></tr>
-                            <tr><td>Tasa adm.</td><td>@TasaAdministrativaPatente.ToString("N2")</td></tr>
+                            <tr><td>Interés por mora</td><td>@InteresPatente.ToString("N2")</td></tr>
+                            <tr><td>Recargos</td><td>@RecargoPatente.ToString("N2")</td></tr>
+                            <tr><td>Costas judiciales</td><td>@CostasPatente.ToString("N2")</td></tr>
+                            <tr><td>Tasa administrativa</td><td>@TasaAdministrativaPatente.ToString("N2")</td></tr>
                             <tr class="total-row">
                                 <td>Total patente</td>
                                 <td>@_resumen.TotalPatentePagar.ToString("N2")</td>
@@ -1024,14 +1026,15 @@
                     <div class="tabla-box">
                         <div class="tabla-header">IMPUESTO 1.5 POR MIL</div>
                         <table class="tabla">
-                            <tr><td>Valor</td><td>@_resumen.ImpuestoActivos.ToString("N2")</td></tr>
+                            <tr><td>Base imponible</td><td>@_resumen.BaseImponible1_5_x_1000.ToString("N2")</td></tr>
+                            <tr><td>Impuesto</td><td>@_resumen.ImpuestoActivos.ToString("N2")</td></tr>
                             <tr><td>Multa</td><td>@_resumen.Multa15.ToString("N2")</td></tr>
-                            <tr><td>Interés</td><td>@InteresIat.ToString("N2")</td></tr>
-                            <tr><td>Recargo</td><td>@RecargoIat.ToString("N2")</td></tr>
-                            <tr><td>Costas</td><td>@CostasIat.ToString("N2")</td></tr>
-                            <tr><td>Tasa adm.</td><td>@TasaAdministrativaIat.ToString("N2")</td></tr>
+                            <tr><td>Interés por mora</td><td>@InteresIat.ToString("N2")</td></tr>
+                            <tr><td>Recargos</td><td>@RecargoIat.ToString("N2")</td></tr>
+                            <tr><td>Costas judiciales</td><td>@CostasIat.ToString("N2")</td></tr>
+                            <tr><td>Tasa administrativa</td><td>@TasaAdministrativaIat.ToString("N2")</td></tr>
                             <tr class="total-row">
-                                <td>Total 1.5</td>
+                                <td>Total 1.5 por mil</td>
                                 <td>@_resumen.Total15Pagar.ToString("N2")</td>
                             </tr>
                         </table>

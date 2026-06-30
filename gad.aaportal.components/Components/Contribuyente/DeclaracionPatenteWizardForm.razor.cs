@@ -1177,7 +1177,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var resultPatente = await SpMunicipioConsumers.ConsultaValorP(
                     new ConsultaValorPDtoParam
                     {
-                        ValorImpuesto = TotalPatentePorEstablecimientos - PorcentajeDescuentoTerceraEdadPatente,
+                        ValorImpuesto = TotalPatentePorEstablecimientos - ValorExoneradoPatente,
                         ValorMulta = ValorMultaPatente,
                         TipoImpuesto = "PMA",
                         Ruc = _declaracionIniciada.Identificacion,
@@ -1203,7 +1203,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                 var resultIat = await SpMunicipioConsumers.ConsultaValorP(
                     new ConsultaValorPDtoParam
                     {
-                        ValorImpuesto = ValorUnoCincoPorMil - PorcentajeDescuentoTerceraEdadIAT,
+                        ValorImpuesto = ValorUnoCincoPorMil - ValorExoneradoIAT,
                         ValorMulta = ValorMultaPorMil,
                         TipoImpuesto = "IAT",
                         Ruc = _declaracionIniciada.Identificacion,

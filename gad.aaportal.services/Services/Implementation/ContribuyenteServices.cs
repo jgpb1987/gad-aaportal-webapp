@@ -658,7 +658,7 @@ namespace gad.aaportal.services.Services.Implementation
                     FechaVencInteres = parametro.FechaVencimiento,
                     UserIngreso = "PATWEB",
                     BaseImponible = (double)parametro.BaseImponiblePatente,
-                    Valor = (double)parametro.Patente,
+                    Valor = (double)parametro.Patente - (double)parametro.ValorExoneradoPatente,
                     AnioDeclaracion = parametro.Anio,
                     ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
                     Multa = (double)parametro.MultaPatente
@@ -684,7 +684,7 @@ namespace gad.aaportal.services.Services.Implementation
                         FechaVencInteres = parametro.FechaVencimiento,
                         UserIngreso = "PATWEB",
                         BaseImponible = (double)parametro.BaseImponibleIAT,
-                        Valor = (double)parametro.UnoCincoXMil,
+                        Valor = (double)parametro.UnoCincoXMil - (double)parametro.ValorExoneradoIAT,
                         AnioDeclaracion = parametro.Anio,
                         ValorPagadoOtroCanton = 0,//DEFINIR SI SON VARIOS CANTONES APARTE
                         Multa = (double)parametro.MultaIat
@@ -738,8 +738,8 @@ namespace gad.aaportal.services.Services.Implementation
                     ValorBomberos = parametro.ValorBomberos,
                     MultaPatente = parametro.MultaPatente,
                     MultaIat = parametro.MultaIat,
-                    DescuentoTerceraEdadPatente = parametro.PorcentajeDescuentoTerceraEdadPatente,
-                    DescuentoTerceraEdadIat = parametro.PorcentajeDescuentoTerceraEdadIAT,
+                    DescuentoTerceraEdadPatente = parametro.ValorExoneradoPatente,
+                    DescuentoTerceraEdadIat = parametro.ValorExoneradoIAT,
                     InteresPatente = parametro.InteresPatente,
                     RecargoPatente = parametro.RecargoPatente,
                     CostasPatente = parametro.CostasPatente,

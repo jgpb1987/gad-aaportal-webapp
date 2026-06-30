@@ -187,7 +187,7 @@
                             <div class="tabla-header">IMPUESTO PATENTE MUNICIPAL</div>
                             <table class="tabla">
                                 <tr><td>Base imponible</td><td>@Patrimonio(_declaracionSeleccionada).ToString("N2")</td></tr>
-                                <tr><td>Impuesto</td><td>@_declaracionSeleccionada.Patente.ToString("N2")</td></tr>
+                                <tr><td>Impuesto</td><td>@((_declaracionSeleccionada.Patente - _declaracionSeleccionada.DescuentoTerceraEdadPatente).ToString("N2"))</td></tr>
                                 <tr><td>Tasa Bomberos</td><td>@_declaracionSeleccionada.ValorBomberos.ToString("N2")</td></tr>
                                 <tr><td>Multa</td><td>@_declaracionSeleccionada.MultaPatente.ToString("N2")</td></tr>
                                 <tr><td>Interés por mora</td><td>@_declaracionSeleccionada.InteresPatente.ToString("N2")</td></tr>
@@ -206,7 +206,7 @@
                             <div class="tabla-header">IMPUESTO 1.5 POR MIL</div>
                             <table class="tabla">
                                 <tr><td>Base imponible</td><td>@Patrimonio(_declaracionSeleccionada).ToString("N2")</td></tr>
-                                <tr><td>Impuesto</td><td>@_declaracionSeleccionada.UnoCincoXMil.ToString("N2")</td></tr>
+                                <tr><td>Impuesto</td><td>@((_declaracionSeleccionada.UnoCincoXMil - _declaracionSeleccionada.DescuentoTerceraEdadIat).ToString("N2"))</td></tr>
                                 <tr><td>Multa</td><td>@_declaracionSeleccionada.MultaIat.ToString("N2")</td></tr>
                                 <tr><td>Interés por mora</td><td>@_declaracionSeleccionada.InteresIat.ToString("N2")</td></tr>
                                 <tr><td>Recargos</td><td>@_declaracionSeleccionada.RecargoIat.ToString("N2")</td></tr>

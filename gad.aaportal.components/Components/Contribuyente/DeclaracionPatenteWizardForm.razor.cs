@@ -1002,11 +1002,11 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 if (result?.Message?.Code == "OK" && result.Data is not null)
                 {
-                    PorcentajeDescuentoTerceraEdadPatente = result.Data.PorcentajeAplicar;
+                    PorcentajeDescuentoTerceraEdadPatente = result.Data.PorcentajePatrimonio;
                     ValorExoneradoPatente = result.Data.ValorDescuento;
                     ExedentePatente = result.Data.ExedenteAplicado;
                     PorcentajeIngreso = result.Data.PorcentajeIngresos;
-
+                    
                     return true;
                 }
 
@@ -1056,7 +1056,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 if (result?.Message?.Code == "OK" && result.Data is not null)
                 {
-                    PorcentajeDescuentoTerceraEdadIAT = result.Data.PorcentajeAplicar;
+                    PorcentajeDescuentoTerceraEdadIAT = result.Data.PorcentajePatrimonio;
                     ValorExoneradoIAT = result.Data.ValorDescuento;
                     ExedenteIAT = result.Data.ExedenteAplicado;
                     PorcentajeIngreso = result.Data.PorcentajeIngresos;

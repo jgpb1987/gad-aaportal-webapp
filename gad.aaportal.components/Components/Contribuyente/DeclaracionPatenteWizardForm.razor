@@ -346,19 +346,19 @@
                                     <strong>@_resumen.Patrimonio.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
-                                    <span>Impuesto de Patente Municipal</span>
+                                    <span>Impuesto</span>
                                     <strong>+@_resumen.DerechoPatenteAnual.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
-                                    <span>Exoneración patente tercera edad</span>
+                                    <span>Exoneración tercera edad</span>
                                     <strong>- @_resumen.DescuentoPatenteTerceraEdad.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
-                                    <span>Subtotal Impuesto Patente</span>
+                                    <span>Subtotal</span>
                                     <strong>@((_resumen.DerechoPatenteAnual - _resumen.DescuentoPatenteTerceraEdad).ToString("C2"))</strong>
                                 </div>
                                 <div class="impuesto-row">
-                                    <span>Multa por presentación tardía</span>
+                                    <span>Multa</span>
                                     <strong>+ @_resumen.MultaPatente.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
@@ -403,19 +403,19 @@
                                     <strong>@_resumen.BaseImponible1_5_x_1000.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
-                                    <span>Impuesto de Patente Municipal</span>
+                                    <span>Impuesto</span>
                                     <strong>+ @_resumen.ImpuestoActivos.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
-                                    <span>Exoneración patente tercera edad</span>
+                                    <span>Exoneración tercera edad</span>
                                     <strong>- @_resumen.DescuentoTerceraEdad15.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
-                                    <span>Subtotal Impuesto Patente</span>
+                                    <span>Subtotal</span>
                                     <strong>@((_resumen.ImpuestoActivos - _resumen.DescuentoTerceraEdad15).ToString("C2"))</strong>
                                 </div>
                                 <div class="impuesto-row">
-                                    <span>Multa por presentación tardía</span>
+                                    <span>Multa</span>
                                     <strong>+ @_resumen.Multa15.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
@@ -550,19 +550,19 @@
                                             <strong>@_resumen.Patrimonio.ToString("C2")</strong>
                                         </div>
                                         <div class="impuesto-row">
-                                            <span>Impuesto de Patente Municipal</span>
+                                            <span>Impuesto</span>
                                             <strong>+@_resumen.DerechoPatenteAnual.ToString("C2")</strong>
                                         </div>
                                         <div class="impuesto-row">
-                                            <span>Exoneración patente tercera edad</span>
+                                            <span>Exoneración tercera edad</span>
                                             <strong>- @_resumen.DescuentoPatenteTerceraEdad.ToString("C2")</strong>
                                         </div>
                                         <div class="impuesto-row">
-                                            <span>Subtotal Impuesto Patente</span>
+                                            <span>Subtotal</span>
                                             <strong>+ @((_resumen.DerechoPatenteAnual - _resumen.DescuentoPatenteTerceraEdad).ToString("C2"))</strong>
                                         </div>
                                         <div class="impuesto-row">
-                                            <span>Multa por presentación tardía</span>
+                                            <span>Multa</span>
                                             <strong>+ @_resumen.MultaPatente.ToString("C2")</strong>
                                         </div>
                                         @if (InteresPatente > 0)
@@ -611,23 +611,23 @@
                                         <div class="impuesto-card-title">1.5 por mil</div>
 
                                         <div class="impuesto-row impuesto-total">
-                                            <span>Base Imponible 1.5 x mil</span>
+                                            <span>Base Imponible</span>
                                             <strong>@_resumen.BaseImponible1_5_x_1000.ToString("C2")</strong>
                                         </div>
                                         <div class="impuesto-row">
-                                            <span>Impuesto Activos Totales</span>
+                                            <span>Impuesto</span>
                                             <strong>+ @_resumen.ImpuestoActivos.ToString("C2")</strong>
                                         </div>
                                         <div class="impuesto-row">
-                                            <span>Exoneración patente tercera edad</span>
+                                            <span>Exoneración tercera edad</span>
                                             <strong>- @_resumen.DescuentoTerceraEdad15.ToString("C2")</strong>
                                         </div>
                                         <div class="impuesto-row">
-                                            <span>Subtotal Impuesto Patente</span>
+                                            <span>Subtotal</span>
                                             <strong>+ @((_resumen.ImpuestoActivos - _resumen.DescuentoTerceraEdad15).ToString("C2"))</strong>
                                         </div>
                                         <div class="impuesto-row">
-                                            <span>Multa por presentación tardía</span>
+                                            <span>Multa</span>
                                             <strong>+ @_resumen.Multa15.ToString("C2")</strong>
                                         </div>
                                         @if (InteresIat > 0)

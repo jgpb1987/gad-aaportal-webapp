@@ -40,6 +40,10 @@ namespace gad.aaportal.components.Components.Contribuyente
         private string _mensajeRestriccionMunicipal = string.Empty;
         private DateTime FechaVencimiento;
         private decimal PorcentajeDescuentoTerceraEdadPatente = 0;
+        private decimal PorcentajeAplicarPMA = 0;
+        private decimal PorcentajeAplicarIAT = 0;
+        private decimal PorcentajeTEPMA = 0;
+        private decimal PorcentajeTEIAT = 0;
         private decimal PorcentajeDescuentoTerceraEdadIAT = 0;
         private decimal ValorExoneradoPatente = 0;
         private decimal ValorExoneradoIAT = 0;
@@ -749,6 +753,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                     MultaPatente = ValorMultaPatente,
                     BaseImponiblePatente = BaseImponiblePatentePorcentaje,
+                    BaseImponibleIAT = BaseImponible,
                     MultaIat = ValorMultaPorMil,
                     FechaVencimiento = FechaVencimiento,
 
@@ -764,6 +769,10 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                     PorcentajeDescuentoTerceraEdadPatente = PorcentajeDescuentoTerceraEdadPatente,
                     PorcentajeDescuentoTerceraEdadIAT = PorcentajeDescuentoTerceraEdadIAT,
+                    PorcentajeAplicarPMA = PorcentajeAplicarPMA,
+                    PorcentajeAplicarIAT = PorcentajeAplicarIAT,
+                    PorcentajeTEPMA = PorcentajeTEPMA,
+                    PorcentajeTEIAT = PorcentajeTEIAT,
                     PorcentajeCalculoIat = _establecimientosBase.FirstOrDefault()!.Porcentaje,
                     ValorExoneradoPatente = ValorExoneradoPatente,
                     ValorExoneradoIAT = ValorExoneradoIAT,
@@ -1003,10 +1012,12 @@ namespace gad.aaportal.components.Components.Contribuyente
                 if (result?.Message?.Code == "OK" && result.Data is not null)
                 {
                     PorcentajeDescuentoTerceraEdadPatente = result.Data.PorcentajePatrimonio;
+                    PorcentajeAplicarPMA = result.Data.PorcentajeAplicar;
+                    PorcentajeTEPMA = result.Data.PorcentajeTe;
                     ValorExoneradoPatente = result.Data.ValorDescuento;
                     ExedentePatente = result.Data.ExedenteAplicado;
                     PorcentajeIngreso = result.Data.PorcentajeIngresos;
-                    
+
                     return true;
                 }
 
@@ -1058,6 +1069,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                 {
                     PorcentajeDescuentoTerceraEdadIAT = result.Data.PorcentajePatrimonio;
                     ValorExoneradoIAT = result.Data.ValorDescuento;
+                    PorcentajeAplicarIAT = result.Data.PorcentajeAplicar;
+                    PorcentajeTEIAT = result.Data.PorcentajeTe;
                     ExedenteIAT = result.Data.ExedenteAplicado;
                     PorcentajeIngreso = result.Data.PorcentajeIngresos;
 

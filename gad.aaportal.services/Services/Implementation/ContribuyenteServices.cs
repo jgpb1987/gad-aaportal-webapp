@@ -608,17 +608,17 @@ namespace gad.aaportal.services.Services.Implementation
                     InsertTerceraEdadDtoParam insertTP = new InsertTerceraEdadDtoParam
                     {
                         AnioCalculo = parametro.Anio,
-                        Patrimonio = (double)parametro.BaseImponiblePatente,
-                        Ingresos = (double)parametro.Ingresos,
-                        PorcentajeTE = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
-                        ExedenteAplicado = parametro.ExedentePatente,
-                        PorcentajePatrimonio = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
+                        PorcentajePatrimonio = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
                         PorcentajeIngreso = (double)parametro.PorcentajeIngreso,
+                        PorcentajeAplicar = (double)parametro.PorcentajeAplicarPMA,
+                        ValorDescuento = (double)parametro.ValorExoneradoPatente,
+                        ExedenteAplicado = parametro.ExedentePatente,
+                        PorcentajeTE = (double)parametro.PorcentajeTEPMA,
+                        Patrimonio = (double)parametro.BaseImponiblePatente,
+                        TipoImpuesto = "PMA",
+                        Ingresos = (double)parametro.Ingresos,
                         BaseImponible = (double)parametro.BaseImponiblePatente,
                         ImpuestoGravado = (double)parametro.Patente,
-                        PorcentajeAplicar = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
-                        ValorDescuento = (double)parametro.ValorExoneradoPatente,
-                        TipoImpuesto = "PMA",
                         UsuarioIngreso = "PATWEB",
                         IdCalculoImpuesto = actividadGenerada
                     };
@@ -631,19 +631,20 @@ namespace gad.aaportal.services.Services.Implementation
                     InsertTerceraEdadDtoParam insertTP = new InsertTerceraEdadDtoParam
                     {
                         AnioCalculo = parametro.Anio,
-                        Patrimonio = (double)parametro.BaseImponiblePatente,
-                        Ingresos = (double)parametro.Ingresos,
-                        PorcentajeTE = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
-                        ExedenteAplicado = parametro.ExedenteIAT,
                         PorcentajePatrimonio = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
                         PorcentajeIngreso = (double)parametro.PorcentajeIngreso,
+                        PorcentajeAplicar = (double)parametro.PorcentajeAplicarIAT,
+                        ValorDescuento = (double)parametro.ValorExoneradoIAT,
+                        ExedenteAplicado = parametro.ExedenteIAT,
+                        PorcentajeTE = (double)parametro.PorcentajeTEIAT,
+                        Patrimonio = (double)parametro.BaseImponiblePatente,
+                        TipoImpuesto = "IAT",
+                        Ingresos = (double)parametro.Ingresos,
                         BaseImponible = (double)parametro.BaseImponibleIAT,
                         ImpuestoGravado = (double)parametro.UnoCincoXMil,
-                        PorcentajeAplicar = (double)parametro.PorcentajeDescuentoTerceraEdadIAT,
-                        ValorDescuento = (double)parametro.ValorExoneradoIAT,
-                        TipoImpuesto = "IAT",
                         UsuarioIngreso = "PATWEB",
                         IdCalculoImpuesto = actividadGenerada
+
                     };
 
                     await spMunicipioServices.InsertTerceraEdad(insertTP);

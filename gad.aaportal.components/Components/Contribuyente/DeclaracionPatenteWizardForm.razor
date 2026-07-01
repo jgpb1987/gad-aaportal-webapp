@@ -362,7 +362,7 @@
                                     <strong>+ @_resumen.MultaPatente.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
-                                    <span>Interés</span>
+                                    <span>Interés por mora</span>
                                     <strong>+ @InteresPatente.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
@@ -419,7 +419,7 @@
                                     <strong>+ @_resumen.Multa15.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
-                                    <span>Interés</span>
+                                    <span>Interés por mora</span>
                                     <strong>+ @InteresIat.ToString("C2")</strong>
                                 </div>
                                 <div class="impuesto-row">
@@ -565,34 +565,34 @@
                                             <span>Multa</span>
                                             <strong>+ @_resumen.MultaPatente.ToString("C2")</strong>
                                         </div>
-                                        @if (InteresPatente > 0)
-                                        {
+@*                                         @if (InteresPatente > 0)
+                                        { *@
                                             <div class="impuesto-row">
-                                                <span>Interés</span>
+                                                <span>Interés por mora</span>
                                                 <strong>+ @InteresPatente.ToString("C2")</strong>
                                             </div>
-                                        }
-                                        @if (RecargoPatente > 0)
-                                        {
+                                        @* } *@
+@*                                         @if (RecargoPatente > 0)
+                                        { *@
                                             <div class="impuesto-row">
                                                 <span>Recargo</span>
                                                 <strong>+ @RecargoPatente.ToString("C2")</strong>
                                             </div>
-                                        }
-                                        @if (CostasPatente > 0)
-                                        {
+                                    @*     } *@
+@*                                         @if (CostasPatente > 0)
+                                        { *@
                                             <div class="impuesto-row">
                                                 <span>Costas judiciales</span>
                                                 <strong>+ @CostasPatente.ToString("C2")</strong>
                                             </div>
-                                        }
-                                        @if (TasaAdministrativaPatente > 0)
-                                        {
+                           @*              } *@
+@*                                         @if (TasaAdministrativaPatente > 0)
+                                        { *@
                                             <div class="impuesto-row">
                                                 <span>Tasa administrativa</span>
                                                 <strong>+ @TasaAdministrativaPatente.ToString("C2")</strong>
                                             </div>
-                                        }
+                              @*           } *@
                                         @if (MostrarValorBomberos)
                                         {
                                             <div class="impuesto-row">
@@ -606,7 +606,6 @@
                                         </div>
 
                                     </div>
-
                                     <div class="impuesto-card">
                                         <div class="impuesto-card-title">1.5 por mil</div>
 
@@ -630,34 +629,34 @@
                                             <span>Multa</span>
                                             <strong>+ @_resumen.Multa15.ToString("C2")</strong>
                                         </div>
-                                        @if (InteresIat > 0)
-                                        {
+    @*                                     @if (InteresIat > 0)
+                                        { *@
                                             <div class="impuesto-row">
-                                                <span>Interés</span>
+                                                <span>Interés por mora</span>
                                                 <strong>+ @InteresIat.ToString("C2")</strong>
                                             </div>
-                                        }
-                                        @if (RecargoIat > 0)
-                                        {
+                                     @*    } *@
+                     @*                    @if (RecargoIat > 0)
+                                        { *@
                                             <div class="impuesto-row">
                                                 <span>Recargo</span>
                                                 <strong>+ @RecargoIat.ToString("C2")</strong>
                                             </div>
-                                        }
-                                        @if (CostasIat > 0)
-                                        {
+                                     @*    } *@
+                                  @*       @if (CostasIat > 0)
+                                        { *@
                                             <div class="impuesto-row">
                                                 <span>Costas judiciales</span>
                                                 <strong>+ @CostasIat.ToString("C2")</strong>
                                             </div>
-                                        }
-                                        @if (TasaAdministrativaIat > 0)
-                                        {
+                                      @*   } *@
+                                   @*      @if (TasaAdministrativaIat > 0)
+                                        { *@
                                             <div class="impuesto-row">
                                                 <span>Tasa administrativa</span>
                                                 <strong>+ @TasaAdministrativaIat.ToString("C2")</strong>
                                             </div>
-                                        }
+                                       @*  } *@
                                         <div class="impuesto-row impuesto-total">
                                             <span>Total 1.5 a pagar</span>
                                             <strong>@_resumen.Total15Pagar.ToString("C2")</strong>
@@ -1020,7 +1019,9 @@
                         <div class="tabla-header">IMPUESTO PATENTE MUNICIPAL</div>
                         <table class="tabla">
                             <tr><td>Base imponible</td><td>@BaseImponiblePatentePorcentaje.ToString("N2")</td></tr>
-                            <tr><td>Impuesto</td><td>@((_resumen.DerechoPatenteAnual - ValorExoneradoPatente).ToString("N2"))</td></tr>
+                            <tr><td>Impuesto</td><td>@((_resumen.DerechoPatenteAnual).ToString("N2"))</td></tr>
+                            <tr><td>Exoneración tercera edad</td><td>@((ValorExoneradoPatente).ToString("N2"))</td></tr>
+                            <tr><td>Subtotal</td><td>@((_resumen.DerechoPatenteAnual - ValorExoneradoPatente).ToString("N2"))</td></tr>
                             <tr><td>Tasa Bomberos</td><td>@_resumen.ValoresBomberosPatente.ToString("N2")</td></tr>
                             <tr><td>Multa</td><td>@_resumen.MultaPatente.ToString("N2")</td></tr>
                             <tr><td>Interés por mora</td><td>@InteresPatente.ToString("N2")</td></tr>
@@ -1039,7 +1040,9 @@
                         <div class="tabla-header">IMPUESTO 1.5 POR MIL</div>
                         <table class="tabla">
                             <tr><td>Base imponible</td><td>@_resumen.BaseImponible1_5_x_1000.ToString("N2")</td></tr>
-                            <tr><td>Impuesto</td><td>@((_resumen.ImpuestoActivos - ValorExoneradoIAT).ToString("N2"))</td></tr>
+                            <tr><td>Impuesto</td><td>@((_resumen.ImpuestoActivos).ToString("N2"))</td></tr>
+                            <tr><td>Exoneración tercera edad</td><td>@((ValorExoneradoIAT).ToString("N2"))</td></tr>
+                            <tr><td>Subtotal</td><td>@((_resumen.ImpuestoActivos - ValorExoneradoIAT).ToString("N2"))</td></tr>
                             <tr><td>Multa</td><td>@_resumen.Multa15.ToString("N2")</td></tr>
                             <tr><td>Interés por mora</td><td>@InteresIat.ToString("N2")</td></tr>
                             <tr><td>Recargos</td><td>@RecargoIat.ToString("N2")</td></tr>

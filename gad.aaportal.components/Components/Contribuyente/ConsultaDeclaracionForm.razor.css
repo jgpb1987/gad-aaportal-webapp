@@ -838,4 +838,11 @@
     .grid-2 {
         page-break-inside: avoid;
     }
+
+    .nota-final {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
 }

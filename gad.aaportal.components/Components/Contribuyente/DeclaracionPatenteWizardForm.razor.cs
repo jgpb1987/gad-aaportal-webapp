@@ -44,6 +44,8 @@ namespace gad.aaportal.components.Components.Contribuyente
         private decimal PorcentajeAplicarIAT = 0;
         private decimal PorcentajeTEPMA = 0;
         private decimal PorcentajeTEIAT = 0;
+        private decimal PatrimonioPMA = 0;
+        private decimal PatrimonioIAT = 0;
         private decimal PorcentajeDescuentoTerceraEdadIAT = 0;
         private decimal ValorExoneradoPatente = 0;
         private decimal ValorExoneradoIAT = 0;
@@ -773,6 +775,8 @@ namespace gad.aaportal.components.Components.Contribuyente
                     PorcentajeAplicarIAT = PorcentajeAplicarIAT,
                     PorcentajeTEPMA = PorcentajeTEPMA,
                     PorcentajeTEIAT = PorcentajeTEIAT,
+                    PatrimonioPMA = PatrimonioPMA,
+                    PatrimonioIAT = PatrimonioIAT,
                     PorcentajeCalculoIat = _establecimientosBase.FirstOrDefault()!.Porcentaje,
                     ValorExoneradoPatente = ValorExoneradoPatente,
                     ValorExoneradoIAT = ValorExoneradoIAT,
@@ -1014,6 +1018,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                     PorcentajeDescuentoTerceraEdadPatente = result.Data.PorcentajePatrimonio;
                     PorcentajeAplicarPMA = result.Data.PorcentajeAplicar;
                     PorcentajeTEPMA = result.Data.PorcentajeTe;
+                    PatrimonioPMA = result.Data.Patrimonio;
                     ValorExoneradoPatente = result.Data.ValorDescuento;
                     ExedentePatente = result.Data.ExedenteAplicado;
                     PorcentajeIngreso = result.Data.PorcentajeIngresos;
@@ -1071,6 +1076,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                     ValorExoneradoIAT = result.Data.ValorDescuento;
                     PorcentajeAplicarIAT = result.Data.PorcentajeAplicar;
                     PorcentajeTEIAT = result.Data.PorcentajeTe;
+                    PatrimonioIAT = result.Data.Patrimonio;
                     ExedenteIAT = result.Data.ExedenteAplicado;
                     PorcentajeIngreso = result.Data.PorcentajeIngresos;
 

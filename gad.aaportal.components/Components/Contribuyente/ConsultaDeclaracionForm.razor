@@ -113,7 +113,7 @@
             </div>
             <hr />
             <div class="modal-detalle-body">
-                <div id="comprobanteConsultaImprimir">
+                <div>
                     <!-- RAZON SOCIAL -->
                     <div class="fila full">
                         <strong>RAZÓN SOCIAL:</strong> @_declaracionSeleccionada.RazonSocial
@@ -143,10 +143,16 @@
                                 <span>ACTIVO NO CORRIENTE:</span>
                                 <strong>@_declaracionSeleccionada.ActivoNoCorriente.ToString("N2")</strong>
                             </div>
-
+                            <div class="item">
+                                <span>&nbsp;</span>
+                            </div>
                             <div class="item total">
                                 <span>TOTAL ACTIVOS:</span>
                                 <strong>@TotalActivo(_declaracionSeleccionada).ToString("N2")</strong>
+                            </div>
+                            <div class="item total">
+                                <span>TOTAL INGRESOS:</span>
+                                <strong>@_declaracionSeleccionada.Ingresos.ToString("N2")</strong>
                             </div>
                         </div>
                         <!-- DERECHA -->
@@ -173,11 +179,6 @@
                             </div>
                         </div>
 
-                    </div>
-                    <hr />
-                    <!-- INGRESOS -->
-                    <div class="fila">
-                        <strong>TOTAL INGRESOS:</strong> @_declaracionSeleccionada.Ingresos.ToString("N2")
                     </div>
                     <hr />
                     <!-- TABLAS -->
@@ -216,6 +217,7 @@
                                 <tr><td>Recargos</td><td>@_declaracionSeleccionada.RecargoIat.ToString("N2")</td></tr>
                                 <tr><td>Costas judiciales</td><td>@_declaracionSeleccionada.CostasIat.ToString("N2")</td></tr>
                                 <tr><td>Tasa administrativa</td><td>@_declaracionSeleccionada.TasaAdministrativaIat.ToString("N2")</td></tr>
+                                <tr><td>&nbsp;</td><td></td></tr>
                                 <tr class="total-row">
                                     <td>Total 1.5 por mil</td>
                                     <td>@TotalIat(_declaracionSeleccionada).ToString("N2")</td>
@@ -231,7 +233,7 @@
                     </div>
 
                     <div class="nota-final">
-                        Los valores por intereses de mora, recargos y costas judiciales están sujetos a variación hasta la fecha efectiva de pago;
+                        <strong>NOTA:</strong> Los valores por intereses de mora, recargos y costas judiciales están sujetos a variación hasta la fecha efectiva de pago;
                         por tanto, el valor total a cancelar podrá modificarse
                     </div>
 

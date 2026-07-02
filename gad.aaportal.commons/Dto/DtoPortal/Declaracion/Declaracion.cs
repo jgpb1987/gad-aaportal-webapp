@@ -113,6 +113,8 @@ namespace gad.aaportal.commons.Dto.DtoPortal.Declaracion
         public decimal PorcentajeAplicarIAT { get; set; }
         public decimal PorcentajeTEPMA { get; set; }
         public decimal PorcentajeTEIAT { get; set; }
+        public decimal PatrimonioPMA { get; set; }
+        public decimal PatrimonioIAT { get; set; }
         public decimal PorcentajeCalculoIat { get; set; }
         public decimal ValorExoneradoPatente { get; set; }
         public decimal ValorExoneradoIAT { get; set; }

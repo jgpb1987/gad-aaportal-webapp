@@ -909,8 +909,8 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 var fechaActual = DateTime.Today;
 
-                if (BaseImponible == 0)
-                    return true;
+                //if (BaseImponible == 0)
+                //    return true;
 
                 var result = await SpMunicipioConsumers.CalcularMulta(
                     new CalcularMultaDtoParam
@@ -949,8 +949,8 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 var fechaActual = DateTime.Today;
 
-                if (BaseImponible == 0)
-                    return true;
+                //if (BaseImponible == 0)
+                //    return true;
 
                 var result = await SpMunicipioConsumers.CalcularMulta(
                     new CalcularMultaDtoParam

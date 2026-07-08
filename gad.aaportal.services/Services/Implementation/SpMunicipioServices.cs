@@ -1,4 +1,5 @@
-﻿using gad.aaportal.commons.Dto.DtoMunicipio;
+﻿using gad.aaportal.commons.Base;
+using gad.aaportal.commons.Dto.DtoMunicipio;
 using gad.aaportal.dataaccess.Configuration;
 using gad.aaportal.services.MessageException;
 using gad.aaportal.services.Services.Interfaces;
@@ -1011,5 +1012,72 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
+        public async Task<ConsultarEstadoRucDtoResult> ConsultarEstadoRuc( ConsultarEstadoRucDtoParam parametro)
+        {
+            ConsultarEstadoRucDtoResult result = new();
+
+            try
+            {
+                var connection = await ObtenerConexionAbiertaAsync();
+
+                await using var command = connection.CreateCommand();
+                command.CommandText = "dbo.SP_Pat_ConsultarEstadoRuc";
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@RUC", SqlDbType.VarChar, 15)
+                {
+                    Value = parametro.Ruc
+                });
+
+                await using var reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    // El SP puede devolver solo Mensaje cuando el RUC no existe
+                    var columnas = Enumerable.Range(0, reader.FieldCount)
+                        .Select(reader.GetName)
+                        .ToList();
+
+                    if (columnas.Contains("Mensaje"))
+                    {
+                        result.Message = new()
+                        {
+                            Code = "CER001",
+                            Description = reader["Mensaje"]?.ToString() ?? "El RUC no existe, por favor acérquese a las oficinas del Municipio."
+                        };
+
+                        return result;
+                    }
+
+                    result.Data = new ConsultarEstadoRucDtoDataResult
+                    {
+                        Personeria = reader["Personeria"]?.ToString() ?? string.Empty,
+                        Contabilidad = reader["Contabilidad"]?.ToString() ?? string.Empty,
+                        Estado = reader["Estado"]?.ToString() ?? string.Empty
+                    };
+
+                    result.Message = new()
+                    {
+                        Code = nameof(CodeMessage.OK),
+                        Description = "Consulta realizada correctamente."
+                    };
+                }
+                else
+                {
+                    result.Message = new()
+                    {
+                        Code = "CER002",
+                        Description = "No se encontró información para el RUC consultado.por favor acérquese a las oficinas del Municipio."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
     }
+
 }

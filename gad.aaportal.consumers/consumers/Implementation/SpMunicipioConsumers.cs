@@ -6,6 +6,7 @@ using gad.aaportal.consumers.Utilitarian;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -243,6 +244,11 @@ namespace gad.aaportal.consumers.consumers.Implementation
                 throw;
             }
             return result;
+        }
+        public async Task<ConsultarEstadoRucDtoResult> ConsultarEstadoRuc(
+    ConsultarEstadoRucDtoParam parametro)
+        {
+            return await _httpClient.Post<ConsultarEstadoRucDtoParam, ConsultarEstadoRucDtoResult>(parametro, configuraciones.EndPointsConfig.ConsultarEstadoRuc);
         }
     }
 }

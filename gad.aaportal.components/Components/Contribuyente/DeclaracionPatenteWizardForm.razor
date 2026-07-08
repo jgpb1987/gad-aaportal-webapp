@@ -1068,12 +1068,16 @@
                 <div class="total-final">
                     TOTAL A PAGAR: @_resumen.TotalPagar.ToString("N2")
                 </div>
+                <div class="comprobante-footer">
+                    <div class="fecha-final">
+                        <strong>Fecha:</strong> @FechaGeneracion.ToString("dd-MM-yyyy HH:mm:ss")
+                    </div>
 
-                <div class="nota-final">
-                    <strong>NOTA:</strong>  Los valores por intereses de mora, recargos y costas judiciales están sujetos a variación hasta la fecha efectiva de pago;
-                    por tanto, el valor total a cancelar podrá modificarse
+                    <div class="nota-final">
+                        <strong>NOTA:</strong> Los valores por intereses de mora, recargos y costas judiciales están sujetos a variación hasta la fecha efectiva de pago;
+                        por tanto, el valor total a cancelar podrá modificarse.
+                    </div>
                 </div>
-
             </div>
 
             <!-- BOTONES -->

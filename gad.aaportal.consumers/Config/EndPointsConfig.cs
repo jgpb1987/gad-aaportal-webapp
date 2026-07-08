@@ -34,6 +34,7 @@ namespace gad.aaportal.consumers.Config
         public string ConsultarAnioAdeuda { get; set; } = null!;
         public string ConsultarFechaVencimiento { get; set; } = null!;
         public string ConsultaValorP { get; set; } = null!;
+        public string ConsultarEstadoRuc { get; set; } = null!;
 
         /*Fin Store Procedure Municipio*/
     }

@@ -19,6 +19,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         private ConsultarDeclaracionContribuyenteDtoResult? _declaracionSeleccionada;
 
         private bool _mostrarModalDetalle;
+        private DateTime FechaGeneracion;
 
         [Inject] private ISessionStorageServices JSSessionStorageServices { get; set; } = null!;
         [Inject] private IContribuyenteConsumers ServicesContribuyente { get; set; } = null!;
@@ -42,6 +43,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             {
                 LoadingBorder?.Open();
 
+                FechaGeneracion = DateTime.Now;
                 var identificacion = await JSSessionStorageServices
                     .GetItemAsync(Configuraciones.AppConfig.Identificacion);
 
@@ -91,6 +93,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
         private void AbrirDetalleDeclaracion(ConsultarDeclaracionContribuyenteDtoResult declaracion)
         {
+            FechaGeneracion = DateTime.Now;
             _declaracionSeleccionada = declaracion;
             _mostrarModalDetalle = true;
         }

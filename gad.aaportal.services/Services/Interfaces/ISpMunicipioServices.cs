@@ -21,5 +21,6 @@ namespace gad.aaportal.services.Services.Interfaces
         Task<ConsultarAnioAdeudaDtoResult> ConsultarAnioAdeuda(ConsultarAnioAdeudaDtoParam parametro);
         Task<AnioVencimientoDtoResult> ConsultarFechaVencimiento(ConsultaAnioVencimientoDtoParam parametro);
         Task<ConsultaValorPDtoResult> ConsultaValorP(ConsultaValorPDtoParam parametro);
+        Task<ConsultarEstadoRucDtoResult> ConsultarEstadoRuc(ConsultarEstadoRucDtoParam parametro);
     }
 }

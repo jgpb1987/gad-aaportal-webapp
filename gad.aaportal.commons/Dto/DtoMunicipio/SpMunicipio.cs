@@ -339,4 +339,20 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     {
         public ConsultaValorPDtoDataResult Data { get; set; } = new();
     }
+    public class ConsultarEstadoRucDtoParam
+    {
+        public string Ruc { get; set; } = string.Empty;
+    }
+
+    public class ConsultarEstadoRucDtoDataResult
+    {
+        public string Personeria { get; set; } = string.Empty;
+        public string Contabilidad { get; set; } = string.Empty;
+        public string Estado { get; set; } = string.Empty;
+    }
+
+    public class ConsultarEstadoRucDtoResult : BaseResult
+    {
+        public ConsultarEstadoRucDtoDataResult Data { get; set; } = new();
+    }
 }

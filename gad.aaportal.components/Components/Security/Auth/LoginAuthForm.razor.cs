@@ -145,27 +145,44 @@ namespace gad.aaportal.components.Components.Security.Auth
                     AceptaPoliticasTratamientoDatos = _userRegistrationParam.AceptaPoliticasTratamientoDatos,
                     PoliticasTratamientoDatos = _userRegistrationParam.PoliticasTratamientoDatos
                 };
-                var urResponse = await SeguridadConsumers.UserRegistration(userRegistrationRequest);
-                if (urResponse != null)
+                var consultaRucMunicipio= await SpMunicipioConsumers.ConsultarEstadoRuc(new() {Ruc= _userRegistrationParam.Identificacion } );
+                if (consultaRucMunicipio != null)
                 {
-                    if (urResponse.Message.Code.Equals("OK"))
+                    if (consultaRucMunicipio.Message.Code.Equals("OK"))
                     {
-                        LoadingBorder!.Close();
-                        _view = LoginView.Login;
-                        Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
-                        ShowLogin();
+                        var urResponse = await SeguridadConsumers.UserRegistration(userRegistrationRequest);
+                        if (urResponse != null)
+                        {
+                            if (urResponse.Message.Code.Equals("OK"))
+                            {
+                                LoadingBorder!.Close();
+                                _view = LoginView.Login;
+                                Toast!.ShowMessage("success", urResponse.Message.Code, urResponse.Message.Description);
+                                ShowLogin();
+                            }
+                            else
+                            {
+                                LoadingBorder!.Close();
+                                await Toast!.ShowMessage("error", urResponse.Message.Code, urResponse.Message.Description);
+                            }
+                        }
+                        else
+                        {
+                            LoadingBorder!.Close();
+                            await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                        }
                     }
-                    else
-                    {
+                    else {
                         LoadingBorder!.Close();
-                        await Toast!.ShowMessage("error", urResponse.Message.Code, urResponse.Message.Description);
+                        await Toast!.ShowMessage("error", consultaRucMunicipio.Message.Code, consultaRucMunicipio.Message.Description);
                     }
+                   
                 }
-                else
-                {
+                else {
                     LoadingBorder!.Close();
-                    await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                    await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error al consultar el ruc, por favor acérquese al municipio");
                 }
+
 
             }
             catch (Exception ex)
@@ -196,44 +213,61 @@ namespace gad.aaportal.components.Components.Security.Auth
                     TimeZone = dataDispositivo.TimeZone == null ? string.Empty : dataDispositivo.TimeZone,
                     UserAgent = dataDispositivo.UserAgent == null ? string.Empty : dataDispositivo.UserAgent
                 };
-                var loginResponse = await SeguridadConsumers.Login(loginRequest);
-                if (loginResponse != null)
+                var consultaRucMunicipio = await SpMunicipioConsumers.ConsultarEstadoRuc(new() { Ruc = LoginParam.User });
+                if (consultaRucMunicipio != null)
                 {
-                    if (loginResponse.Data != null)
+                    if (consultaRucMunicipio.Message.Code.Equals("OK"))
                     {
-                        if (loginResponse.Message.Code.Equals("OK"))
+                        var loginResponse = await SeguridadConsumers.Login(loginRequest);
+                        if (loginResponse != null)
                         {
-                            await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Expiration, loginResponse.Data.Expiration.ToString());
-                            await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Token, loginResponse.Data.Token);
-                            await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.UltimoAcceso, loginResponse.Data.UltimoAcceso.ToString());
-                            await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Nombres, loginResponse.Data.Nombres);
-                            await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Identificacion, loginResponse.Data.Identificacion);
-                            LoadingBorder!.Close();
-                            //await ConsultaDinardap();
-                            UriHelper.NavigateTo("/index");
-                            await Toast!.ShowMessage("success", loginResponse.Message.Code, loginResponse.Message.Description);
+                            if (loginResponse.Data != null)
+                            {
+                                if (loginResponse.Message.Code.Equals("OK"))
+                                {
+                                    await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Expiration, loginResponse.Data.Expiration.ToString());
+                                    await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Token, loginResponse.Data.Token);
+                                    await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.UltimoAcceso, loginResponse.Data.UltimoAcceso.ToString());
+                                    await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Nombres, loginResponse.Data.Nombres);
+                                    await JSSessionStorageServices.SetItemAsync(Configuraciones.AppConfig.Identificacion, loginResponse.Data.Identificacion);
+                                    LoadingBorder!.Close();
+                                    //await ConsultaDinardap();
+                                    UriHelper.NavigateTo("/index");
+                                    await Toast!.ShowMessage("success", loginResponse.Message.Code, loginResponse.Message.Description);
+                                }
+                                else
+                                {
+                                    LoadingBorder!.Close();
+                                    await Toast!.ShowMessage("error", loginResponse.Message.Code, loginResponse.Message.Description);
+                                }
+                            }
+                            else if (loginResponse.Message == null)
+                            {
+                                LoadingBorder!.Close();
+                                await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                            }
+                            else
+                            {
+                                LoadingBorder!.Close();
+                                await Toast!.ShowMessage("error", loginResponse.Message.Code, loginResponse.Message.Description);
+                            }
                         }
                         else
                         {
                             LoadingBorder!.Close();
-                            await Toast!.ShowMessage("error", loginResponse.Message.Code, loginResponse.Message.Description);
+                            await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
                         }
-                    }
-                    else if (loginResponse.Message == null)
-                    {
-                        LoadingBorder!.Close();
-                        await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
                     }
                     else
                     {
                         LoadingBorder!.Close();
-                        await Toast!.ShowMessage("error", loginResponse.Message.Code, loginResponse.Message.Description);
+                        await Toast!.ShowMessage("error", consultaRucMunicipio.Message.Code, consultaRucMunicipio.Message.Description);
                     }
                 }
                 else
                 {
                     LoadingBorder!.Close();
-                    await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                    await Toast!.ShowMessage("error", "SERVER_ERROR", "Existe un error al consultar el ruc, por favor acérquese al municipio");
                 }
             }
             catch (Exception ex)

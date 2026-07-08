@@ -70,6 +70,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         private RegistrarDeclaracionDtoResult? _declaracionRegistrada;
         private bool _deshabilitaPorcentajeCantonUnico = false;
         private string razSocial;
+        private DateTime FechaGeneracion;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -99,7 +100,7 @@ namespace gad.aaportal.components.Components.Contribuyente
             try
             {
                 LoadingBorder?.Open();
-
+                FechaGeneracion = DateTime.Now;
                 var usuario = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Identificacion);
                 var parametro = new ContribuyenteDtoParam { Identificacion = usuario };
                 var result = await ServicesDeclaracion.ConsultarPeriodosDeclaracion(parametro);
@@ -803,7 +804,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                 }
 
                 _declaracionRegistrada = result.Data;
-
+                FechaGeneracion = DateTime.Now;
                 _procesoFinalizado = true;
                 _stepActual = 3;
                 StateHasChanged();

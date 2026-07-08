@@ -26,5 +26,6 @@ namespace gad.aaportal.consumers.consumers.Interface
         Task<AnioVencimientoDtoResult> ConsultarFechaVencimiento(ConsultaAnioVencimientoDtoParam parametro);
 
         Task<ConsultaValorPDtoResult> ConsultaValorP(ConsultaValorPDtoParam parametro);
+        Task<ConsultarEstadoRucDtoResult> ConsultarEstadoRuc(ConsultarEstadoRucDtoParam parametro);
     }
 }

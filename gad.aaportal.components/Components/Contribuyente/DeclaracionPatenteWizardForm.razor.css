@@ -1290,13 +1290,6 @@
         size: A4 portrait;
         margin: 7mm;
     }
-
-    .nota-final {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-    }
 }
 /*-----------*/
 @media (max-width: 767px) {
@@ -1591,11 +1584,11 @@
 }
 
 /* NOTA */
-.nota-final {
+/*.nota-final {
     margin-top: 10px;
     font-size: 11px;
     color: #555;
-}
+}*/
 
 /* BOTONES */
 .modal-detalle-actions {
@@ -1657,7 +1650,27 @@
         border-top: 1px solid #000;
         padding-top: 4px;
     }
+/* FOOTER DEL COMPROBANTE */
+.comprobante-footer {
+    margin-top: 12px;
+    font-size: 11px;
+    color: #555;
+}
 
+.fecha-final {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.nota-final {
+    font-size: 11px;
+    color: #555;
+    text-align: justify;
+    line-height: 1.35;
+}
+/* FOOTER DEL COMPROBANTE */
 @media print {
 
     body {
@@ -1766,11 +1779,11 @@
         text-align: right;
     }
 
-    .nota-final {
+/*    .nota-final {
         font-size: 10px;
         margin-top: 5px;
         text-align: center;
-    }
+    }*/
 
     /* OCULTAR BOTONES */
     .btn-close-modal,
@@ -1783,5 +1796,46 @@
     .balance-grid,
     .grid-2 {
         page-break-inside: avoid;
+    }
+/*
+    .comprobante-footer {
+        margin-top: 8px !important;
+        font-size: 10px !important;
+        page-break-inside: avoid;
+    }
+
+    .fecha-final {
+        text-align: right !important;
+        font-size: 10px !important;
+        margin-bottom: 4px !important;
+    }*/
+
+/*    .nota-final {
+        position: static !important;
+        width: auto !important;
+        font-size: 9px !important;
+        text-align: justify !important;
+        line-height: 1.25 !important;
+        margin-top: 0 !important;
+    }*/
+    .comprobante-footer {
+        margin-top: 8px !important;
+        font-size: 10px !important;
+        page-break-inside: avoid;
+    }
+
+    .fecha-final {
+        text-align: left !important;
+        font-size: 10px !important;
+        margin-bottom: 4px !important;
+    }
+
+    .nota-final {
+        position: static !important;
+        width: auto !important;
+        font-size: 9px !important;
+        text-align: justify !important;
+        line-height: 1.25 !important;
+        margin-top: 0 !important;
     }
 }

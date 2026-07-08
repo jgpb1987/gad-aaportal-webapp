@@ -276,5 +276,21 @@ namespace gad.aaportal.apis.Controllers
 
             return result;
         }
+        [HttpPost("consultarEstadoRuc")]
+        public async Task<ActionResult<ConsultarEstadoRucDtoResult>> ConsultarEstadoRuc([FromBody] ConsultarEstadoRucDtoParam parametro)
+        {
+            ConsultarEstadoRucDtoResult result = new();
+
+            try
+            {
+                result = await services.ConsultarEstadoRuc(parametro);
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
     }
 }

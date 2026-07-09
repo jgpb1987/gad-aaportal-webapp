@@ -36,6 +36,7 @@ namespace gad.aaportal.consumers.Config
         public string ConsultaValorP { get; set; } = null!;
         public string ConsultarEstadoRuc { get; set; } = null!;
 
+        public string ConsultarMensaje { get; set; } = null!;
         /*Fin Store Procedure Municipio*/
     }
 }

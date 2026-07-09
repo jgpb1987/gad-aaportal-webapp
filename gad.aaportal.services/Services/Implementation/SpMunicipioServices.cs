@@ -1061,6 +1061,50 @@ namespace gad.aaportal.services.Services.Implementation
 
             return result;
         }
+        public async Task<ConsultarMensajeDtoResult> ConsultarMensaje()
+        {
+            ConsultarMensajeDtoResult result = new();
+
+            try
+            {
+                var connection = await ObtenerConexionAbiertaAsync();
+
+                await using var command = connection.CreateCommand();
+
+                command.CommandText = "dbo.SP_Pat_Mensaje";
+                command.CommandType = CommandType.StoredProcedure;
+
+                await using var reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    result.Data = new ConsultarMensajeDtoDataResult
+                    {
+                        Mensaje = reader["Mensaje"]?.ToString() ?? string.Empty
+                    };
+
+                    result.Message = new()
+                    {
+                        Code = nameof(CodeMessage.OK),
+                        Description = "Consulta realizada correctamente."
+                    };
+                }
+                else
+                {
+                    result.Message = new()
+                    {
+                        Code = "CM001",
+                        Description = "No se encontró ningún mensaje configurado."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
     }
 
 }

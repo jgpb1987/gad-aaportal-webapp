@@ -138,3 +138,107 @@
         font-weight: 600;
         text-decoration: none !important;
     }
+
+/* ========================================
+   MEDIOS DE PAGO
+======================================== */
+
+.medios-pago-container {
+    border-bottom: none !important;
+    padding: 16px 12px;
+}
+
+.medios-pago-card {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid var(--pro-li-sidebar-hover);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.medios-pago-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background-color: rgba(26, 117, 204, 0.08);
+    color: var(--pro-li-sidebar-hover);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.medios-pago-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+    .medios-pago-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+.medios-pago-content {
+    padding: 12px;
+}
+
+.medios-pago-description {
+    margin: 0 0 10px 0;
+    color: #555;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.medios-pago-list {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+    .medios-pago-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 7px;
+        padding: 5px 0;
+        border-bottom: none !important;
+        color: #444;
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+.medio-pago-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    color: var(--pro-li-sidebar-hover);
+    flex-shrink: 0;
+}
+
+    .medio-pago-check svg {
+        width: 12px;
+        height: 12px;
+    }
+
+/* Responsive */
+@media (max-width: 580px) {
+
+    .medios-pago-container {
+        padding: 12px 10px;
+    }
+
+    .medios-pago-card {
+        border-radius: 6px;
+    }
+
+    .medios-pago-header {
+        font-size: 12px;
+    }
+
+    .medios-pago-description,
+    .medios-pago-list li {
+        font-size: 11px;
+    }
+}

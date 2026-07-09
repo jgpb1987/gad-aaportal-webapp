@@ -292,5 +292,21 @@ namespace gad.aaportal.apis.Controllers
 
             return result;
         }
+        [HttpGet("consultarMensaje")]
+        public async Task<ActionResult<ConsultarMensajeDtoResult>> ConsultarMensaje()
+        {
+            ConsultarMensajeDtoResult result = new();
+
+            try
+            {
+                result = await services.ConsultarMensaje();
+            }
+            catch (Exception ex)
+            {
+                result.Message = SystemExceptionCustomized.GetError(ex);
+            }
+
+            return result;
+        }
     }
 }

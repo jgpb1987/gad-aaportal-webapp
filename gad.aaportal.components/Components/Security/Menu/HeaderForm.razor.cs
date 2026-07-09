@@ -36,6 +36,7 @@ namespace gad.aaportal.components.Components.Security.Menu
             LoadingBorder!.Close();
             UriHelper.NavigateTo("/");
         }
+
     }
 }
 

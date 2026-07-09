@@ -250,5 +250,10 @@ namespace gad.aaportal.consumers.consumers.Implementation
         {
             return await _httpClient.Post<ConsultarEstadoRucDtoParam, ConsultarEstadoRucDtoResult>(parametro, configuraciones.EndPointsConfig.ConsultarEstadoRuc);
         }
+        public async Task<ConsultarMensajeDtoResult> ConsultarMensaje()
+        {
+            return await _httpClient.GetSinBr<ConsultarMensajeDtoResult>(
+                configuraciones.ServerApisConfig.ApiServer1 + configuraciones.EndPointsConfig.ConsultarMensaje);
+        }
     }
 }

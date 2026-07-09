@@ -27,5 +27,6 @@ namespace gad.aaportal.consumers.consumers.Interface
 
         Task<ConsultaValorPDtoResult> ConsultaValorP(ConsultaValorPDtoParam parametro);
         Task<ConsultarEstadoRucDtoResult> ConsultarEstadoRuc(ConsultarEstadoRucDtoParam parametro);
+        Task<ConsultarMensajeDtoResult> ConsultarMensaje();
     }
 }

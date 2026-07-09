@@ -355,4 +355,13 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
     {
         public ConsultarEstadoRucDtoDataResult Data { get; set; } = new();
     }
+    public class ConsultarMensajeDtoDataResult
+    {
+        public string Mensaje { get; set; } = string.Empty;
+    }
+
+    public class ConsultarMensajeDtoResult : BaseResult
+    {
+        public ConsultarMensajeDtoDataResult Data { get; set; } = new();
+    }
 }

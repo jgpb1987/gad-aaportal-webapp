@@ -1,10 +1,5 @@
 ﻿using gad.aaportal.commons.Dto.Declaracion;
 using gad.aaportal.commons.Dto.DtoPortal.Declaracion;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.consumers.consumers.Interface
 {

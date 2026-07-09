@@ -1,15 +1,10 @@
-﻿using gad.aaportal.commons.Dto.DtoPortal.Declaracion;
+﻿using gad.aaportal.commons.Dto.DtoMunicipio;
 using gad.aaportal.consumers.Config;
 using gad.aaportal.consumers.consumers.Interface;
 using gad.aaportal.consumers.Js;
 using gad.generic.components.Components.Several;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.components.Components.Contribuyente
 {
@@ -23,6 +18,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
         [Inject] private ISessionStorageServices JSSessionStorageServices { get; set; } = null!;
         [Inject] private IContribuyenteConsumers ServicesContribuyente { get; set; } = null!;
+        [Inject] private ISpMunicipioConsumers ServicesSpMunicipio { get; set; } = null!;
         [Inject] private ConfiguracionesApp Configuraciones { get; set; } = null!;
         [Inject] private IJSRuntime JSRuntime { get; set; } = null!;
 
@@ -95,6 +91,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         {
             FechaGeneracion = DateTime.Now;
             _declaracionSeleccionada = declaracion;
+            ActualizarValoresPagar();
             _mostrarModalDetalle = true;
         }
 
@@ -172,6 +169,24 @@ namespace gad.aaportal.components.Components.Contribuyente
         private async Task ImprimirComprobante()
         {
             await JSRuntime.InvokeVoidAsync("imprimirComprobante", "comprobanteConsultaImprimir");
+        }
+
+        private async Task ActualizarValoresPagar()
+        {
+            var codPatente = _declaracionSeleccionada.CodigoPatente;
+            var codIAT = _declaracionSeleccionada.CodigoIat;
+
+            var valoresPat = await ServicesSpMunicipio.ConsultarValoresPagar(new ConsultarValoresPagarDtoParam { CodigoIngreso = Convert.ToInt32(codPatente) });
+            _declaracionSeleccionada.InteresPatente = valoresPat.Data.Resumen.Interes;
+            _declaracionSeleccionada.RecargoPatente = valoresPat.Data.Resumen.Recargo;
+            _declaracionSeleccionada.CostasPatente = valoresPat.Data.Resumen.CostaJ;
+
+            var valoresIAT = await ServicesSpMunicipio.ConsultarValoresPagar(new ConsultarValoresPagarDtoParam { CodigoIngreso = Convert.ToInt32(codIAT) });
+            _declaracionSeleccionada.InteresIat = valoresIAT.Data.Resumen.Interes;
+            _declaracionSeleccionada.RecargoIat = valoresIAT.Data.Resumen.Recargo;
+            _declaracionSeleccionada.CostasIat = valoresIAT.Data.Resumen.CostaJ;
+
+            StateHasChanged();
         }
     }
 }

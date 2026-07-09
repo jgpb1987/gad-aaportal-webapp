@@ -6,13 +6,8 @@ using gad.aaportal.services.Services.Interfaces;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace gad.aaportal.services.Services.Implementation
 {
@@ -593,21 +588,9 @@ namespace gad.aaportal.services.Services.Implementation
 
                 while (await reader.ReadAsync())
                 {
-                    result.Data.Detalles.Add(new ConsultarValoresPagarDetalleDtoDataResult
-                    {
-                        Valor = reader["Valor"] != DBNull.Value ? Convert.ToDecimal(reader["Valor"]) : 0,
-                        DescripcionDescripcion = reader["Descripcion_descripcion"] != DBNull.Value
-                            ? reader["Descripcion_descripcion"].ToString()!
-                            : string.Empty
-                    });
-                }
-
-                if (await reader.NextResultAsync() && await reader.ReadAsync())
-                {
                     result.Data.Resumen = new ConsultarValoresPagarResumenDtoDataResult
                     {
                         Total = reader["Total"] != DBNull.Value ? Convert.ToDecimal(reader["Total"]) : 0,
-                        RecargoTit = reader["RecargoTit"] != DBNull.Value ? Convert.ToDecimal(reader["RecargoTit"]) : 0,
                         Interes = reader["Interes"] != DBNull.Value ? Convert.ToDecimal(reader["Interes"]) : 0,
                         Recargo = reader["Recargo"] != DBNull.Value ? Convert.ToDecimal(reader["Recargo"]) : 0,
                         Descuento = reader["Descuento"] != DBNull.Value ? Convert.ToDecimal(reader["Descuento"]) : 0,

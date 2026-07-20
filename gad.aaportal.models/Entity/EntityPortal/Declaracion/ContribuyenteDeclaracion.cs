@@ -45,6 +45,10 @@ namespace gad.aaportal.models.Entity.Declaracion
         public decimal CostasIat { get; set; }
         public decimal TasaAdministrativaIat { get; set; }
 
+        public decimal BaseImponiblePatente { get; set; }
+        public decimal BaseImponibleIat { get; set; }
+        public decimal PorcentajeIat { get; set; }
+
         public bool Estado { get; set; }
 
         public virtual Contribuyente IdentificacionNavigation { get; set; } = null!;

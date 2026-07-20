@@ -756,7 +756,7 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                     MultaPatente = ValorMultaPatente,
                     BaseImponiblePatente = BaseImponiblePatentePorcentaje,
-                    BaseImponibleIAT = BaseImponible,
+                    BaseImponibleIAT = BaseImponibleIatPorcentaje,
                     MultaIat = ValorMultaPorMil,
                     FechaVencimiento = FechaVencimiento,
 
@@ -778,7 +778,7 @@ namespace gad.aaportal.components.Components.Contribuyente
                     PorcentajeTEIAT = PorcentajeTEIAT,
                     PatrimonioPMA = PatrimonioPMA,
                     PatrimonioIAT = PatrimonioIAT,
-                    PorcentajeCalculoIat = _establecimientosBase.FirstOrDefault()!.Porcentaje,
+                    PorcentajeCalculoIat = _establecimientos.FirstOrDefault( p=> p.EsMunicipioBase)!.Porcentaje,
                     ValorExoneradoPatente = ValorExoneradoPatente,
                     ValorExoneradoIAT = ValorExoneradoIAT,
                     ExedentePatente = ExedentePatente,

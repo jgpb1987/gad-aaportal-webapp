@@ -644,13 +644,6 @@
     font-size: 16px;
 }
 
-/* NOTA */
-.nota-final {
-    margin-top: 10px;
-    font-size: 11px;
-    color: #555;
-}
-
 /* BOTONES */
 .modal-detalle-actions {
     margin-top: 15px;
@@ -711,138 +704,235 @@
         border-top: 1px solid #000;
         padding-top: 4px;
     }
+/* PIE DEL COMPROBANTE */
+.comprobante-footer {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #d1d5db;
+    font-size: 11px;
+    color: #555;
+}
 
+.fecha-final {
+    margin-bottom: 6px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.nota-final {
+    margin: 0;
+    font-size: 11px;
+    color: #555;
+    text-align: justify;
+    line-height: 1.35;
+}
 @media print {
 
+    @page {
+        size: A4 portrait;
+        margin: 7mm;
+    }
+
+    html,
     body {
-        margin: 0;
-        padding: 0;
-        background: white;
+        width: 100% !important;
+        min-height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
     }
 
-    /* CONTENEDOR PRINCIPAL */
+    .modal-backdrop-custom {
+        position: static !important;
+        inset: auto !important;
+        display: block !important;
+        width: 100% !important;
+        min-height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+    }
+
     .reporte-container {
-        width: 100%;
-        max-width: 190mm; /* ancho A4 real */
-        margin: 0 auto;
-        padding: 10mm;
-        box-shadow: none;
-        border: none;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: none !important;
+        min-height: 270mm !important;
+        height: 270mm !important;
+        margin: 0 !important;
+        padding: 5mm 7mm !important;
+        overflow: visible !important;
+        background: #ffffff !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
     }
 
-    /* HEADER */
     .reporte-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        flex: 0 0 auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+    }
+
+    .reporte-container > hr {
+        flex: 0 0 auto !important;
+        width: 100% !important;
+    }
+
+    .modal-detalle-body {
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+    }
+
+    /*
+       Este es el div que contiene todo el reporte.
+       Debe ser flexible para empujar el pie hacia abajo.
+    */
+    .reporte-contenido {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        width: 100% !important;
     }
 
     .logo-img {
-        max-width: 120px;
-        height: auto;
+        max-width: 120px !important;
+        height: auto !important;
     }
 
     .reporte-titulo {
-        text-align: center;
-        flex: 1;
-        font-size: 14px;
-        font-weight: bold;
+        flex: 1 1 auto !important;
+        text-align: center !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
     }
 
-    /* GRID SUPERIOR */
     .grid-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 5px;
-        font-size: 12px;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 5px !important;
+        font-size: 12px !important;
     }
 
-    /* 🔥 BALANCE */
     .balance-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
     }
 
     .columna {
-        width: 100%;
+        width: 100% !important;
     }
 
     .item {
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        padding: 2px 0;
+        display: flex !important;
+        justify-content: space-between !important;
+        padding: 2px 0 !important;
+        font-size: 12px !important;
     }
 
         .item.total {
-            font-weight: bold;
+            font-weight: bold !important;
         }
 
-    /* TABLAS */
     .reporte-two-columns {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
     }
 
     .tabla {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 11px;
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 11px !important;
     }
 
         .tabla td {
-            padding: 4px;
-            border-bottom: 1px solid #ccc;
+            padding: 4px !important;
+            border: 1px solid #ccc !important;
         }
 
             .tabla td:last-child {
-                text-align: right;
-                font-weight: bold;
+                text-align: right !important;
+                font-weight: bold !important;
             }
 
     .tabla-header {
-        font-weight: bold;
-        font-size: 12px;
-        margin-bottom: 4px;
+        margin-bottom: 4px !important;
+        font-size: 12px !important;
+        font-weight: bold !important;
     }
 
     .total-row td {
-        font-weight: bold;
+        font-weight: bold !important;
     }
 
-    /* TOTAL FINAL */
     .total-final {
-        margin-top: 10px;
-        font-size: 14px;
-        font-weight: bold;
-        text-align: right;
+        flex: 0 0 auto !important;
+        margin-top: 10px !important;
+        text-align: right !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
+    }
+
+    /* PIE DE PÁGINA */
+    .comprobante-footer {
+        position: static !important;
+        flex: 0 0 auto !important;
+        width: 100% !important;
+        margin-top: auto !important;
+        padding-top: 3mm !important;
+        border-top: 1px solid #bfc5cc !important;
+        color: #555 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .fecha-final {
+        position: static !important;
+        display: block !important;
+        margin: 0 0 1.5mm 0 !important;
+        padding: 0 !important;
+        text-align: left !important;
+        font-size: 9px !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
     }
 
     .nota-final {
-        font-size: 10px;
-        margin-top: 5px;
-        text-align: center;
+        position: static !important;
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        text-align: justify !important;
+        font-size: 8.5px !important;
+        line-height: 1.25 !important;
+        color: #555 !important;
     }
 
-    /* OCULTAR BOTONES */
     .btn-close-modal,
     .modal-detalle-actions {
         display: none !important;
     }
 
-    /* EVITAR CORTES FEOS */
     .tabla-box,
     .balance-grid,
-    .grid-2 {
-        page-break-inside: avoid;
-    }
-
-    .nota-final {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
+    .grid-2,
+    .reporte-two-columns,
+    .total-final,
+    .comprobante-footer {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
 }

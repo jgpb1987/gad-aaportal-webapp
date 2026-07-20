@@ -275,6 +275,7 @@ namespace gad.aaportal.commons.Dto.DtoMunicipio
         public string? UsuarioIngreso { get; set; } = "PATWEB";
         //[Required(ErrorMessage = "El BANCO es obligatorio.")]
         public string? Banco { get; set; } = null!;
+        public string? Ruc { get; set; } = null!;
     }
 
     public class InsertarTranferenciaIatDtoDataResult

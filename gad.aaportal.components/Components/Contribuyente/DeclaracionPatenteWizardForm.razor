@@ -954,6 +954,7 @@
 
                     <div><strong>AÑO DECLARACIÓN:</strong> @_declaracionRegistrada.FechaRegistro.Year</div>
                     <div><strong>AÑO IMPUESTO RENTA:</strong> @(_declaracionRegistrada.FechaRegistro.Year - 1)</div>
+                    <div><strong>FECHA DECLARACIÓN:</strong> @(_declaracionRegistrada.FechaRegistro.ToString("dd/MM/yyyy"))</div>
                 </div>
 
                 <hr />
@@ -982,6 +983,10 @@
                         <div class="item total">
                             <span>TOTAL INGRESOS:</span>
                             <strong>@_declaracionRegistrada.Ingresos.ToString("N2")</strong>
+                        </div>
+                        <div class="item total">
+                            <span>% ANTONIO ANTE:</span>
+                            <strong>@(_establecimientos.FirstOrDefault(p => p.EsMunicipioBase)!.Porcentaje.ToString("N2"))%</strong>
                         </div>
                     </div>
 

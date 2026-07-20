@@ -224,6 +224,9 @@ public class ConsultarDeclaracionContribuyenteDtoResult
     public decimal TasaAdministrativaIat { get; set; }
     public decimal TotalPagar => UnoCincoXMil + Patente + ValorBomberos + MultaPatente + MultaIat + InteresPatente + RecargoPatente + CostasPatente + TasaAdministrativaPatente + InteresIat + RecargoIat + CostasIat + TasaAdministrativaIat - (DescuentoTerceraEdadPatente + DescuentoTerceraEdadIat);
 
+    public decimal BaseImponiblePatente { get; set; }
+    public decimal BaseImponibleIat { get; set; }
+    public decimal PorcentajeIat { get; set; }
     public bool Estado { get; set; }
 }
 

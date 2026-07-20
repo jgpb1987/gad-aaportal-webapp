@@ -55,6 +55,11 @@ namespace gad.aaportal.dataaccess.Configuration
             entity.Property(e => e.RecargoIat).HasColumnType("decimal(18, 6)");
             entity.Property(e => e.CostasIat).HasColumnType("decimal(18, 6)");
             entity.Property(e => e.TasaAdministrativaIat).HasColumnType("decimal(18, 6)");
+
+            entity.Property(e => e.BaseImponiblePatente).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.BaseImponibleIat).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.PorcentajeIat).HasColumnType("decimal(8, 6)");
+
             entity.Property(e => e.Estado).HasColumnType("bit");
 
             entity.HasOne(d => d.IdentificacionNavigation)

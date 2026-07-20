@@ -113,7 +113,7 @@
             </div>
             <hr />
             <div class="modal-detalle-body">
-                <div>
+                <div class="reporte-contenido">
                     <!-- RAZON SOCIAL -->
                     <div class="fila full">
                         <strong>RAZÓN SOCIAL:</strong> @_declaracionSeleccionada.RazonSocial
@@ -128,6 +128,7 @@
 
                         <div><strong>AÑO DECLARACIÓN:</strong> @_declaracionSeleccionada.Anio</div>
                         <div><strong>AÑO IMPUESTO RENTA:</strong> @(_declaracionSeleccionada.Anio - 1)</div>
+                        <div><strong>FECHA DECLARACIÓN:</strong> @(_declaracionSeleccionada.FechaRegistro.ToString("dd/MM/yyyy"))</div>
                     </div>
                     <hr />
                     <!-- 🔥 BALANCE CORREGIDO -->
@@ -153,6 +154,10 @@
                             <div class="item total">
                                 <span>TOTAL INGRESOS:</span>
                                 <strong>@_declaracionSeleccionada.Ingresos.ToString("N2")</strong>
+                            </div>
+                            <div class="item total">
+                                <span>% ANTONIO ANTE:</span>
+                                <strong>@_declaracionSeleccionada.PorcentajeIat.ToString("N2")%</strong>
                             </div>
                         </div>
                         <!-- DERECHA -->
@@ -187,7 +192,7 @@
                         <div class="tabla-box">
                             <div class="tabla-header">IMPUESTO PATENTE MUNICIPAL</div>
                             <table class="tabla">
-                                <tr><td>Base imponible</td><td>@Patrimonio(_declaracionSeleccionada).ToString("N2")</td></tr>
+                                <tr><td>Base imponible</td><td>@_declaracionSeleccionada.BaseImponiblePatente.ToString("N2")</td></tr>
                                 <tr><td>Impuesto</td><td>@((_declaracionSeleccionada.Patente).ToString("N2"))</td></tr>
                                 <tr><td>Exoneración tercera edad</td><td>@((_declaracionSeleccionada.DescuentoTerceraEdadPatente).ToString("N2"))</td></tr>
                                 <tr><td>Subtotal</td><td>@((_declaracionSeleccionada.Patente - _declaracionSeleccionada.DescuentoTerceraEdadPatente).ToString("N2"))</td></tr>
@@ -208,7 +213,7 @@
                         <div class="tabla-box">
                             <div class="tabla-header">IMPUESTO 1.5 POR MIL</div>
                             <table class="tabla">
-                                <tr><td>Base imponible</td><td>@Patrimonio(_declaracionSeleccionada).ToString("N2")</td></tr>
+                                <tr><td>Base imponible</td><td>@_declaracionSeleccionada.BaseImponibleIat.ToString("N2")</td></tr>
                                 <tr><td>Impuesto</td><td>@((_declaracionSeleccionada.UnoCincoXMil).ToString("N2"))</td></tr>
                                 <tr><td>Exoneración tercera edad</td><td>@((_declaracionSeleccionada.DescuentoTerceraEdadIat).ToString("N2"))</td></tr>
                                 <tr><td>Subtotal</td><td>@((_declaracionSeleccionada.UnoCincoXMil - _declaracionSeleccionada.DescuentoTerceraEdadIat).ToString("N2"))</td></tr>

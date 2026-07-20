@@ -1679,17 +1679,26 @@
         background: white;
     }
 
-    /* CONTENEDOR PRINCIPAL */
     .reporte-container {
-        width: 100%;
-        max-width: 190mm; /* ancho A4 real */
-        margin: 0 auto;
-        padding: 10mm;
-        box-shadow: none;
-        border: none;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: none !important;
+        min-height: 283mm !important;
+        margin: 0 !important;
+        padding: 6mm 8mm !important;
+        box-shadow: none !important;
+        border: none !important;
     }
 
-    /* HEADER */
+        .reporte-container > .modal-periodo-body {
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1 1 auto !important;
+            padding: 0 !important;
+        }
+
     .reporte-header {
         display: flex;
         align-items: center;
@@ -1708,7 +1717,6 @@
         font-weight: bold;
     }
 
-    /* GRID SUPERIOR */
     .grid-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1716,7 +1724,6 @@
         font-size: 12px;
     }
 
-    /* 🔥 BALANCE */
     .balance-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1738,7 +1745,6 @@
             font-weight: bold;
         }
 
-    /* TABLAS */
     .reporte-two-columns {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1771,7 +1777,6 @@
         font-weight: bold;
     }
 
-    /* TOTAL FINAL */
     .total-final {
         margin-top: 10px;
         font-size: 14px;
@@ -1779,63 +1784,78 @@
         text-align: right;
     }
 
-/*    .nota-final {
-        font-size: 10px;
-        margin-top: 5px;
-        text-align: center;
-    }*/
-
-    /* OCULTAR BOTONES */
     .btn-close-modal,
     .modal-detalle-actions {
         display: none !important;
     }
 
-    /* EVITAR CORTES FEOS */
     .tabla-box,
     .balance-grid,
-    .grid-2 {
-        page-break-inside: avoid;
-    }
-/*
+    .grid-2,
     .comprobante-footer {
-        margin-top: 8px !important;
-        font-size: 10px !important;
-        page-break-inside: avoid;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
 
-    .fecha-final {
-        text-align: right !important;
-        font-size: 10px !important;
-        margin-bottom: 4px !important;
-    }*/
-
-/*    .nota-final {
+    .comprobante-footer {
         position: static !important;
-        width: auto !important;
+        margin-top: auto !important;
+        padding-top: 3mm !important;
+        border-top: 1px solid #bfc5cc !important;
         font-size: 9px !important;
-        text-align: justify !important;
-        line-height: 1.25 !important;
-        margin-top: 0 !important;
-    }*/
-    .comprobante-footer {
-        margin-top: 8px !important;
-        font-size: 10px !important;
-        page-break-inside: avoid;
     }
 
     .fecha-final {
+        margin: 0 0 1.5mm 0 !important;
         text-align: left !important;
-        font-size: 10px !important;
-        margin-bottom: 4px !important;
+        font-size: 9px !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
     }
 
     .nota-final {
         position: static !important;
-        width: auto !important;
-        font-size: 9px !important;
-        text-align: justify !important;
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 8.5px !important;
         line-height: 1.25 !important;
-        margin-top: 0 !important;
+        text-align: justify !important;
+        color: #555 !important;
     }
+
+    @page {
+        size: A4 portrait;
+        margin: 7mm;
+    }
+}
+.comprobante-footer {
+    position: static !important;
+    margin-top: auto !important;
+    padding-top: 3mm !important;
+    border-top: 1px solid #bfc5cc !important;
+    font-size: 9px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
+.fecha-final {
+    margin: 0 0 1.5mm 0 !important;
+    text-align: left !important;
+    font-size: 9px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+}
+
+.nota-final {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 8.5px !important;
+    line-height: 1.25 !important;
+    text-align: justify !important;
+    color: #555 !important;
 }

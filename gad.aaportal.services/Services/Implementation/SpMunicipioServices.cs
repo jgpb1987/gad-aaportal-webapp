@@ -802,6 +802,7 @@ namespace gad.aaportal.services.Services.Implementation
                 command.Parameters.Add(new SqlParameter("@Valor", SqlDbType.Float) { Value = parametro.Valor });
                 command.Parameters.Add(new SqlParameter("@UsuarioIngreso", SqlDbType.VarChar, 50) { Value = parametro.UsuarioIngreso });
                 command.Parameters.Add(new SqlParameter("@Banco", SqlDbType.VarChar, 150) { Value = parametro.Banco });
+                command.Parameters.Add(new SqlParameter("@Ruc", SqlDbType.VarChar, 18) { Value = parametro.Ruc });
 
                 var filasAfectadas = await command.ExecuteNonQueryAsync();
                 result.Data.Insertado = filasAfectadas > 0;

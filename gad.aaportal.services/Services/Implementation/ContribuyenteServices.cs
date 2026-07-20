@@ -283,7 +283,7 @@ namespace gad.aaportal.services.Services.Implementation
 
                 var municipioBase = servicesConfig.MunicipioBase.Trim();
 
-                var establecimientos = await contexto.ContribuyenteEstablecimientos.AsNoTracking().Where(e => e.Identificacion == parametro.Identificacion && e.Estado == "ABIERTO")
+                var establecimientos = await contexto.ContribuyenteEstablecimientos.AsNoTracking().Where(e => e.Identificacion == parametro.Identificacion)
                     .GroupBy(e => new
                     {
                         Provincia = e.Provincia.Trim(),
@@ -387,7 +387,8 @@ namespace gad.aaportal.services.Services.Implementation
 
                 var municipioBase = servicesConfig.MunicipioBase.Trim();
 
-                var establecimientos = await contexto.ContribuyenteEstablecimientos.AsNoTracking().Where(e => e.Identificacion == parametro.Identificacion && e.Estado == "ABIERTO")
+                //var establecimientos = await contexto.ContribuyenteEstablecimientos.AsNoTracking().Where(e => e.Identificacion == parametro.Identificacion && e.Estado == "ABIERTO")
+                var establecimientos = await contexto.ContribuyenteEstablecimientos.AsNoTracking().Where(e => e.Identificacion == parametro.Identificacion)
                     .GroupBy(e => new
                     {
                         Provincia = e.Provincia.Trim(),
@@ -585,7 +586,7 @@ namespace gad.aaportal.services.Services.Implementation
                     FechaInicio = DateTime.Now,
                     FechaVencimiento = parametro.FechaVencimiento,
                     AnioPatente = parametro.Anio,
-                    BaseImponiblePatente = (double)parametro.ActivoCorriente + (double)parametro.ActivoNoCorriente - (double)parametro.PasivoCorriente + (double)parametro.PasivoNoCorriente + (double)parametro.PasivoContingente,
+                    BaseImponiblePatente = ((((double)parametro.ActivoCorriente + (double)parametro.ActivoNoCorriente) - ((double)parametro.PasivoCorriente + (double)parametro.PasivoNoCorriente + (double)parametro.PasivoContingente))* (double)parametro.PorcentajeCalculoIat)/100,
                     TarifaPatente = (double)parametro.Patente,
                     MultaPatente = (double)parametro.MultaPatente,
                     PorcentajeDescuentoTercera = (double)parametro.PorcentajeDescuentoTerceraEdadPatente,
@@ -710,7 +711,8 @@ namespace gad.aaportal.services.Services.Implementation
                         NroDocumento = parametro.PagoOtroCanton.NroDocumento,
                         UsuarioIngreso = parametro.PagoOtroCanton.UsuarioIngreso,
                         Valor = parametro.PagoOtroCanton.Valor,
-                        FechaPago = parametro.PagoOtroCanton.FechaPago
+                        FechaPago = parametro.PagoOtroCanton.FechaPago,
+                        Ruc=parametro.Identificacion
                     };
                     await spMunicipioServices.InsertarTranferenciaIat(insertarTranferenciaIatDto);
                 }
@@ -749,6 +751,10 @@ namespace gad.aaportal.services.Services.Implementation
                     RecargoIat = parametro.RecargoIat,
                     CostasIat = parametro.CostasIat,
                     TasaAdministrativaIat = parametro.TasaAdministrativaIat,
+                    BaseImponiblePatente= (((parametro.ActivoCorriente + parametro.ActivoNoCorriente) - (parametro.PasivoCorriente + parametro.PasivoNoCorriente + parametro.PasivoContingente)) * parametro.PorcentajeCalculoIat)/100,
+                    BaseImponibleIat= parametro.BaseImponibleIAT,
+                    PorcentajeIat= parametro.PorcentajeCalculoIat,
+
                     Estado = true
                 };
 
@@ -864,6 +870,9 @@ namespace gad.aaportal.services.Services.Implementation
                         RecargoPatente = d.RecargoPatente,
                         TasaAdministrativaIat = d.TasaAdministrativaIat,
                         TasaAdministrativaPatente = d.TasaAdministrativaPatente,
+                        BaseImponiblePatente= d.BaseImponiblePatente,
+                        BaseImponibleIat = d.BaseImponibleIat,
+                        PorcentajeIat = d.PorcentajeIat,
                         Estado = d.Estado
                     }
                 ).ToListAsync();

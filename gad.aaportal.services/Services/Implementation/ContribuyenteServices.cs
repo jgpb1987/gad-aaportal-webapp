@@ -582,7 +582,7 @@ namespace gad.aaportal.services.Services.Implementation
                     IngresoTotales = (double)parametro.Ingresos,
                     TotalActivos = (double)parametro.ActivoCorriente + (double)parametro.ActivoNoCorriente,
                     TotalPasivos = (double)parametro.PasivoCorriente + (double)parametro.PasivoNoCorriente + (double)parametro.PasivoContingente,
-                    Patrimonio = (double)parametro.ActivoCorriente + (double)parametro.ActivoNoCorriente - (double)parametro.PasivoCorriente + (double)parametro.PasivoNoCorriente + (double)parametro.PasivoContingente,
+                    Patrimonio = ((double)parametro.ActivoCorriente + (double)parametro.ActivoNoCorriente) - ((double)parametro.PasivoCorriente + (double)parametro.PasivoNoCorriente + (double)parametro.PasivoContingente),
                     FechaInicio = DateTime.Now,
                     FechaVencimiento = parametro.FechaVencimiento,
                     AnioPatente = parametro.Anio,

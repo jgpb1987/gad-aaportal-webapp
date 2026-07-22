@@ -4,6 +4,7 @@
 <ResumenEncabezadoContribuyenteForm />
 
 <div class="declaracion-container">
+
     <div class="declaracion-action-card">
         <div>
             <div class="declaracion-action-title">Declaración de patente</div>
@@ -468,7 +469,7 @@
                                                 <td>@item.Provincia - @item.Canton</td>
                                                 <td class="text-end">@item.BaseImponible.ToString("C2")</td>
                                                 <td class="text-end">@item.BaseImponibleIat.ToString("C2")</td>
-                                                <td class="text-end">@item.Porcentaje.ToString("N2") %</td>
+                                                <td class="text-end">@item.Porcentaje.ToString("N3") %</td>
                                                 <td hidden class="text-end">@item.Valor.ToString("C2")</td>
                                             </tr>
                                         }
@@ -697,6 +698,24 @@
                         }
                     </div>
                 }
+            </div>
+        </div>
+    }
+    @if (_sinPeriodosDeclaracion)
+    {
+        <div class="restriccion-municipal-alert">
+            <div class="restriccion-icon">
+                !
+            </div>
+
+            <div>
+                <div class="restriccion-title">
+                    No existen períodos disponibles
+                </div>
+
+                <div class="restriccion-message">
+                    @_mensajeSinPeriodosDeclaracion
+                </div>
             </div>
         </div>
     }
@@ -952,8 +971,8 @@
                         @($"{_declaracionRegistrada.CodigoUnicoPago}-{_declaracionRegistrada.CodigoPatente}-{_declaracionRegistrada.CodigoIat}")
                     </div>
 
-                    <div><strong>AÑO DECLARACIÓN:</strong> @_declaracionRegistrada.FechaRegistro.Year</div>
-                    <div><strong>AÑO IMPUESTO RENTA:</strong> @(_declaracionRegistrada.FechaRegistro.Year - 1)</div>
+                    <div><strong>AÑO PATENTE:</strong> @_declaracionRegistrada.Anio</div>
+                    <div><strong>AÑO IMPUESTO RENTA:</strong> @(_declaracionRegistrada.Anio - 1)</div>
                     <div><strong>FECHA DECLARACIÓN:</strong> @(_declaracionRegistrada.FechaRegistro.ToString("dd/MM/yyyy"))</div>
                 </div>
 
@@ -986,7 +1005,7 @@
                         </div>
                         <div class="item total">
                             <span>% ANTONIO ANTE:</span>
-                            <strong>@(_establecimientos.FirstOrDefault(p => p.EsMunicipioBase)!.Porcentaje.ToString("N2"))%</strong>
+                            <strong>@(_establecimientos.FirstOrDefault(p => p.EsMunicipioBase)!.Porcentaje.ToString("N3"))%</strong>
                         </div>
                     </div>
 

@@ -38,6 +38,8 @@ namespace gad.aaportal.components.Components.Contribuyente
         private bool _procesoFinalizado;
         private bool _tieneRestriccionMunicipal;
         private string _mensajeRestriccionMunicipal = string.Empty;
+        private bool _sinPeriodosDeclaracion;
+        private string _mensajeSinPeriodosDeclaracion = string.Empty;
         private DateTime FechaVencimiento;
         private decimal PorcentajeDescuentoTerceraEdadPatente = 0;
         private decimal PorcentajeAplicarPMA = 0;
@@ -95,65 +97,279 @@ namespace gad.aaportal.components.Components.Contribuyente
                 EsMunicipioBase = e.EsMunicipioBase
             }).ToList();
         }
+        private void MostrarAlertaSinPeriodos(string mensaje)
+        {
+            _sinPeriodosDeclaracion = true;
+            _mensajeSinPeriodosDeclaracion = mensaje;
+
+            _mostrarModalPeriodo = false;
+
+            _periodosDeclaracion = new PeriodoDeclaracionListResult();
+            _periodoSeleccionado = new IniciarDeclaracionDtoParam();
+
+            _establecimientos = new List<ContribuyenteEstablecimientoPago>();
+            _establecimientosBase = new List<ContribuyenteEstablecimientoPago>();
+
+            _deshabilitaPorcentajeCantonUnico = false;
+        }
+        private void LimpiarAlertaSinPeriodos()
+        {
+            _sinPeriodosDeclaracion = false;
+            _mensajeSinPeriodosDeclaracion = string.Empty;
+        }
         private async Task CargarPeriodosDeclaracion()
         {
             try
             {
                 LoadingBorder?.Open();
                 FechaGeneracion = DateTime.Now;
+                LimpiarAlertaSinPeriodos();
                 var usuario = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Identificacion);
-                var parametro = new ContribuyenteDtoParam { Identificacion = usuario };
-                var result = await ServicesDeclaracion.ConsultarPeriodosDeclaracion(parametro);
-                #region consultar anio adeuda
-                var resultaAnioDeclaracion = await SpMunicipioConsumers.ConsultarAnioAdeuda(new ConsultarAnioAdeudaDtoParam() { Ruc = usuario });
-                #endregion
-                LoadingBorder?.Close();
+                if (string.IsNullOrWhiteSpace(usuario))
+                {
+                    MostrarAlertaSinPeriodos(
+                        "No fue posible identificar al contribuyente. " +
+                        "Por favor, cierre sesión e ingrese nuevamente."
+                    );
 
-                if (result?.Data is not null)
-                {
-                    if (resultaAnioDeclaracion?.Data is not null)
-                    {
-                        result.Data.PeriodosDeclaracion = result.Data.PeriodosDeclaracion.Where(p => p.AnioPatente == resultaAnioDeclaracion.Data.Anio).ToList();
-                        _periodosDeclaracion = result.Data;
-                        _deshabilitaPorcentajeCantonUnico = (_periodosDeclaracion.Establecimientos.Count == 1 && _periodosDeclaracion.Establecimientos.Where(p => p.EsMunicipioBase).ToList().Count == 1);
-                        _establecimientosBase = ClonarEstablecimientos(_periodosDeclaracion.Establecimientos ?? new List<ContribuyenteEstablecimientoPago>());
-                        StateHasChanged();
-                    }
-                    else
-                    {
-                        MostrarMensaje("error",
-                        result?.Message?.Code ?? "PERIODOS",
-                        result?.Message?.Description ?? "No existen periodos a declarar en el Municipio");
-                    }
+                    await MostrarMensaje(
+                        "error",
+                        "IDENTIFICACION_NO_ENCONTRADA",
+                        "No se encontró la identificación del contribuyente en sesión"
+                    );
+
+                    return;
                 }
-                else
+
+                var parametro = new ContribuyenteDtoParam
                 {
-                    MostrarMensaje(
+                    Identificacion = usuario
+                };
+
+                var result = await ServicesDeclaracion.ConsultarPeriodosDeclaracion(parametro);
+
+                if (result?.Data is null)
+                {
+                    //MostrarAlertaSinPeriodos(
+                    //    "No fue posible consultar los períodos de declaración. " +
+                    //    "Por favor, acérquese a las oficinas del GAD Municipal " +
+                    //    "de Antonio Ante para revisar su información."
+                    //);
+
+                    await MostrarMensaje(
                         "error",
                         result?.Message?.Code ?? "PERIODOS_ERROR",
-                        result?.Message?.Description ?? "No fue posible consultar los períodos de declaración");
+                        result?.Message?.Description ??
+                        "No fue posible consultar los períodos de declaración"
+                    );
+
+                    return;
                 }
+
+                if (result.Data.PeriodosDeclaracion is null ||
+                    !result.Data.PeriodosDeclaracion.Any())
+                {
+                    //MostrarAlertaSinPeriodos(
+                    //    "No se encontraron períodos disponibles para realizar " +
+                    //    "la declaración. Por favor, acérquese a las oficinas del " +
+                    //    "GAD Municipal de Antonio Ante para revisar su información."
+                    //);
+
+                    await MostrarMensaje(
+                        "error",
+                        "PERIODOS_NO_ENCONTRADOS",
+                        "No existen períodos disponibles para declarar"
+                    );
+
+                    return;
+                }
+                var resultaAnioDeclaracion =
+                    await SpMunicipioConsumers.ConsultarAnioAdeuda(
+                        new ConsultarAnioAdeudaDtoParam
+                        {
+                            Ruc = usuario
+                        });
+                if (resultaAnioDeclaracion?.Data is null)
+                {
+                    MostrarAlertaSinPeriodos(
+                        "No fue posible determinar el año pendiente de declaración. " +
+                        "Por favor, acérquese a las oficinas del GAD Municipal " +
+                        "de Antonio Ante para revisar su información."
+                    );
+
+                    await MostrarMensaje(
+                        "error",
+                        resultaAnioDeclaracion?.Message?.Code ?? "ANIO_ADEUDA_ERROR",
+                        resultaAnioDeclaracion?.Message?.Description ??
+                        "No fue posible determinar el año pendiente de declaración"
+                    );
+
+                    return;
+                }
+
+                var anioPendiente = resultaAnioDeclaracion.Data.Anio;
+
+                result.Data.PeriodosDeclaracion =
+                    result.Data.PeriodosDeclaracion
+                        .Where(p => p.AnioPatente == anioPendiente)
+                        .ToList();
+
+                if (!result.Data.PeriodosDeclaracion.Any() && anioPendiente>0)
+                {
+                    MostrarAlertaSinPeriodos(
+                        $"No se encontró información para realizar la declaración. " +
+                        "Por favor, acérquese a las oficinas del GAD Municipal " +
+                        "de Antonio Ante para revisar su información."
+                    );
+
+                    await MostrarMensaje(
+                        "error",
+                        "PERIODO_ANIO_NO_ENCONTRADO",
+                        $"No se encontró información para realizar la declaración."
+                    );
+                    return;
+                }
+
+                LimpiarAlertaSinPeriodos();
+                _periodosDeclaracion = result.Data;
+
+                var establecimientos =
+                    _periodosDeclaracion.Establecimientos ??
+                    new List<ContribuyenteEstablecimientoPago>();
+
+                _deshabilitaPorcentajeCantonUnico =
+                    establecimientos.Count == 1 &&
+                    establecimientos.Count(p => p.EsMunicipioBase) == 1;
+
+                _establecimientosBase =
+                    ClonarEstablecimientos(establecimientos);
+
+                StateHasChanged();
             }
             catch
             {
+                MostrarAlertaSinPeriodos(
+                    "Se produjo un inconveniente al consultar los períodos de " +
+                    "declaración. Por favor, acérquese a las oficinas del GAD " +
+                    "Municipal de Antonio Ante o comuníquese con soporte."
+                );
+
+                await MostrarMensaje(
+                    "error",
+                    "SERVER_ERROR",
+                    "Existe un error no administrado, por favor informe a Tecnología"
+                );
+            }
+            finally
+            {
                 LoadingBorder?.Close();
-                MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+                StateHasChanged();
             }
         }
+        //private async Task CargarPeriodosDeclaracion()
+        //{
+        //    try
+        //    {
+        //        LoadingBorder?.Open();
+        //        FechaGeneracion = DateTime.Now;
+        //        var usuario = await JSSessionStorageServices.GetItemAsync(Configuraciones.AppConfig.Identificacion);
+        //        var parametro = new ContribuyenteDtoParam { Identificacion = usuario };
+        //        var result = await ServicesDeclaracion.ConsultarPeriodosDeclaracion(parametro);
+        //        #region consultar anio adeuda
+        //        var resultaAnioDeclaracion = await SpMunicipioConsumers.ConsultarAnioAdeuda(new ConsultarAnioAdeudaDtoParam() { Ruc = usuario });
+        //        #endregion
+        //        LoadingBorder?.Close();
+
+        //        if (result?.Data is not null)
+        //        {
+        //            if (resultaAnioDeclaracion?.Data is not null)
+        //            {
+        //                result.Data.PeriodosDeclaracion = result.Data.PeriodosDeclaracion.Where(p => p.AnioPatente == resultaAnioDeclaracion.Data.Anio).ToList();
+        //                _periodosDeclaracion = result.Data;
+        //                _deshabilitaPorcentajeCantonUnico = (_periodosDeclaracion.Establecimientos.Count == 1 && _periodosDeclaracion.Establecimientos.Where(p => p.EsMunicipioBase).ToList().Count == 1);
+        //                _establecimientosBase = ClonarEstablecimientos(_periodosDeclaracion.Establecimientos ?? new List<ContribuyenteEstablecimientoPago>());
+        //                StateHasChanged();
+        //            }
+        //            else
+        //            {
+        //                MostrarMensaje("error",
+        //                result?.Message?.Code ?? "PERIODOS",
+        //                result?.Message?.Description ?? "No existen periodos a declarar en el Municipio");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            MostrarMensaje(
+        //                "error",
+        //                result?.Message?.Code ?? "PERIODOS_ERROR",
+        //                result?.Message?.Description ?? "No fue posible consultar los períodos de declaración");
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        LoadingBorder?.Close();
+        //        MostrarMensaje("error", "SERVER_ERROR", "Existe un error no administrado, por favor informe a Tecnología");
+        //    }
+        //}
+        //private async Task AbrirModalPeriodo()
+        //{
+        //    var identificacion = await JSSessionStorageServices
+        //        .GetItemAsync(Configuraciones.AppConfig.Identificacion);
+
+        //    if (string.IsNullOrWhiteSpace(identificacion))
+        //    {
+        //        MostrarMensaje("error", "IDENTIFICACION_NO_ENCONTRADA", "No se encontró la identificación del contribuyente en sesión");
+        //        return;
+        //    }
+
+        //    LoadingBorder?.Open();
+
+        //    var puedeDeclarar = await ValidarRestriccionesMunicipales(identificacion);
+
+        //    LoadingBorder?.Close();
+
+        //    if (!puedeDeclarar)
+        //        return;
+
+        //    _periodoSeleccionado = new IniciarDeclaracionDtoParam
+        //    {
+        //        Identificacion = identificacion
+        //    };
+
+        //    _mostrarModalPeriodo = true;
+        //}
+
         private async Task AbrirModalPeriodo()
         {
+            if (_sinPeriodosDeclaracion)
+            {
+                await MostrarMensaje(
+                    "error",
+                    "PERIODOS_NO_DISPONIBLES",
+                    _mensajeSinPeriodosDeclaracion
+                );
+
+                return;
+            }
+
             var identificacion = await JSSessionStorageServices
                 .GetItemAsync(Configuraciones.AppConfig.Identificacion);
 
             if (string.IsNullOrWhiteSpace(identificacion))
             {
-                MostrarMensaje("error", "IDENTIFICACION_NO_ENCONTRADA", "No se encontró la identificación del contribuyente en sesión");
+                await MostrarMensaje(
+                    "error",
+                    "IDENTIFICACION_NO_ENCONTRADA",
+                    "No se encontró la identificación del contribuyente en sesión"
+                );
+
                 return;
             }
 
             LoadingBorder?.Open();
 
-            var puedeDeclarar = await ValidarRestriccionesMunicipales(identificacion);
+            var puedeDeclarar =
+                await ValidarRestriccionesMunicipales(identificacion);
 
             LoadingBorder?.Close();
 
@@ -167,7 +383,6 @@ namespace gad.aaportal.components.Components.Contribuyente
 
             _mostrarModalPeriodo = true;
         }
-
         private void CerrarModalPeriodo()
         {
             _mostrarModalPeriodo = false;
@@ -334,6 +549,7 @@ namespace gad.aaportal.components.Components.Contribuyente
         {
             if (Toast is not null)
                 await Toast.ShowMessage(tipo, codigo, descripcion);
+
         }
         private async Task MarcarCalculoNoValido(string codigo, string descripcion)
         {
@@ -639,12 +855,45 @@ namespace gad.aaportal.components.Components.Contribuyente
                     }
                 }
 
-                if (exoneraciones.Data.ExoneracionIat == "SiPaga" && !registraPagoIAT)
+                //if (exoneraciones.Data.ExoneracionIat == "SiPaga" && !registraPagoIAT)
+                //{
+                //    if (!await CalcularUnoCincoPorMil())
+                //        return;
+                //}
+                //else //if (exoneraciones.Data.ExoneracionIat == "NoPaga")
+                //{
+                //    ValorUnoCincoPorMil = 0;
+                //    BaseImponibleIatPorcentaje = 0;
+                //}
+
+                //if (!await CalcularMultaPatente())
+                //    return;
+
+                //if (!await CalcularMulta1_5Mil())
+                //    return;
+
+                //if (!await CalcularValoresTerceraEdadPatente())
+                //    return;
+
+                //if (!await CalcularValoresTerceraEdad_1_5Mil())
+                //    return;
+
+                //if (!await ConsultarValorBomberos())
+                //    return;
+
+                //if (!await ConsultarValoresPagar())
+                //    return;
+
+                if (registraPagoIAT)
+                {
+                    AplicarReglaPagoIatOtroCanton();
+                }
+                else if (exoneraciones.Data.ExoneracionIat == "SiPaga")
                 {
                     if (!await CalcularUnoCincoPorMil())
                         return;
                 }
-                else //if (exoneraciones.Data.ExoneracionIat == "NoPaga")
+                else
                 {
                     ValorUnoCincoPorMil = 0;
                     BaseImponibleIatPorcentaje = 0;
@@ -653,20 +902,41 @@ namespace gad.aaportal.components.Components.Contribuyente
                 if (!await CalcularMultaPatente())
                     return;
 
-                if (!await CalcularMulta1_5Mil())
-                    return;
+                if (!registraPagoIAT)
+                {
+                    if (!await CalcularMulta1_5Mil())
+                        return;
+                }
+                else
+                {
+                    AplicarReglaPagoIatOtroCanton();
+                }
 
                 if (!await CalcularValoresTerceraEdadPatente())
                     return;
 
-                if (!await CalcularValoresTerceraEdad_1_5Mil())
-                    return;
+                if (!registraPagoIAT)
+                {
+                    if (!await CalcularValoresTerceraEdad_1_5Mil())
+                        return;
+                }
+                else
+                {
+                    AplicarReglaPagoIatOtroCanton();
+                }
 
                 if (!await ConsultarValorBomberos())
                     return;
 
                 if (!await ConsultarValoresPagar())
                     return;
+
+                /*
+                 * Refuerzo final:
+                 * garantiza que ningún método haya vuelto a colocar
+                 * valores en el 1.5 por mil.
+                 */
+                AplicarReglaPagoIatOtroCanton();
 
                 CargarResumenImpuestos();
 
@@ -737,6 +1007,9 @@ namespace gad.aaportal.components.Components.Contribuyente
 
                 LoadingBorder?.Open();
 
+                AplicarReglaPagoIatOtroCanton();
+                CargarResumenImpuestos();
+
                 var parametro = new RegistrarDeclaracionDtoParam
                 {
                     Identificacion = _declaracionIniciada.Identificacion,
@@ -750,14 +1023,11 @@ namespace gad.aaportal.components.Components.Contribuyente
                     Ingresos = _valoresDeclaracion.Ingresos,
                     CostosGastos = _valoresDeclaracion.CostosGastos,
 
-                    UnoCincoXMil = ValorUnoCincoPorMil,
                     Patente = TotalPatentePorEstablecimientos,
                     ValorBomberos = ValorBomberos,
 
                     MultaPatente = ValorMultaPatente,
                     BaseImponiblePatente = BaseImponiblePatentePorcentaje,
-                    BaseImponibleIAT = BaseImponibleIatPorcentaje,
-                    MultaIat = ValorMultaPorMil,
                     FechaVencimiento = FechaVencimiento,
 
                     InteresPatente = InteresPatente,
@@ -765,25 +1035,83 @@ namespace gad.aaportal.components.Components.Contribuyente
                     CostasPatente = CostasPatente,
                     TasaAdministrativaPatente = TasaAdministrativaPatente,
 
-                    InteresIat = InteresIat,
-                    RecargoIat = RecargoIat,
-                    CostasIat = CostasIat,
-                    TasaAdministrativaIat = TasaAdministrativaIat,
-
                     PorcentajeDescuentoTerceraEdadPatente = PorcentajeDescuentoTerceraEdadPatente,
-                    PorcentajeDescuentoTerceraEdadIAT = PorcentajeDescuentoTerceraEdadIAT,
                     PorcentajeAplicarPMA = PorcentajeAplicarPMA,
-                    PorcentajeAplicarIAT = PorcentajeAplicarIAT,
                     PorcentajeTEPMA = PorcentajeTEPMA,
-                    PorcentajeTEIAT = PorcentajeTEIAT,
                     PatrimonioPMA = PatrimonioPMA,
-                    PatrimonioIAT = PatrimonioIAT,
-                    PorcentajeCalculoIat = _establecimientos.FirstOrDefault( p=> p.EsMunicipioBase)!.Porcentaje,
                     ValorExoneradoPatente = ValorExoneradoPatente,
-                    ValorExoneradoIAT = ValorExoneradoIAT,
                     ExedentePatente = ExedentePatente,
-                    ExedenteIAT = ExedenteIAT,
                     PorcentajeIngreso = PorcentajeIngreso,
+
+                    //UnoCincoXMil = ValorUnoCincoPorMil,
+                    //BaseImponibleIAT = BaseImponibleIatPorcentaje,
+                    //MultaIat = ValorMultaPorMil,
+                    //InteresIat = InteresIat,
+                    //RecargoIat = RecargoIat,
+                    //CostasIat = CostasIat,
+                    //TasaAdministrativaIat = TasaAdministrativaIat,
+                    //PorcentajeDescuentoTerceraEdadIAT = PorcentajeDescuentoTerceraEdadIAT,
+                    //PorcentajeAplicarIAT = PorcentajeAplicarIAT,
+                    //PorcentajeTEIAT = PorcentajeTEIAT,
+                    //PatrimonioIAT = PatrimonioIAT,
+                    //PorcentajeCalculoIat = _establecimientos.FirstOrDefault(p => p.EsMunicipioBase)!.Porcentaje,
+                    //ValorExoneradoIAT = ValorExoneradoIAT,
+                    //ExedenteIAT = ExedenteIAT,
+
+                    UnoCincoXMil = registraPagoIAT  ? 0: ValorUnoCincoPorMil,
+
+                    BaseImponibleIAT = registraPagoIAT
+                        ? 0
+                        : BaseImponibleIatPorcentaje,
+
+                    MultaIat = registraPagoIAT
+                        ? 0
+                        : ValorMultaPorMil,
+
+                    InteresIat = registraPagoIAT
+                        ? 0
+                        : InteresIat,
+
+                    RecargoIat = registraPagoIAT
+                        ? 0
+                        : RecargoIat,
+
+                    CostasIat = registraPagoIAT
+                        ? 0
+                        : CostasIat,
+
+                    TasaAdministrativaIat = registraPagoIAT
+                        ? TASA_ADMINISTRATIVA_OTRO_CANTON
+                        : TasaAdministrativaIat,
+
+                    PorcentajeDescuentoTerceraEdadIAT = registraPagoIAT
+                        ? 0
+                        : PorcentajeDescuentoTerceraEdadIAT,
+
+                    PorcentajeAplicarIAT = registraPagoIAT
+                        ? 0
+                        : PorcentajeAplicarIAT,
+
+                    PorcentajeTEIAT = registraPagoIAT
+                        ? 0
+                        : PorcentajeTEIAT,
+
+                    PatrimonioIAT = registraPagoIAT
+                        ? 0
+                        : PatrimonioIAT,
+
+                    PorcentajeCalculoIat = registraPagoIAT
+                        ? 0
+                        : _establecimientos
+                            .FirstOrDefault(p => p.EsMunicipioBase)!.Porcentaje,
+
+                    ValorExoneradoIAT = registraPagoIAT
+                        ? 0
+                        : ValorExoneradoIAT,
+
+                    ExedenteIAT = registraPagoIAT
+                        ? string.Empty
+                        : ExedenteIAT,
 
                     RegistraPagoOtroCanton = registraPagoIAT,
                     PagoOtroCanton = insertarTranferenciaIatDto
@@ -1220,30 +1548,64 @@ namespace gad.aaportal.components.Components.Contribuyente
                     return false;
                 }
 
-                var resultIat = await SpMunicipioConsumers.ConsultaValorP(
-                    new ConsultaValorPDtoParam
-                    {
-                        ValorImpuesto = ValorUnoCincoPorMil - ValorExoneradoIAT,
-                        ValorMulta = ValorMultaPorMil,
-                        TipoImpuesto = "IAT",
-                        Ruc = _declaracionIniciada.Identificacion,
-                        AnioDeclaracion = _periodoSeleccionado.AnioDeclaracion
-                    });
+                //var resultIat = await SpMunicipioConsumers.ConsultaValorP(
+                //    new ConsultaValorPDtoParam
+                //    {
+                //        ValorImpuesto = ValorUnoCincoPorMil - ValorExoneradoIAT,
+                //        ValorMulta = ValorMultaPorMil,
+                //        TipoImpuesto = "IAT",
+                //        Ruc = _declaracionIniciada.Identificacion,
+                //        AnioDeclaracion = _periodoSeleccionado.AnioDeclaracion
+                //    });
 
-                if (resultIat?.Data is not null)
+                //if (resultIat?.Data is not null)
+                //{
+                //    InteresIat = Convert.ToDecimal(resultIat.Data.Intereses);
+                //    RecargoIat = Convert.ToDecimal(resultIat.Data.Recargo);
+                //    CostasIat = Convert.ToDecimal(resultIat.Data.CostaJ);
+                //    TasaAdministrativaIat = Convert.ToDecimal(resultIat.Data.TasaAdministrativa);
+                //}
+                //else
+                //{
+                //    await MarcarCalculoNoValido(
+                //        resultIat?.Message?.Code ?? "VALORES_IAT_ERROR",
+                //        resultIat?.Message?.Description ?? "No fue posible consultar los valores a pagar del 1.5 x 1000");
+
+                //    return false;
+                //}
+                if (registraPagoIAT)
                 {
-                    InteresIat = Convert.ToDecimal(resultIat.Data.Intereses);
-                    RecargoIat = Convert.ToDecimal(resultIat.Data.Recargo);
-                    CostasIat = Convert.ToDecimal(resultIat.Data.CostaJ);
-                    TasaAdministrativaIat = Convert.ToDecimal(resultIat.Data.TasaAdministrativa);
+                    AplicarReglaPagoIatOtroCanton();
                 }
                 else
                 {
-                    await MarcarCalculoNoValido(
-                        resultIat?.Message?.Code ?? "VALORES_IAT_ERROR",
-                        resultIat?.Message?.Description ?? "No fue posible consultar los valores a pagar del 1.5 x 1000");
+                    var resultIat = await SpMunicipioConsumers.ConsultaValorP(
+                        new ConsultaValorPDtoParam
+                        {
+                            ValorImpuesto = ValorUnoCincoPorMil - ValorExoneradoIAT,
+                            ValorMulta = ValorMultaPorMil,
+                            TipoImpuesto = "IAT",
+                            Ruc = _declaracionIniciada.Identificacion,
+                            AnioDeclaracion = _periodoSeleccionado.AnioDeclaracion
+                        });
 
-                    return false;
+                    if (resultIat?.Data is not null)
+                    {
+                        InteresIat = Convert.ToDecimal(resultIat.Data.Intereses);
+                        RecargoIat = Convert.ToDecimal(resultIat.Data.Recargo);
+                        CostasIat = Convert.ToDecimal(resultIat.Data.CostaJ);
+                        TasaAdministrativaIat =
+                            Convert.ToDecimal(resultIat.Data.TasaAdministrativa);
+                    }
+                    else
+                    {
+                        await MarcarCalculoNoValido(
+                            resultIat?.Message?.Code ?? "VALORES_IAT_ERROR",
+                            resultIat?.Message?.Description ??
+                            "No fue posible consultar los valores a pagar del 1.5 x 1000");
+
+                        return false;
+                    }
                 }
 
                 return true;
@@ -1264,27 +1626,95 @@ namespace gad.aaportal.components.Components.Contribuyente
             await JSRuntime.InvokeVoidAsync("imprimirComprobante", "comprobanteImprimir");
         }
 
+        //private async Task PagoOtroCanton()
+        //{
+        //    if (registraPagoIAT)
+        //    {
+        //        _mostrarModalPagoOtroCanton = true;
+        //        await ConsultaCantones();
+        //    }
+        //    else
+        //    {
+        //        _declaracionCalculada = false;
+        //    }
+        //    insertarTranferenciaIatDto = new InsertarTranferenciaIatDtoParam();
+        //    StateHasChanged();
+        //    await Task.CompletedTask;
+        //}
         private async Task PagoOtroCanton()
         {
+            _declaracionCalculada = false;
+            _mensajeValidacionCalculo = string.Empty;
+            _resumen = new ResumenImpuestoDeclaracionViewModel();
+
+            insertarTranferenciaIatDto =
+                new InsertarTranferenciaIatDtoParam();
+
             if (registraPagoIAT)
             {
+                AplicarReglaPagoIatOtroCanton();
+
                 _mostrarModalPagoOtroCanton = true;
                 await ConsultaCantones();
             }
             else
             {
-                _declaracionCalculada = false;
+                /*
+                 * Al desmarcar, se limpian los valores especiales.
+                 * Los valores normales se obtendrán nuevamente
+                 * cuando el usuario presione Calcular.
+                 */
+                BaseImponibleIatPorcentaje = 0;
+                ValorUnoCincoPorMil = 0;
+                ValorMultaPorMil = 0;
+                InteresIat = 0;
+                RecargoIat = 0;
+                CostasIat = 0;
+                TasaAdministrativaIat = 0;
+                ValorExoneradoIAT = 0;
+                PorcentajeDescuentoTerceraEdadIAT = 0;
+                PorcentajeAplicarIAT = 0;
+                PorcentajeTEIAT = 0;
+                PatrimonioIAT = 0;
+                ExedenteIAT = string.Empty;
             }
-            insertarTranferenciaIatDto = new InsertarTranferenciaIatDtoParam();
+
             StateHasChanged();
+
             await Task.CompletedTask;
         }
-
+        //private async Task CerrarModalPagoOtroCanton()
+        //{
+        //    _mostrarModalPagoOtroCanton = false;
+        //    registraPagoIAT = false;
+        //    insertarTranferenciaIatDto = new();
+        //    await Task.CompletedTask;
+        //}
         private async Task CerrarModalPagoOtroCanton()
         {
             _mostrarModalPagoOtroCanton = false;
             registraPagoIAT = false;
             insertarTranferenciaIatDto = new();
+
+            BaseImponibleIatPorcentaje = 0;
+            ValorUnoCincoPorMil = 0;
+            ValorMultaPorMil = 0;
+            InteresIat = 0;
+            RecargoIat = 0;
+            CostasIat = 0;
+            TasaAdministrativaIat = 0;
+            ValorExoneradoIAT = 0;
+            PorcentajeDescuentoTerceraEdadIAT = 0;
+            PorcentajeAplicarIAT = 0;
+            PorcentajeTEIAT = 0;
+            PatrimonioIAT = 0;
+            ExedenteIAT = string.Empty;
+
+            _declaracionCalculada = false;
+            _resumen = new ResumenImpuestoDeclaracionViewModel();
+
+            StateHasChanged();
+
             await Task.CompletedTask;
         }
 
@@ -1300,10 +1730,60 @@ namespace gad.aaportal.components.Components.Contribuyente
             }
         }
 
+        //private async Task ConfirmarPagoOtroCanton()
+        //{
+        //    _mostrarModalPagoOtroCanton = false;
+        //    await Task.CompletedTask;
+        //}
         private async Task ConfirmarPagoOtroCanton()
         {
             _mostrarModalPagoOtroCanton = false;
+
+            AplicarReglaPagoIatOtroCanton();
+
+            /*
+             * Obliga al usuario a volver a calcular después de confirmar
+             * los datos del pago realizado en otro cantón.
+             */
+            _declaracionCalculada = false;
+            _mensajeValidacionCalculo = string.Empty;
+            _resumen = new ResumenImpuestoDeclaracionViewModel();
+
+            StateHasChanged();
+
             await Task.CompletedTask;
+        }
+
+        private const decimal TASA_ADMINISTRATIVA_OTRO_CANTON = 1.00m;
+
+        /// <summary>
+        /// Limpia todos los valores del impuesto 1.5 por mil cuando el
+        /// contribuyente registra que realizó el pago en otro cantón.
+        /// Solo conserva la tasa administrativa de USD 1,00.
+        /// </summary>
+        private void AplicarReglaPagoIatOtroCanton()
+        {
+            if (!registraPagoIAT)
+                return;
+
+            BaseImponibleIatPorcentaje = 0;
+            ValorUnoCincoPorMil = 0;
+            ValorMultaPorMil = 0;
+
+            InteresIat = 0;
+            RecargoIat = 0;
+            CostasIat = 0;
+            TasaAdministrativaIat = TASA_ADMINISTRATIVA_OTRO_CANTON;
+
+            Valores3EdadPorMil = 0;
+            ValorExoneradoIAT = 0;
+
+            PorcentajeDescuentoTerceraEdadIAT = 0;
+            PorcentajeAplicarIAT = 0;
+            PorcentajeTEIAT = 0;
+            PatrimonioIAT = 0;
+
+            ExedenteIAT = string.Empty;
         }
     }
 }
